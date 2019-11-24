@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core'
-import { useCoolBtn, useAppbarStyle } from '../../helpers/featherStyle'
+import { useCoolBtn, useAppbarStyle } from '../helpers/featherStyle'
 
 export const Navigation = () => {
   const coolBtn = useCoolBtn()

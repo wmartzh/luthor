@@ -18,11 +18,11 @@ export const useCoolBtn = makeStyles({
 export const useAppbarStyle = makeStyles(theme => ({
   appbar: {
     background: theme.palette.common.white,
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
     color: theme.palette.secondary.contrastText
   },
   toolbar: {
-    minHeight: '150px',
+    minHeight: '60px',
     borderRadius: '5px'
   },
   menuButton: {

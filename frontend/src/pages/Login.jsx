@@ -9,12 +9,13 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  Link
+  Link,
+  Button
 } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { makeStyles } from '@material-ui/styles'
 import { Copyright } from '../components/Copyright'
-import { CoolBtn } from '../components/CoolBtn'
+import { FthBtn } from '../components/FthBtn'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     height: '100px',
     width: '100px',
     margin: theme.spacing(1),
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+    background: 'linear-gradient(45deg, #92F1D5 30%, #08B1C5 90%)'
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -83,7 +84,12 @@ export const Login = () => {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <CoolBtn type="submit" content="Sign In" myClass={classes.submit} />
+          <FthBtn
+            type="submit"
+            content="Sign In"
+            myClass={classes.submit}
+            to="/"
+          />
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

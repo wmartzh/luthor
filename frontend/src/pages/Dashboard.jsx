@@ -6,16 +6,17 @@ import {
   Avatar,
   Typography,
   Container,
-  Box,
-  Button
+  Box
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 
 import imageAvatar from '../assets/img/person_image.jpg'
-import { Navigation } from '../components/layout/Navigation'
+import { FthBtn } from '../components/FthBtn'
+import { statusColor } from '../constants/statusColor'
+import { Navigation } from '../layout/Navigation'
 
-const usePapperStyle = makeStyles(theme => ({
+const useDashboardStyle = makeStyles(theme => ({
   root: {
     flexGrow: 1
   },
@@ -31,7 +32,8 @@ const usePapperStyle = makeStyles(theme => ({
     padding: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderRadius: '10px'
   },
   avatar: {
     height: '100px',
@@ -45,35 +47,22 @@ const usePapperStyle = makeStyles(theme => ({
   },
   status: {
     width: '100%',
-    height: '50px',
-    background: 'linear-gradient(45deg, #92F1D5 30%, #ABF6BD 90%)',
+    height: '10px',
+    marginTop: '-5px',
     textAlign: 'center',
-    justifyItems: 'center'
-  },
-  btn: {
-    width: '100%',
-    height: '50px',
-    marginTop: theme.spacing(2),
-    background: '#1D7AA2',
-    color: theme.palette.primary.contrastText,
-    '&:hover': {
-      background: '#1D7AA2'
-    }
+    justifyItems: 'center',
+    borderRadius: '0 0 10px 10px'
   }
 }))
 
 export const Dashboard = () => {
-  const classes = usePapperStyle()
+  const classes = useDashboardStyle()
+
   return (
     <Container maxWidth="md">
       <Navigation />
       <Grid container justify="center">
-        {/* <Grid item xs={12}>
-          <Paper elevation={0} className={classes.banner}>
-            banner
-          </Paper>
-        </Grid> */}
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} sm={6} md={5}>
           <Paper elevation={0} className={classes.paperUser}>
             <Avatar variant="rounded" className={classes.avatar}>
               {/* <AccountCircleIcon fontSize="large" /> */}
@@ -86,11 +75,17 @@ export const Dashboard = () => {
                 #202066
               </Box>
             </Typography>
+            <Box marginTop="50px" />
+            <FthBtn content="Get Permission" bg="#12B6C6" />
+            <FthBtn content="My Assistances" bg="#F8B500" />
+            <FthBtn content="My Permissions" bg="#1D7AA2" />
           </Paper>
-          <Box className={classes.status}></Box>
-          <Button className={classes.btn}>Hola</Button>
-          <Button className={classes.btn}>Hola</Button>
-          <Button className={classes.btn}>Hola</Button>
+          <Box
+            className={classes.status}
+            style={{
+              background: statusColor.denied
+            }}
+          ></Box>
         </Grid>
       </Grid>
     </Container>
