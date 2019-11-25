@@ -17,5 +17,21 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//Register and login routes
 Route::post('/register','Api\AuthController@register');
 Route::post('/login','Api\AuthController@login');
+
+
+
+// Route::group(['middleware'  =>  ['auth:api']], function () {
+
+///Event Routes
+    Route::group(['prefix'  =>  '/events'], function () {
+        Route::get('/','EventController@index');
+        Route::get('/{id}','EventController@show');
+        Route::post('/','EventController@store');
+        Route::put('/{event}','EventController@update');
+    });
+// });
+
+Route::get('test/{event}','EventController@index');

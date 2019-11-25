@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Event;
 use Illuminate\Http\Request;
+use League\Flysystem\Exception;
 
 class EventController extends Controller
 {
@@ -15,17 +16,16 @@ class EventController extends Controller
     public function index()
     {
         //
+        try{
+            $dta = \App\Event::all();
+
+            return response()->json(['data'=>$dta,'response'=>200]);
+        }catch(Exception $e){
+
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -35,7 +35,19 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $vD = request()->validate([
+            'title'=> 'required',
+            'start_time'=> 'required'
+        ]);
+        try{
+            \App\Event::create($vD);
+
+            return response()->json(['response'=> 201]);
+
+        }catch(Exception $e){
+            return response()->json(['response'=> 400]);
+        }
+
     }
 
     /**
@@ -44,20 +56,20 @@ class EventController extends Controller
      * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function show(Event $event)
+    public function show($id)
     {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Event $event)
-    {
-        //
+
+
+
+        try{
+            $✅ = \App\Event::findOrFail($id);
+            return response()->json(['data'=>$✅],$status = 200);
+
+        }catch(Exception $e){
+         return response()->json(['message'=>'something was wrong'],$status=400);
+        }
+
     }
 
     /**
@@ -69,7 +81,54 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        //
+        //FIND THE FUCKING REG
+        // if(! Event::find($event)){
+        //     return false;
+        // }
+        // else{
+        //     echo(Event::find($event));
+        // }
+
+
+        // $ev = Event::find($event);
+
+        // if($request->title !== null ){
+        //     if($request->title == $ev->title){
+        //         return response('Works ');
+        //     }
+        // }
+        // else{
+        //    return  response('This shit it wont works');
+        // }
+
+
+
+
+
+
+
+        // THIS SHIT WORKS WIHT POST METHOD
+
+        $request->validate([
+                'title'=> 'required',
+                'start_time' => 'required'
+        ]);
+
+
+        try{
+            $event->update([
+                'title' => $request->title,
+                'start_time' => $request->start_time
+            ]);
+
+            return response()->json(['message'=> $event],$status = 200);
+
+
+        }catch(Exception $e){
+            return response()->json(['message'=>'something was wrong'],$status=400);
+        }
+
+
     }
 
     /**
