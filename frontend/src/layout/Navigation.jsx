@@ -1,9 +1,8 @@
 import React from 'react'
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core'
-import { useCoolBtn, useAppbarStyle } from '../helpers/featherStyle'
+import { useAppbarStyle } from '../helpers/featherStyle'
 
 export const Navigation = () => {
-  const coolBtn = useCoolBtn()
   const appBarStyle = useAppbarStyle()
 
   return (
@@ -18,7 +17,7 @@ export const Navigation = () => {
           Project Luthor
         </Typography>
         {/* <Button color="inherit">Login</Button> */}
-        <Button className={coolBtn.root}>API</Button>
+        {/* <Button className={coolBtn.root}>API</Button> */}
       </Toolbar>
     </AppBar>
   )
