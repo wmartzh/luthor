@@ -39,7 +39,7 @@ export const Dashboard = () => {
     <Container maxWidth="md">
       <Navigation />
       <Grid container justify="center">
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={11} sm={5}>
           <Paper elevation={1} className="fth-paper">
             <Avatar variant="rounded" className={classes.avatar}>
               {/* <AccountCircleIcon fontSize="large" /> */}

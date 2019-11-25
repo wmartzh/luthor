@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/styles'
+import imageAvatar from '../assets/svg/unadeca_logo_large.svg'
 
 export const useAppbarStyle = makeStyles(theme => ({
   appbar: {
@@ -7,7 +8,7 @@ export const useAppbarStyle = makeStyles(theme => ({
     color: theme.palette.secondary.contrastText
   },
   toolbar: {
-    minHeight: '60px',
+    minHeight: '66px',
     borderRadius: '5px'
   },
   menuButton: {
@@ -15,6 +16,14 @@ export const useAppbarStyle = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
+  },
+  avatar: {
+    height: '60px',
+    width: '200px',
+    margin: '2px 0 5px 12px',
+    background: `url(${imageAvatar})`,
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
   }
 }))
 
