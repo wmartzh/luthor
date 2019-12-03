@@ -1,7 +1,7 @@
 export const statusColor = {
   // fth Permissions
-  allow: 'linear-gradient(45deg, #92F1D5 30%, #ABF6BD 90%)',
-  denied: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+  allow: 'linear-gradient(45deg, #92F1D5 30%, #08B1C5 90%)',
+  denied: 'linear-gradient(45deg, #F45953 30%, #FF8E53 90%)',
 
   // fth Assitances
   present: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',

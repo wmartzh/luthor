@@ -7,7 +7,7 @@ const useBtnStyle = makeStyles(theme => ({
     boxShadow: 'none',
     '&:hover': {
       backgroundColor: '#08B1C5',
-      boxShadow: '0 3px 5px 2px rgba(25, 57, 132, .3)'
+      boxShadow: '0 3px 3px 1px rgba(0,0,0,0.2)'
     }
   }
 }))
@@ -18,6 +18,7 @@ export const FthBtn = ({ content, myClass, to, bg = '#08B1C5' }) => {
     margin: '10px 0',
     color: 'white'
   }
+  // const preventDefault = event => event.preventDefault()
   return (
     <Button
       variant="contained"
@@ -25,6 +26,7 @@ export const FthBtn = ({ content, myClass, to, bg = '#08B1C5' }) => {
       className={['fth-button', classes.root, myClass].join(' ')}
       style={btnStyle}
       href={to}
+      // onClick={preventDefault}
     >
       {content}
     </Button>

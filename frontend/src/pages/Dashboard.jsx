@@ -20,21 +20,6 @@ const useDashboardStyle = makeStyles(theme => ({
   root: {
     flexGrow: 1
   },
-  banner: {
-    height: '100px',
-    marginTop: theme.spacing(6),
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary
-  },
-  paperUser: {
-    marginTop: theme.spacing(8),
-    padding: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    borderRadius: '10px'
-  },
   avatar: {
     height: '100px',
     width: '100px',
@@ -44,14 +29,6 @@ const useDashboardStyle = makeStyles(theme => ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
-  },
-  status: {
-    width: '100%',
-    height: '10px',
-    marginTop: '-5px',
-    textAlign: 'center',
-    justifyItems: 'center',
-    borderRadius: '0 0 10px 10px'
   }
 }))
 
@@ -62,8 +39,8 @@ export const Dashboard = () => {
     <Container maxWidth="md">
       <Navigation />
       <Grid container justify="center">
-        <Grid item xs={12} sm={6} md={5}>
-          <Paper elevation={0} className={classes.paperUser}>
+        <Grid item xs={11} sm={5}>
+          <Paper elevation={1} className="fth-paper">
             <Avatar variant="rounded" className={classes.avatar}>
               {/* <AccountCircleIcon fontSize="large" /> */}
             </Avatar>
@@ -71,19 +48,23 @@ export const Dashboard = () => {
               Sandra Wells
             </Typography>
             <Typography component="span" variant="h5">
-              <Box fontSize={16} lineHeight={2} color="gray">
+              <Box fontSize={14} lineHeight={2} color="gray">
                 #202066
               </Box>
             </Typography>
             <Box marginTop="50px" />
-            <FthBtn content="Get Permission" bg="#12B6C6" />
+            <FthBtn
+              to="/permission"
+              content="Get Permission"
+              bg={statusColor.allow}
+            />
             <FthBtn content="My Assistances" bg="#F8B500" />
             <FthBtn content="My Permissions" bg="#1D7AA2" />
           </Paper>
           <Box
-            className={classes.status}
+            className="fth-status-bar"
             style={{
-              background: statusColor.denied
+              background: statusColor.allow
             }}
           ></Box>
         </Grid>

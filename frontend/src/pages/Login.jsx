@@ -9,8 +9,7 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  Link,
-  Button
+  Link
 } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { makeStyles } from '@material-ui/styles'

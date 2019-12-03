@@ -1,19 +1,5 @@
 import { makeStyles } from '@material-ui/styles'
-
-export const useCoolBtn = makeStyles({
-  root: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    border: 0,
-    borderRadius: 3,
-    boxShadow: 'none',
-    color: 'white',
-    height: 48,
-    padding: '0 30px',
-    '&:hover': {
-      boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)'
-    }
-  }
-})
+import imageAvatar from '../assets/svg/unadeca_logo_large.svg'
 
 export const useAppbarStyle = makeStyles(theme => ({
   appbar: {
@@ -22,7 +8,7 @@ export const useAppbarStyle = makeStyles(theme => ({
     color: theme.palette.secondary.contrastText
   },
   toolbar: {
-    minHeight: '60px',
+    minHeight: '66px',
     borderRadius: '5px'
   },
   menuButton: {
@@ -30,5 +16,24 @@ export const useAppbarStyle = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
+  },
+  avatar: {
+    height: '60px',
+    width: '200px',
+    margin: '3px 0 5px 12px',
+    background: `url(${imageAvatar})`,
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
+  }
+}))
+
+export const usePaperStyle = makeStyles(theme => ({
+  root: {
+    marginTop: theme.spacing(8),
+    padding: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    borderRadius: '10px 10px 0 0'
   }
 }))
