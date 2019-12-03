@@ -20,7 +20,7 @@ export const useAppbarStyle = makeStyles(theme => ({
   avatar: {
     height: '60px',
     width: '200px',
-    margin: '2px 0 5px 12px',
+    margin: '3px 0 5px 12px',
     background: `url(${imageAvatar})`,
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
