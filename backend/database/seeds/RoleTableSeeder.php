@@ -11,11 +11,14 @@ class RoleTableSeeder extends Seeder
      */
     public function run()
     {
+
+
+
         //
         \App\Role::create([
             'name'=> 'root'
         ]);
-        
+
         \App\Role::create([
             'name' => 'student'
         ]);
@@ -30,6 +33,21 @@ class RoleTableSeeder extends Seeder
         ]);
         \App\Role::create([
             'name' => 'rector'
+        ]);
+
+        //User
+
+        \App\User::create([
+            'nickname' => 'paquito',
+            'rol_id' => '2',
+            'email' => 'paquito@mail.com',
+            'password' => 'secret'
+        ]);
+        \App\User::create([
+            'nickname' => 'juanito',
+            'rol_id' => '2',
+            'email' => 'juanito@mail.com',
+            'password' => 'secret'
         ]);
     }
 }

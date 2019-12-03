@@ -31,7 +31,38 @@ Route::post('/login','Api\AuthController@login');
         Route::get('/{id}','EventController@show');
         Route::post('/','EventController@store');
         Route::put('/{event}','EventController@update');
+        Route::delete('/{id}','EventController@destroy');
     });
+// });
+
+///Penalty Routes
+Route::group(['prefix'  =>  '/penalties'], function () {
+    Route::get('/','PenaltyController@index');
+    Route::get('/{id}','PenaltyController@show');
+    Route::post('/','PenaltyController@store');
+    Route::put('/{penalty}','PenaltyController@update');
+    Route::delete('/{id}','PenaltyController@destroy');
+});
+// });
+
+///Permissions Routes
+Route::group(['prefix'  =>  '/permissions'], function () {
+    Route::get('/','PermissionsController@index');
+    Route::get('/{id}','PermissionsController@show');
+    Route::post('/','PermissionsController@store');
+    Route::put('/{permissions}','PermissionsController@update');
+    Route::delete('/{id}','PermissionsController@destroy');
+});
+// });
+
+///Alterts Routes
+Route::group(['prefix'  =>  '/alerts'], function () {
+    Route::get('/','AlertController@index');
+    Route::get('/{id}','AlertController@show');
+    Route::post('/','AlertController@store');
+    Route::put('/{alert}','AlertController@update');
+    Route::delete('/{id}','AlertController@destroy');
+});
 // });
 
 Route::get('test/{event}','EventController@index');

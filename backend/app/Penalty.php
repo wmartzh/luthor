@@ -8,7 +8,7 @@ class Penalty extends Model
 {
     //
     protected $fillable = [
-        'user_id'
+        'user_id','availible'
     ];
 
     public function users(){

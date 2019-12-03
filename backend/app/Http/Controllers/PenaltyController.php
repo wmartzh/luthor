@@ -14,18 +14,15 @@ class PenaltyController extends Controller
      */
     public function index()
     {
-        //
+        try{
+            $dta = \App\Penalty::all();
+
+            return response()->json(['data'=>$dta,'response'=>200]);
+        }catch(Exception $e){
+
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -36,6 +33,18 @@ class PenaltyController extends Controller
     public function store(Request $request)
     {
         //
+        $vD = request()->validate([
+            'user_id'=> 'required',
+            'available'
+        ]);
+        try{
+            \App\Penalty::create($vD);
+
+            return response()->json(['response'=> 201]);
+
+        }catch(Exception $e){
+            return response()->json(['response'=> 400]);
+        }
     }
 
     /**
@@ -44,21 +53,18 @@ class PenaltyController extends Controller
      * @param  \App\Penalty  $penalty
      * @return \Illuminate\Http\Response
      */
-    public function show(Penalty $penalty)
+    public function show($id)
     {
         //
+        try{
+            $✅ = \App\Penalty::findOrFail($id);
+            return response()->json(['data'=>$✅],$status = 200);
+
+        }catch(Exception $e){
+         return response()->json(['message'=>'something was wrong'],$status=400);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Penalty  $penalty
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Penalty $penalty)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -69,7 +75,21 @@ class PenaltyController extends Controller
      */
     public function update(Request $request, Penalty $penalty)
     {
-        //
+        $data = $request->validate([
+            'user_id'=> 'required',
+            'available'=> 'required' //⛔ Grammar correction
+        ]);
+
+
+        try{
+            $penalty->update($data);
+
+            return response()->json(['message'=> $penalty],$status = 200);
+
+
+        }catch(Exception $e){
+            return response()->json(['message'=>'something was wrong'],$status=400);
+        }
     }
 
     /**
@@ -78,8 +98,12 @@ class PenaltyController extends Controller
      * @param  \App\Penalty  $penalty
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Penalty $penalty)
+    public function destroy($id)
     {
         //
+        $penalty = \App\Penalty::findOrFail($id);
+        $penalty->delete();
+
+        return response()->json(['message'=>'OK'],$status=402);
     }
 }

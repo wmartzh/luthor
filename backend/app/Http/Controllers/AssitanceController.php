@@ -15,6 +15,13 @@ class AssitanceController extends Controller
     public function index()
     {
         //
+        try{
+            $dta = \App\Assitance ::all();
+
+            return response()->json(['data'=>$dta,'response'=>200]);
+        }catch(Exception $e){
+
+        }
     }
 
     /**

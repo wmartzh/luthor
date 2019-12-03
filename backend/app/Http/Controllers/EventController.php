@@ -58,10 +58,6 @@ class EventController extends Controller
      */
     public function show($id)
     {
-
-
-
-
         try{
             $✅ = \App\Event::findOrFail($id);
             return response()->json(['data'=>$✅],$status = 200);
@@ -81,34 +77,6 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        //FIND THE FUCKING REG
-        // if(! Event::find($event)){
-        //     return false;
-        // }
-        // else{
-        //     echo(Event::find($event));
-        // }
-
-
-        // $ev = Event::find($event);
-
-        // if($request->title !== null ){
-        //     if($request->title == $ev->title){
-        //         return response('Works ');
-        //     }
-        // }
-        // else{
-        //    return  response('This shit it wont works');
-        // }
-
-
-
-
-
-
-
-        // THIS SHIT WORKS WIHT POST METHOD
-
         $request->validate([
                 'title'=> 'required',
                 'start_time' => 'required'
@@ -128,7 +96,6 @@ class EventController extends Controller
             return response()->json(['message'=>'something was wrong'],$status=400);
         }
 
-
     }
 
     /**
@@ -137,8 +104,12 @@ class EventController extends Controller
      * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Event $event)
+    public function destroy(Request $request, $id)
     {
         //
+        $event = \App\Event::findOrFail($id);
+        $event->delete();
+
+        return response()->json(['message'=>'OK'],$status=402);
     }
 }

@@ -17,7 +17,6 @@ class CreatePermissionsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->enum('status',['allow','denied'])->default('denied');
-            $table->enum('role',['student','monitor'])->default('student');
             $table->dateTimeTz('output_date_time');
             $table->dateTimeTz('entry_date_time');
             $table->date('date');
