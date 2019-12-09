@@ -8,7 +8,7 @@ class Assitance extends Model
 {
     //
     protected $fillable = [
-        'event_id', 'status', 'date', 'time'
+        'user_id','event_id', 'status', 'date', 'time'
 
     ];
 

@@ -24,15 +24,7 @@ class AssitanceController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -42,7 +34,21 @@ class AssitanceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $vD = request()->validate([
+            'event_id' => 'required',
+            'status' => 'required',
+            'date' => 'required',
+            'time' => 'required'
+        ]);
+        try{
+            \App\Assitance::create($vD);
+
+            return response()->json(['response'=> 201]);
+
+        }catch(Exception $e){
+            return response()->json(['response'=> 400]);
+        }
     }
 
     /**
@@ -51,21 +57,21 @@ class AssitanceController extends Controller
      * @param  \App\Assitance  $assitance
      * @return \Illuminate\Http\Response
      */
-    public function show(Assitance $assitance)
+    public function show($id)
     {
         //
+        {
+            //
+            try{
+                $✅ = \App\Assitance::findOrFail($id);
+                return response()->json(['data'=>$✅],$status = 200);
+
+            }catch(Exception $e){
+             return response()->json(['message'=>'something was wrong'],$status=400);
+            }
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Assitance  $assitance
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Assitance $assitance)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -77,6 +83,23 @@ class AssitanceController extends Controller
     public function update(Request $request, Assitance $assitance)
     {
         //
+        $data = request()->validate([
+            'user_id'=> 'required',
+            'event_id' => 'required',
+            'status' => 'required',
+            'date' => 'required',
+            'time' => 'required'
+        ]);
+
+        try{
+            $assitance->update($data);
+
+            return response()->json(['message'=> $assitance],$status = 200);
+
+
+        }catch(Exception $e){
+            return response()->json(['message'=>'something was wrong'],$status=400);
+        }
     }
 
     /**
@@ -85,8 +108,11 @@ class AssitanceController extends Controller
      * @param  \App\Assitance  $assitance
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Assitance $assitance)
+    public function destroy($id)
     {
-        //
+        $assitance = \App\Assitance::findOrFail($id);
+        $assitance->delete();
+
+        return response()->json(['message'=>'OK'],$status=402);
     }
 }

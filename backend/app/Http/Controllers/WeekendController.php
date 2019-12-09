@@ -15,17 +15,17 @@ class WeekendController extends Controller
     public function index()
     {
         //
+        try{
+            $dta = \App\Weekend::all();
+
+            return response()->json(['data'=>$dta,'response'=>200]);
+        }catch(Exception $e){
+
+        }
+
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -36,6 +36,21 @@ class WeekendController extends Controller
     public function store(Request $request)
     {
         //
+        $vD = request()->validate([
+            'user_id'=> 'required',
+            'out_date_time',
+            'in_date_time',
+            'location'
+        ]);
+        try{
+            \App\Weekend::create($vD);
+
+            return response()->json(['response'=> 201]);
+
+        }
+        catch(Exception $e){
+            return response()->json(['response'=> 400]);
+        }
     }
 
     /**
@@ -44,21 +59,17 @@ class WeekendController extends Controller
      * @param  \App\Weekend  $weekend
      * @return \Illuminate\Http\Response
      */
-    public function show(Weekend $weekend)
+    public function show($id)
     {
-        //
+        try{
+            $✅ = \App\Weekend::findOrFail($id);
+            return response()->json(['data'=>$✅],$status = 200);
+
+        }catch(Exception $e){
+         return response()->json(['message'=>'something was wrong'],$status=400);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Weekend  $weekend
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Weekend $weekend)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -70,6 +81,23 @@ class WeekendController extends Controller
     public function update(Request $request, Weekend $weekend)
     {
         //
+        $data = $request->validate([
+            'user_id'=> 'required',
+            'out_date_time',
+            'in_date_time',
+            'location'
+        ]);
+
+
+        try{
+            $penalty->update($data);
+
+            return response()->json(['message'=> $penalty],$status = 200);
+
+
+        }catch(Exception $e){
+            return response()->json(['message'=>'something was wrong'],$status=400);
+        }
     }
 
     /**
@@ -81,5 +109,9 @@ class WeekendController extends Controller
     public function destroy(Weekend $weekend)
     {
         //
+        $penalty = \App\Weekend::findOrFail($id);
+        $penalty->delete();
+
+        return response()->json(['message'=>'OK'],$status=402);
     }
 }

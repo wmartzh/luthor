@@ -65,4 +65,25 @@ Route::group(['prefix'  =>  '/alerts'], function () {
 });
 // });
 
+///Assitance Routes
+Route::group(['prefix'  =>  '/assistance'], function () {
+    Route::get('/','AssitanceController@index');
+    Route::get('/{id}','AssitanceController@show');
+    Route::post('/','AssitanceController@store');
+    Route::put('/{assitance}','AssitanceController@update');
+    Route::delete('/{id}','AssitanceController@destroy');
+});
+// });
+
+///Weekend Routes
+Route::group(['prefix'  =>  '/weekends'], function () {
+    Route::get('/','WeekendController@index');
+    Route::get('/{id}','WeekendController@show');
+    Route::post('/','WeekendController@store');
+    Route::put('/{weekend}','WeekendController@update');
+    Route::delete('/{id}','WeekendController@destroy');
+});
+// });
+
+
 Route::get('test/{event}','EventController@index');
