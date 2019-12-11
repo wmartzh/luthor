@@ -15,18 +15,18 @@ class CreatePermissionsTable extends Migration
     {
         Schema::create('permissions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->enum('status',['allow','denied'])->default('denied');
+            $table->integer('code_user');
+            $table->enum('status',['active','rejected','deprecated'])->default('active');
             $table->dateTimeTz('output_date_time');
-            $table->dateTimeTz('entry_date_time');
+            $table->dateTimeTz('entry_date_time')->nullable();
             $table->date('date');
             $table->string('place');
             $table->timestamps();
 
             //Relations
 
-            $table->foreign('user_id')
-                  ->references('id')
+            $table->foreign('code_user')
+                  ->references('code')
                   ->on('users')
                   ->onDelete('cascade');
 

@@ -48,9 +48,9 @@ Route::group(['prefix'  =>  '/penalties'], function () {
 ///Permissions Routes
 Route::group(['prefix'  =>  '/permissions'], function () {
     Route::get('/','PermissionsController@index');
-    Route::get('/{id}','PermissionsController@show');
+    Route::get('/{code}','PermissionsController@show');
     Route::post('/','PermissionsController@store');
-    Route::put('/{permissions}','PermissionsController@update');
+    Route::put('/','PermissionsController@update');
     Route::delete('/{id}','PermissionsController@destroy');
 });
 // });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Permissions;
 use Illuminate\Http\Request;
+use App\User;
 
 class PermissionsController extends Controller
 {
@@ -33,22 +34,43 @@ class PermissionsController extends Controller
      */
     public function store(Request $request)
     {
-        $vD = request()->validate([
-            'user_id' => 'required',
-            'status',
-            'output_date_time' => 'required',
-            'entry_date_time'=> 'required',
-            'date' => 'required',
-            'place' => 'required'
-
-        ]);
         try{
-            \App\Permissions::create($vD);
 
-            return response()->json(['response'=> 201]);
+            $data = request()->validate([
+                'code_user' => 'required',
+                'output_date_time' => 'required',
+                'date' => 'required',
+                'place' => 'required',
+                'status'
+
+            ]);
+
+
+            $res = User::select()->where('code',$data['code_user'])->get();
+            $user = $res->toArray();
+            $usermodel = \App\User::findOrFail($user[0]['id']);
+            if($user[0]['status'] =='penalized'){//check status
+                //create reg
+                $data['status'] = 'rejected';
+                \App\Permissions::create($data);
+                return response()->json(['response'=>'Unauthorized']);
+
+
+            }else if($user[0]['status']=='in'){//check status
+
+                //create reg
+
+                $data['status'] = 'active';
+                \App\Permissions::create($data);
+                $usermodel->update(['status'=>'out']); //update user status
+                return response()->json(['response'=> 'Authorized']);
+            }
+            else{
+                return response()->json(['response'=> 'User is out']);
+            }
 
         }catch(Exception $e){
-            return response()->json(['response'=> 400]);
+            return response()->http_response_code(400);
         }
     }
 
@@ -58,12 +80,12 @@ class PermissionsController extends Controller
      * @param  \App\Permissions  $permissions
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($code)
     {
 
          //
          try{
-            $✅ = \App\Permissions::findOrFail($id);
+            $✅ = \App\Permissions::select()->where('code_user',$code)->get();
             return response()->json(['data'=>$✅],$status = 200);
 
         }catch(Exception $e){
@@ -80,23 +102,30 @@ class PermissionsController extends Controller
      * @param  \App\Permissions  $permissions
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Permissions $permissions)
+    public function update(Request $request)
     {
         //
         $data = $request->validate([
-            'user_id' => 'required',
-            'status',
-            'output_date_time' => 'required',
-            'entry_date_time'=> 'required',
-            'date' => 'required',
-            'place' => 'required'
+            'code_user' => 'required',
+            'entry_date_time',
+            'status'
         ]);
 
-
         try{
-            $permissions->update($data);
+            $data['entry_date_time'] = date("Y-m-d H:i:s");
+            $data['status']= 'deprecated';
+            //Search active permissions
+            $permission = \App\Permissions::select()->where([['code_user',$data['code_user']],['status','active']])->get();
+            $permissionModel = \App\Permissions::findOrFail($permission[0]['id']);            //Search user
+            //Search user
+            $res = User::select()->where('code',$data['code_user'])->get();
+            $user = $res->toArray();
+            $usermodel = \App\User::findOrFail($user[0]['id']);
+            //Update user and permissions status 
+            $usermodel->update(['status'=>'in']);
+            $permissionModel->update($data);
+            return response()->json(['message'=> 'accepted'],$status = 200);
 
-            return response()->json(['message'=> $permissions],$status = 200);
 
 
         }catch(Exception $e){
