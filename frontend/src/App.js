@@ -5,6 +5,8 @@ import { Dashboard } from './pages/Dashboard'
 import { Login } from './pages/Login'
 import { GetPermission } from './pages/GetPermission'
 
+import { GlobalStyle } from './styles/GlobalStyle'
+
 export const App = () => {
   return (
     <ThemeProvider>
@@ -12,9 +14,10 @@ export const App = () => {
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/" component={Dashboard} />
-          <Route exact path="/permission" component={GetPermission} />
+          <Route exact path="/get-permission" component={GetPermission} />
         </Switch>
       </Router>
+      <GlobalStyle />
     </ThemeProvider>
   )
 }

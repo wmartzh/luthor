@@ -1,15 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
+import styled from 'styled-components'
 
-import Select from '@material-ui/core/es/Select'
-import InputLabel from '@material-ui/core/es/InputLabel'
-import FormControl from '@material-ui/core/es/FormControl'
-import TextField from '@material-ui/core/es/TextField'
-import MenuItem from '@material-ui/core/es/MenuItem'
+import { statusColor } from '../constants/statusColor'
+import userPhoto from '../assets/img/person_image.jpg'
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
-import { statusColor } from '../constants/statusColor'
-import { Navigation } from '../layout/Navigation'
 import { ButtonComponent } from '../components/ButtonComponent'
 
 import { StyledContainer } from '../styles/StyledContainer'
@@ -17,18 +13,21 @@ import { StyledSpacer } from '../styles/StyledSpacer'
 import { StyledStatusBar } from '../styles/StyledStatusBar'
 import { StyledCard } from '../styles/StyledCard'
 import { StyledH1 } from '../styles/StyledH1'
+import { StyledSpan } from '../styles/StyledSpan'
+import { StyledAvatar } from '../styles/StyledAvatar'
 import { StyledBackButton } from '../styles/StyledBackButton'
 import { LinkComponent } from '../components/LinkComponent'
 
-export const GetPermission = () => {
+import Select from '@material-ui/core/Select'
+import InputLabel from '@material-ui/core/InputLabel'
+import FormControl from '@material-ui/core/FormControl'
+import TextField from '@material-ui/core/es/TextField'
+import MenuItem from '@material-ui/core/MenuItem'
+
+export const ToTest = () => {
   const [type, setType] = useState('')
-
-  const inputLabel = useRef(null)
-  const [labelWidth, setLabelWidth] = React.useState(0)
-
-  useEffect(() => {
-    setLabelWidth(inputLabel.current.offsetWidth)
-  }, [])
+  const [labelWidth, setLabelWidth] = useState(0)
+  const inputLabel = React.useRef(null)
 
   const handleChange = event => {
     setType(event.target.value)
@@ -36,7 +35,6 @@ export const GetPermission = () => {
 
   return (
     <StyledContainer>
-      <Navigation />
       <StyledSpacer height="54px" />
       <StyledCard roundedTop width="300px">
         <StyledBackButton>
