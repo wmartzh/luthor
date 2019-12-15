@@ -22,6 +22,7 @@ import { LinkComponent } from '../components/LinkComponent'
 
 export const GetPermission = () => {
   const [type, setType] = useState('')
+  const [place, setPlace] = useState('')
 
   const inputLabel = useRef(null)
   const [labelWidth, setLabelWidth] = React.useState(0)
@@ -29,10 +30,6 @@ export const GetPermission = () => {
   useEffect(() => {
     setLabelWidth(inputLabel.current.offsetWidth)
   }, [])
-
-  const handleChange = event => {
-    setType(event.target.value)
-  }
 
   return (
     <StyledContainer>
@@ -60,9 +57,9 @@ export const GetPermission = () => {
           <Select
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
-            value={type}
-            onChange={handleChange}
             labelWidth={labelWidth}
+            onChange={e => setType(e.target.value)}
+            value={type}
           >
             <MenuItem value={'normal'}>Normal</MenuItem>
             <MenuItem value={'weekends'}>Weekends</MenuItem>
@@ -74,6 +71,8 @@ export const GetPermission = () => {
           margin="normal"
           fullWidth
           id="place"
+          onChange={e => setPlace(e.target.value)}
+          value={place}
           required
         />
         <StyledSpacer height="40px" />

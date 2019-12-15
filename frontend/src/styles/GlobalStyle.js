@@ -3,6 +3,9 @@ import { createGlobalStyle } from 'styled-components'
 export const GlobalStyle = createGlobalStyle`
   body {
     background: #F5F7FB;
-    font-family: 'Segoe UI'
+    font-family: 'Segoe UI';
+    &::-webkit-scrollbar { 
+      display: none; 
+    }
   }
 `
