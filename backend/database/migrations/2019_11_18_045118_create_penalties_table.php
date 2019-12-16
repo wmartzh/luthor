@@ -15,12 +15,12 @@ class CreatePenaltiesTable extends Migration
     {
         Schema::create('penalties', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->boolean('available',[true, false])->default(false);
+            $table->integer('user_code');
+            $table->boolean('active',[true, false])->default(false);
             $table->timestamps();
 
-            $table->foreign('user_id')
-                ->references('id')
+            $table->foreign('user_code')
+                ->references('code')
                 ->on('users')
                 ->onDelete('cascade');
         });

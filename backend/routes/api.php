@@ -38,9 +38,9 @@ Route::post('/login','Api\AuthController@login');
 ///Penalty Routes
 Route::group(['prefix'  =>  '/penalties'], function () {
     Route::get('/','PenaltyController@index');
-    Route::get('/{id}','PenaltyController@show');
+    Route::get('/{code}','PenaltyController@show');
     Route::post('/','PenaltyController@store');
-    Route::put('/{penalty}','PenaltyController@update');
+    Route::put('/','PenaltyController@update');
     Route::delete('/{id}','PenaltyController@destroy');
 });
 // });
@@ -80,7 +80,8 @@ Route::group(['prefix'  =>  '/weekends'], function () {
     Route::get('/','WeekendController@index');
     Route::get('/{id}','WeekendController@show');
     Route::post('/','WeekendController@store');
-    Route::put('/{weekend}','WeekendController@update');
+    Route::put('/','WeekendController@update');
+    Route::put('/{code}','WeekendController@recycle');
     Route::delete('/{id}','WeekendController@destroy');
 });
 // });

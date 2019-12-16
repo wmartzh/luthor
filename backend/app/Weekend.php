@@ -9,7 +9,7 @@ class Weekend extends Model
     //
 
     protected $fillable = [
-        'user_id','out_date_time','in_date_time','string'
+        'user_code','state','preceptor','vicerector','out_date_time','in_date_time','location'
     ];
 
 

@@ -10,7 +10,7 @@ class WeekendController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response;
      */
     public function index()
     {
@@ -36,16 +36,41 @@ class WeekendController extends Controller
     public function store(Request $request)
     {
         //
-        $vD = request()->validate([
-            'user_id'=> 'required',
-            'out_date_time',
-            'in_date_time',
-            'location'
+        $vD = $request->validate([
+            'user_code'=> 'required',
+            'out_date_time' => 'required',
+            'in_date_time' => 'required',
+            'location' => 'required'
         ]);
         try{
-            \App\Weekend::create($vD);
 
-            return response()->json(['response'=> 201]);
+            //Search user
+            $res = \App\User::select()->where('code',$vD['user_code'])->get();
+            $user = $res->toArray();
+            $usermodel = \App\User::findOrFail($user[0]['id']);
+
+            if($user[0]['status']=='penalized'){
+                return response()->json(['message'=> 'Can not process, the user is penalized']);
+            }else{
+                $search = \App\Weekend::where([['user_code',$vD['user_code']],['state','in process']])->exists();
+
+                if(!$search){
+
+                    \App\Weekend::create($vD);
+                    return response()->json(['message'=>'Permission requested']);
+                }
+                else{
+                    return response()->json(['message'=>'User already has a request in process']);
+                }
+
+            }
+
+
+
+
+
+
+
 
         }
         catch(Exception $e){
@@ -78,21 +103,26 @@ class WeekendController extends Controller
      * @param  \App\Weekend  $weekend
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Weekend $weekend)
+    public function update(Request $request)
     {
         //
         $data = $request->validate([
-            'user_id'=> 'required',
-            'out_date_time',
-            'in_date_time',
-            'location'
+            'user_code'=> 'required',
+            'state'=> 'required'
         ]);
 
-
         try{
-            $penalty->update($data);
 
-            return response()->json(['message'=> $penalty],$status = 200);
+            $weekendInf = \App\Weekend::select()->where([['user_code',$data['user_code']],['state','in process']])->get();
+            $weekendModel = \App\Weekend::findOrFail($weekendInf[0]['id']);
+            $weekendModel->update($data);
+
+            if($data['state']=='aproved'){
+                return response()-json(['message'=>'Request approved']);
+            }else if($data['state']=='rejected'){
+                return response()-json(['message'=>'Request denied']);
+            }
+
 
 
         }catch(Exception $e){
@@ -113,5 +143,22 @@ class WeekendController extends Controller
         $penalty->delete();
 
         return response()->json(['message'=>'OK'],$status=402);
+    }
+
+    public function recycle($code)
+    {
+        $weekendInf = \App\Weekend::select()->where([['user_code',$code],['state','aproved']])->get();
+        $weekendModel = \App\Weekend::findOrFail($weekendInf[0]['id']);
+        $now = date("Y-m-d H:i:s");
+
+        if($now >$weekendInf[0]['in_date_time']){
+            $weekendModel->update(['state'=>'deprecated']);
+            return response()->json(['message'=>'Regs recycled']);
+        }else{
+            return response()->json(['message'=>'Thers is nothing to recycle']);
+        }
+
+
+
     }
 }

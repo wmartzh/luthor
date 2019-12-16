@@ -34,13 +34,34 @@ class PenaltyController extends Controller
     {
         //
         $vD = request()->validate([
-            'user_id'=> 'required',
-            'available'
+            'user_code'=> 'required',
+            'active'
         ]);
-        try{
-            \App\Penalty::create($vD);
 
-            return response()->json(['response'=> 201]);
+
+
+        try{
+            $res = \App\User::select()->where('code',$vD['user_code'])->get();
+            $user = $res->toArray();
+            $usermodel = \App\User::findOrFail($user[0]['id']);
+
+            if($user[0]['status']=='penalized'){
+                return response()->json(['message'=>'the user now is penalized']);
+            }else if($user[0]['status'] == 'out'){
+                return response()->json(['message'=>'the user now is out of the campus']);
+
+            }else if($user[0]['status']=='in' || $user[0]['status'] == 'out'){
+
+                $usermodel->update(['status'=>'penalized']);
+                $vD['active'] = true;
+                \App\Penalty::create($vD);
+                return response()->json(['message'=>'user penalized']);
+
+            }
+
+
+
+
 
         }catch(Exception $e){
             return response()->json(['response'=> 400]);
@@ -53,12 +74,13 @@ class PenaltyController extends Controller
      * @param  \App\Penalty  $penalty
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($code)
     {
         //
         try{
-            $✅ = \App\Penalty::findOrFail($id);
-            return response()->json(['data'=>$✅],$status = 200);
+            $penalties = \App\Penalty::select()->where('user_code',$code)->get();
+            $penaltiesActive = $penalties->toArray();
+            return response()->json(['data'=>$penaltiesActive]);
 
         }catch(Exception $e){
          return response()->json(['message'=>'something was wrong'],$status=400);
@@ -73,18 +95,35 @@ class PenaltyController extends Controller
      * @param  \App\Penalty  $penalty
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Penalty $penalty)
+    public function update(Request $request)
     {
         $data = $request->validate([
-            'user_id'=> 'required',
-            'available'=> 'required' //⛔ Grammar correction
+            'user_code'=> 'required',
+            'active'
         ]);
-
-
         try{
-            $penalty->update($data);
+            //get active penalties
+            $penalties = \App\Penalty::select()->where([['user_code',$data['user_code']],['active',true]])->get();
+            $penaltiesActive = $penalties->toArray();
 
-            return response()->json(['message'=> $penalty],$status = 200);
+            if($penaltiesActive[0]['active']==false){ //check if active penalties exists
+                return response()->json(['message'=>'user has not active penalties']);
+
+            }else if($penaltiesActive[0]['active']==true){
+
+                //obtain user and penalty info
+                $res = \App\User::select()->where('code',$data['user_code'])->get();
+                $user = $res->toArray();
+                $usermodel = \App\User::findOrFail($user[0]['id']);
+                $penalty = \App\Penalty::findOrFail($penaltiesActive[0]['id']);
+
+                //update data
+                $data['active']=false;
+                $usermodel->update(['status','in']);
+                $penalty->update($data);
+
+                return response()->json(['message'=>'penalty removed']);
+            }
 
 
         }catch(Exception $e){
