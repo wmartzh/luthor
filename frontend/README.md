@@ -1,5 +1,8 @@
 # Project Luthor
 
+# Futures changes 
+*  add new color tu the estatus user
+
 ## Screenshots
 
 ### Student

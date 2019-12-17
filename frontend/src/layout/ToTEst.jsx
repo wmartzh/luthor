@@ -25,66 +25,59 @@ import TextField from '@material-ui/core/es/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 
 export const ToTest = () => {
-  const [type, setType] = useState('')
-  const [labelWidth, setLabelWidth] = useState(0)
-  const inputLabel = React.useRef(null)
-
-  const handleChange = event => {
-    setType(event.target.value)
-  }
+  const StyledTable = styled.table`
+    width: 100%;
+    th,
+    td {
+      text-align: start;
+    }
+    th {
+      font-size: 14px;
+      font-weight: 600;
+      color: #b0a3cc;
+      padding-bottom: 30px;
+    }
+    tbody tr {
+      height: 24px;
+      padding: 20px;
+      background: #fff;
+    }
+  `
 
   return (
     <StyledContainer>
-      <StyledSpacer height="54px" />
-      <StyledCard roundedTop width="300px">
-        <StyledBackButton>
-          <LinkComponent to="/">
-            <ArrowBackIosIcon fontSize="small" style={{ marginTop: '5px' }} />
-          </LinkComponent>
-        </StyledBackButton>
-        <StyledH1
-          fontWeigth="600"
-          color="#12B6C6"
-          style={{ margin: '0 0 8px 0' }}
-        >
-          Get my permission
-        </StyledH1>
-
-        <StyledSpacer height="20px" />
-        <FormControl fullWidth variant="outlined">
-          <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
-            Type
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-outlined-label"
-            id="demo-simple-select-outlined"
-            value={type}
-            onChange={handleChange}
-            labelWidth={labelWidth}
-          >
-            <MenuItem value={'normal'}>Normal</MenuItem>
-            <MenuItem value={'weekends'}>Weekends</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField
-          variant="outlined"
-          label="Place"
-          margin="normal"
-          fullWidth
-          id="place"
-          required
-        />
-        <StyledSpacer height="40px" />
-        <ButtonComponent to="/" background="#12B6C6" width="300px">
-          Confirm
-        </ButtonComponent>
-        <StyledSpacer height="10px" />
-      </StyledCard>
-      <StyledStatusBar
-        background={statusColor.allow}
-        width="340px"
-        margin="auto"
-      />
+      <StyledSpacer height="90px" />
+      <StyledH1 fontWeigth="700" color="#4F3C75">
+        My Assistance
+      </StyledH1>
+      <StyledSpacer height="20px" />
+      <StyledTable>
+        <thead>
+          <tr>
+            <th>Assistance</th>
+            <th>Event</th>
+            <th>Monitor</th>
+            <th>Date</th>
+            <th>...</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Jill</td>
+            <td>Smith</td>
+            <td>50</td>
+            <td>50</td>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>Eve</td>
+            <td>Jackson</td>
+            <td>94</td>
+            <td>94</td>
+            <td>94</td>
+          </tr>
+        </tbody>
+      </StyledTable>
     </StyledContainer>
   )
 }

@@ -6,6 +6,7 @@ import { Login } from './pages/Login'
 import { GetPermission } from './pages/GetPermission'
 
 import { GlobalStyle } from './styles/GlobalStyle'
+import { MyAssitance } from './pages/MyAssitance'
 
 export const App = () => {
   return (
@@ -15,6 +16,7 @@ export const App = () => {
           <Route exact path="/login" component={Login} />
           <Route exact path="/" component={Dashboard} />
           <Route exact path="/get-permission" component={GetPermission} />
+          <Route exact path="/my-assistance" component={MyAssitance} />
         </Switch>
       </Router>
       <GlobalStyle />

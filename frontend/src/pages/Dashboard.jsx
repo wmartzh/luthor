@@ -17,7 +17,7 @@ export const Dashboard = () => {
     <StyledContainer>
       <Navigation />
       <StyledSpacer height="54px" />
-      <StyledCard roundedTop width="300px">
+      <StyledCard flexDirection="column" roundedTop width="340px">
         <StyledAvatar image={userPhoto} />
         <StyledH1 style={{ margin: '0 0 8px 0' }}>Sandra Wells</StyledH1>
         <StyledSpan>#202066</StyledSpan>
