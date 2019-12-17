@@ -12,6 +12,9 @@
 #### *Get Permission*
 ![student dashboard](./Doc/img/studentGetPermission.png)
 
+#### *My Assistance*
+![student dashboard](./Doc/img/studentMyAssistance.png)
+
 ## Available Scripts
 
 In the project directory, you can run:
