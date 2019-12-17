@@ -1,104 +1,91 @@
-import React, { useState } from 'react'
-import {
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  Box,
-  TextField,
-  FormControl,
-  Select,
-  InputLabel,
-  MenuItem
-} from '@material-ui/core'
+import React, { useState, useEffect, useRef } from 'react'
+
+import Select from '@material-ui/core/es/Select'
+import InputLabel from '@material-ui/core/es/InputLabel'
+import FormControl from '@material-ui/core/es/FormControl'
+import TextField from '@material-ui/core/es/TextField'
+import MenuItem from '@material-ui/core/es/MenuItem'
+
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 import { statusColor } from '../constants/statusColor'
-import { makeStyles } from '@material-ui/styles'
-import { FthBtn } from '../components/FthBtn'
 import { Navigation } from '../layout/Navigation'
+import { ButtonComponent } from '../components/ButtonComponent'
+import { LinkComponent } from '../components/LinkComponent'
 
-const useStyles = makeStyles(theme => ({
-  formControl: {
-    margin: theme.spacing(1),
-    width: '100%'
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2)
-  }
-}))
+import { StyledContainer } from '../styles/StyledContainer'
+import { StyledSpacer } from '../styles/StyledSpacer'
+import { StyledStatusBar } from '../styles/StyledStatusBar'
+import { StyledCard } from '../styles/StyledCard'
+import { StyledH1 } from '../styles/StyledH1'
+import { StyledBackButton } from '../styles/StyledBackButton'
 
 export const GetPermission = () => {
-  const classes = useStyles()
   const [type, setType] = useState('')
+  const [place, setPlace] = useState('')
 
-  const inputLabel = React.useRef(null)
+  const inputLabel = useRef(null)
   const [labelWidth, setLabelWidth] = React.useState(0)
-  React.useEffect(() => {
+
+  useEffect(() => {
     setLabelWidth(inputLabel.current.offsetWidth)
   }, [])
 
-  const handleChange = event => {
-    setType(event.target.value)
-  }
-
   return (
-    <Container maxWidth="md">
+    <StyledContainer>
       <Navigation />
-      <Grid container justify="center">
-        <Grid item xs={12} sm={5}>
-          <Paper elevation={2} className="fth-paper">
-            <Typography
-              component="h1"
-              variant="h5"
-              style={{ color: '#12B6C6' }}
-            >
-              Get my permission
-            </Typography>
-            <Box marginTop="50px" />
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel
-                ref={inputLabel}
-                id="demo-simple-select-outlined-label"
-              >
-                Type
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                value={type}
-                onChange={handleChange}
-                labelWidth={labelWidth}
-              >
-                <MenuItem value={'normal'}>Normal</MenuItem>
-                <MenuItem value={'weekends'}>Weekends</MenuItem>
-              </Select>
-              <TextField
-                variant="outlined"
-                label="Place"
-                margin="normal"
-                fullWidth
-                id="place"
-                required
-              />
-            </FormControl>
-            <Box marginTop="20px" />
-            <FthBtn
-              type="submit"
-              content="Confirm"
-              myClass={classes.submit}
-              to="/"
-              bg={statusColor.allow}
-            />
-            <Box marginTop="30px" />
-          </Paper>
-          <Box
-            className="fth-status-bar"
-            style={{
-              background: statusColor.allow
-            }}
-          ></Box>
-        </Grid>
-      </Grid>
-    </Container>
+      <StyledSpacer height="54px" />
+      <StyledCard flexDirection="column" roundedTop width="340px">
+        <StyledBackButton>
+          <LinkComponent to="/">
+            <ArrowBackIosIcon fontSize="small" style={{ marginTop: '5px' }} />
+          </LinkComponent>
+        </StyledBackButton>
+        <StyledH1
+          fontWeigth="600"
+          color="#12B6C6"
+          style={{ margin: '0 0 8px 0' }}
+        >
+          Get my permission
+        </StyledH1>
+
+        <StyledSpacer height="20px" />
+        <FormControl fullWidth variant="outlined">
+          <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+            Type
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            labelWidth={labelWidth}
+            onChange={e => setType(e.target.value)}
+            value={type}
+          >
+            <MenuItem value={'normal'}>Normal</MenuItem>
+            <MenuItem value={'weekends'}>Weekends</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          variant="outlined"
+          label="Place"
+          margin="normal"
+          fullWidth
+          id="place"
+          onChange={e => setPlace(e.target.value)}
+          value={place}
+          required
+        />
+        <StyledSpacer height="40px" />
+        <ButtonComponent to="/" background="#12B6C6" width="300px">
+          Confirm
+        </ButtonComponent>
+        <StyledSpacer height="10px" />
+      </StyledCard>
+      <StyledStatusBar
+        background={statusColor.allow}
+        width="340px"
+        margin="auto"
+      />
+    </StyledContainer>
   )
 }
