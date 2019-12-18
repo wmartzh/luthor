@@ -1,39 +1,48 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
-import ExpandMore from '@material-ui/icons/ExpandMore'
-
-import { StyledSpacer } from '../styles/StyledSpacer'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 import { StyledCard } from '../styles/StyledCard'
 import { StyledSpan } from '../styles/StyledSpan'
-import { StyledH2 } from '../styles/StyledH2'
-import { StyledDataContent } from '../styles/StyledDataContent'
+import { StyledSpacer } from '../styles/StyledSpacer'
+import { StyledH1 } from '../styles/StyledH1'
+import { StyledBackButton } from '../styles/StyledBackButton'
+import { LinkComponent } from './LinkComponent'
 
-export const TableComponent = ({ tableItemsSizes, tableheader }) => {
-  const [expanded, setExpanded] = useState(false)
+export const StyledTableItem = styled.div`
+  min-width: ${props => (props.width ? props.width : '100%')};
+  flex-direction: column;
 
-  const StyledStatusCube = styled.div`
-    width: 24px;
-    height: 24px;
-    background: ${props => props.background};
-    border-radius: 7px;
-  `
+  @media (min-width: 800px) {
+    display: ${props => (props.display ? props.display : 'block')};
+  }
+  @media (max-width: 840px) {
+    display: ${props => (props.displayMd ? props.displayMd : 'block')};
+  }
+  @media (max-width: 690px) {
+    display: ${props => (props.displaySm ? props.displaySm : 'block')};
+  }
+`
 
-  const StyledTableItem = styled.div`
-    min-width: ${props => (props.width ? props.width : '100%')};
+export const StyledTableItemExpand = styled.div`
+  width: 100%;
+  padding: 28px 0 0 ${props => props.paddingLerft};
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  @media (min-width: 800px) {
+    display: none;
+  }
+`
 
-    @media (min-width: 800px) {
-      display: ${props => (props.display ? props.display : 'block')};
-    }
-    @media (max-width: 840px) {
-      display: ${props => (props.displayMd ? props.displayMd : 'block')};
-    }
-    @media (max-width: 690px) {
-      display: ${props => (props.displaySm ? props.displaySm : 'block')};
-    }
-  `
-
+export const TableComponent = ({
+  title,
+  titleColor,
+  tableheader,
+  tableContent,
+  tableExpand
+}) => {
   const StyledTableHeader = styled.div`
     display: flex;
     justify-content: start;
@@ -57,23 +66,32 @@ export const TableComponent = ({ tableItemsSizes, tableheader }) => {
     }
   `
 
-  const StyledTableItemExpand = styled.div`
-    width: 100%;
-    padding: 28px 0 0 ${props => props.paddingLerft};
-    @media (min-width: 800px) {
-      display: none;
-    }
-  `
   return (
     <>
+      <StyledSpacer height="90px" />
+      <StyledH1
+        fontWeigth="700"
+        color={titleColor}
+        style={{ marginLeft: '40px', position: 'relative' }}
+      >
+        <StyledBackButton top="2.5px" left="-30px">
+          <LinkComponent to="/">
+            <ArrowBackIosIcon fontSize="small" />
+          </LinkComponent>
+        </StyledBackButton>
+        {title}
+      </StyledH1>
+
+      <StyledSpacer height="20px" />
+
       <StyledTableHeader>
         {tableheader.map(content => (
           <StyledTableItem
             key={content.title}
             width={content.size}
-            display={content.display}
-            displayMd={content.displayMd}
-            displaySm={content.displaySm}
+            display={content.display ? 'block' : 'none'}
+            displayMd={content.displayMd ? 'block' : 'none'}
+            displaySm={content.displaySm ? 'block' : 'none'}
           >
             <StyledSpan
               fontFamily="Segoe UI"
@@ -91,80 +109,10 @@ export const TableComponent = ({ tableItemsSizes, tableheader }) => {
           displayMd="block"
         ></StyledTableItem>
       </StyledTableHeader>
-
-      {/* TODO: reduce the code when i have the data queries  */}
       <StyledSpacer height="20px" />
       <StyledCard width="100%" flexDirection="column" alignItems="start">
-        <StyledTableBody>
-          <StyledTableItem width={tableItemsSizes[0]}>
-            <StyledStatusCube background="#F45953" />
-          </StyledTableItem>
-          <StyledTableItem width={tableItemsSizes[1]}>
-            <StyledH2 fontWeigth="600" color="#4F3C75">
-              Culto Despertino
-            </StyledH2>
-          </StyledTableItem>
-          <StyledTableItem
-            width={tableItemsSizes[2]}
-            displayMd="none"
-            displaySm="none"
-          >
-            <StyledH2 fontWeigth="600" color="#4F3C75">
-              Paco Pedro de la mar
-            </StyledH2>
-          </StyledTableItem>
-          <StyledTableItem width={tableItemsSizes[3]} displaySm="none">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
-              NOV 08 - 28
-            </StyledSpan>
-          </StyledTableItem>
-          <StyledTableItem
-            className="last-item"
-            width={tableItemsSizes[4]}
-            display="none"
-            displayMd="block"
-          >
-            <ExpandMore
-              fontSize="small"
-              style={{ cursor: 'pointer' }}
-              onClick={() => setExpanded(prev => !prev)}
-            />
-          </StyledTableItem>
-        </StyledTableBody>
-        {/*  */}
-
-        {/* FIXME: date responsive! */}
-        {expanded && (
-          <StyledTableItemExpand paddingLerft={tableItemsSizes[0]}>
-            <StyledDataContent>
-              <StyledSpan
-                fontFamily="Segoe UI"
-                fontWeigth="600"
-                color="#B0A3CC"
-              >
-                Monitor
-              </StyledSpan>
-              <StyledH2 fontWeigth="600" color="#4F3C75">
-                Paco Pedro de la mar
-              </StyledH2>
-              <StyledSpacer height="28px" />
-              <StyledSpan
-                fontFamily="Segoe UI"
-                fontWeigth="600"
-                color="#B0A3CC"
-              >
-                Date
-              </StyledSpan>
-              <StyledSpan
-                fontFamily="Segoe UI"
-                fontWeigth="600"
-                color="#4F3C75"
-              >
-                NOV 08 - 28
-              </StyledSpan>
-            </StyledDataContent>
-          </StyledTableItemExpand>
-        )}
+        <StyledTableBody>{tableContent}</StyledTableBody>
+        {tableExpand}
       </StyledCard>
     </>
   )
