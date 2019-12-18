@@ -32,7 +32,11 @@ export const Dashboard = () => {
         <ButtonComponent to="/my-assistance" background="#4F3C75" width="300px">
           My Assistance
         </ButtonComponent>
-        <ButtonComponent to="/my-permission" background="#1D7AA2" width="300px">
+        <ButtonComponent
+          to="/my-permissions"
+          background="#1D7AA2"
+          width="300px"
+        >
           My Permissions
         </ButtonComponent>
         <StyledSpacer height="40px" />
