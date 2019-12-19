@@ -44,7 +44,7 @@ export const MyPermissions = () => {
     },
     {
       size: '180px',
-      title: 'Out/Entry',
+      title: 'Out / Entry',
       display: true,
       displayMd: false,
       displaySm: false,

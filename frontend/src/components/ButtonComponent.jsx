@@ -4,6 +4,7 @@ import { LinkComponent } from './LinkComponent'
 
 export const ButtonComponent = ({
   children,
+  disable,
   background,
   color = '#fff',
   width = '100%',
@@ -24,11 +25,15 @@ export const ButtonComponent = ({
       margin: auto;
     }
   `
-  return (
-    <LinkComponent to={to}>
-      <StyledButton background={background} color={color} width={width}>
-        <span>{children}</span>
-      </StyledButton>
-    </LinkComponent>
+  const button = (
+    <StyledButton
+      background={disable ? '#999' : background}
+      color={disable ? '#333' : color}
+      width={width}
+    >
+      <span>{children}</span>
+    </StyledButton>
   )
+
+  return disable ? button : <LinkComponent to={to}>{button}</LinkComponent>
 }
