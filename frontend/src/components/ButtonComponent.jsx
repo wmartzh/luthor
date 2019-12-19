@@ -8,15 +8,17 @@ export const ButtonComponent = ({
   background,
   color = '#fff',
   width = '100%',
+  height = '48px',
+  margin = '10px',
   to
 }) => {
   const StyledButton = styled.div`
     width: ${props => props.width};
-    height: 48px;
+    height: ${props => props.height};
     background: ${props => props.background};
     border-radius: 5px;
     color: ${props => props.color};
-    margin: 10px;
+    margin: ${props => props.margin};
     display: flex;
     align-items: center;
     span {
@@ -30,6 +32,8 @@ export const ButtonComponent = ({
       background={disable ? '#999' : background}
       color={disable ? '#333' : color}
       width={width}
+      height={height}
+      margin={margin}
     >
       <span>{children}</span>
     </StyledButton>

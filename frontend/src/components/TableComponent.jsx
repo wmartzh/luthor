@@ -13,6 +13,7 @@ import { LinkComponent } from './LinkComponent'
 export const StyledTableItem = styled.div`
   min-width: ${props => (props.width ? props.width : '100%')};
   flex-direction: column;
+  vertical-align: middle;
 
   @media (min-width: 800px) {
     display: ${props => (props.display ? props.display : 'block')};
@@ -30,7 +31,6 @@ export const StyledTableItemExpand = styled.div`
   padding: 28px 0 0 ${props => props.paddingLerft};
   display: flex;
   flex-direction: column;
-  justify-content: start;
   @media (min-width: 800px) {
     display: none;
   }
@@ -60,6 +60,7 @@ export const TableComponent = ({
     justify-content: start;
     flex-direction: row;
     position: relative;
+    align-items: center;
     .last-item:last-child {
       position: absolute;
       right: 10px;

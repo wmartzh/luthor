@@ -8,17 +8,17 @@ import MenuItem from '@material-ui/core/es/MenuItem'
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
-import { userStatusColor } from '../constants/statusColor'
-import { Navigation } from '../layout/Navigation'
-import { ButtonComponent } from '../components/ButtonComponent'
-import { LinkComponent } from '../components/LinkComponent'
+import { userStatusColor } from '../../constants/statusColor'
+import { Navigation } from '../../layout/Navigation'
+import { ButtonComponent } from '../../components/ButtonComponent'
+import { LinkComponent } from '../../components/LinkComponent'
 
-import { StyledContainer } from '../styles/StyledContainer'
-import { StyledSpacer } from '../styles/StyledSpacer'
-import { StyledStatusBar } from '../styles/StyledStatusBar'
-import { StyledCard } from '../styles/StyledCard'
-import { StyledH1 } from '../styles/StyledH1'
-import { StyledBackButton } from '../styles/StyledBackButton'
+import { StyledContainer } from '../../styles/StyledContainer'
+import { StyledSpacer } from '../../styles/StyledSpacer'
+import { StyledStatusBar } from '../../styles/StyledStatusBar'
+import { StyledCard } from '../../styles/StyledCard'
+import { StyledH1 } from '../../styles/StyledH1'
+import { StyledBackButton } from '../../styles/StyledBackButton'
 
 export const GetPermission = ({ user }) => {
   const { status } = user

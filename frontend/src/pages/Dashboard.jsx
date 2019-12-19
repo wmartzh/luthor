@@ -43,7 +43,7 @@ export const Dashboard = ({ user }) => {
             </ButtonComponent>
             <ButtonComponent
               to="/my-permissions"
-              background="#1D7AA2"
+              background="#FB7140"
               width="300px"
             >
               My Permissions
@@ -69,14 +69,15 @@ export const Dashboard = ({ user }) => {
             >
               Validate Entry
             </ButtonComponent>
-            <ButtonComponent
+            {/* TODO: */}
+            {/* <ButtonComponent
               to="/my-permission"
               background="#1D7AA2"
               width="300px"
               disable
             >
               Status
-            </ButtonComponent>
+            </ButtonComponent> */}
           </>
         )}
 

@@ -10,7 +10,7 @@ export const App = () => {
   const [user, setUser] = useState({
     username: 'Sandra Wells',
     role: '0',
-    status: 'out',
+    status: 'in',
     code: '#202066'
   })
   return (

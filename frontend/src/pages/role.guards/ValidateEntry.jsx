@@ -13,7 +13,7 @@ import { StyledH2 } from '../../styles/StyledH2'
 import { StyledContainer } from '../../styles/StyledContainer'
 import { ButtonComponent } from '../../components/ButtonComponent'
 
-export const ValidatePermission = () => {
+export const ValidateEntry = () => {
   const tableheader = [
     {
       size: '160px',
@@ -21,7 +21,7 @@ export const ValidatePermission = () => {
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#77B0C8'
+      color: '#B0A3CC'
     },
     {
       size: '440px',
@@ -29,7 +29,7 @@ export const ValidatePermission = () => {
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#77B0C8'
+      color: '#B0A3CC'
     },
     {
       size: '100px',
@@ -37,7 +37,7 @@ export const ValidatePermission = () => {
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#77B0C8'
+      color: '#B0A3CC'
     }
   ]
 
@@ -49,7 +49,7 @@ export const ValidatePermission = () => {
         displayMd={tableheader[0].displayMd ? 'block' : 'none'}
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#1D7AA2">
+        <StyledH2 fontWeigth="600" color="#4F3C75">
           #001122
         </StyledH2>
       </StyledTableItem>
@@ -59,7 +59,7 @@ export const ValidatePermission = () => {
         displayMd={tableheader[1].displayMd ? 'block' : 'none'}
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#77B0C8">
+        <StyledH2 fontWeigth="600" color="#B0A3CC">
           Normal
         </StyledH2>
       </StyledTableItem>
@@ -72,7 +72,7 @@ export const ValidatePermission = () => {
       >
         <ButtonComponent
           to="/my-assistance"
-          background="#12B6C6"
+          background="#4F3C75"
           width="100px"
           height="40px"
           margin="0"
@@ -87,8 +87,8 @@ export const ValidatePermission = () => {
     <StyledContainer>
       <Navigation />
       <TableComponent
-        title="Validate Permissions"
-        titleColor="#1D7AA2"
+        title="Validate Entry"
+        titleColor="#4F3C75"
         tableheader={tableheader}
         tableContent={tableContent}
       />

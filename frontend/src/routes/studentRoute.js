@@ -1,6 +1,6 @@
-import { GetPermission } from '../pages/GetPermission'
-import { MyAssitance } from '../pages/MyAssitance'
-import { MyPermissions } from '../pages/MyPermissions'
+import { GetPermission } from '../pages/role.students/GetPermission'
+import { MyAssitance } from '../pages/role.students/MyAssistance'
+import { MyPermissions } from '../pages/role.students/MyPermissions'
 
 export const studentRoute = [
   {

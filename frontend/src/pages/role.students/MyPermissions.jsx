@@ -6,51 +6,49 @@ import {
   TableComponent,
   StyledTableItem,
   StyledTableItemExpand
-} from '../components/TableComponent'
+} from '../../components/TableComponent'
 
-import { Navigation } from '../layout/Navigation'
-import { StyledH2 } from '../styles/StyledH2'
-import { StyledSpan } from '../styles/StyledSpan'
-import { StyledSpacer } from '../styles/StyledSpacer'
-import { StyledContainer } from '../styles/StyledContainer'
-import { StyledStatusCube } from '../styles/StyledStatusCube'
+import { Navigation } from '../../layout/Navigation'
+import { StyledH2 } from '../../styles/StyledH2'
+import { StyledSpan } from '../../styles/StyledSpan'
+import { StyledSpacer } from '../../styles/StyledSpacer'
+import { StyledContainer } from '../../styles/StyledContainer'
 
-export const MyAssitance = () => {
+export const MyPermissions = () => {
   const [expanded, setExpanded] = useState(false)
-  const tableItemsSizes = ['74px', '340px', '240px', '100px', '24px']
 
   const tableheader = [
     {
-      size: '74px',
-      title: 'Status',
-      display: true,
-      displayMd: true,
-      displaySm: true,
-      color: '#B0A3CC'
-    },
-    {
-      size: '330px',
-      title: 'Event',
-      display: true,
-      displayMd: true,
-      displaySm: true,
-      color: '#B0A3CC'
-    },
-    {
-      size: '250px',
-      title: 'Monitor',
-      display: true,
-      displayMd: false,
-      displaySm: false,
-      color: '#B0A3CC'
-    },
-    {
       size: '100px',
+      title: 'Type',
+      display: true,
+      displayMd: true,
+      displaySm: true,
+      color: '#ff9e7a'
+    },
+    {
+      size: '300px',
+      title: 'Place',
+      display: true,
+      displayMd: true,
+      displaySm: true,
+      color: '#ff9e7a'
+    },
+    {
+      size: '180px',
       title: 'Date',
       display: true,
       displayMd: true,
       displaySm: false,
-      color: '#B0A3CC'
+      color: '#ff9e7a'
+    },
+    {
+      size: '180px',
+      title: 'Out / Entry',
+      display: true,
+      displayMd: false,
+      displaySm: false,
+      color: '#ff9e7a'
     }
   ]
 
@@ -62,7 +60,9 @@ export const MyAssitance = () => {
         displayMd={tableheader[0].displayMd ? 'block' : 'none'}
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
-        <StyledStatusCube background="#F45953" />
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+          Normal
+        </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
         width={tableheader[1].size}
@@ -70,7 +70,7 @@ export const MyAssitance = () => {
         displayMd={tableheader[1].displayMd ? 'block' : 'none'}
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#4F3C75">
+        <StyledH2 fontWeigth="600" color="#FB7140">
           Culto Despertino
         </StyledH2>
       </StyledTableItem>
@@ -80,8 +80,8 @@ export const MyAssitance = () => {
         displayMd={tableheader[2].displayMd ? 'block' : 'none'}
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#4F3C75">
-          Paco Pedro de la mar
+        <StyledH2 fontWeigth="600" color="#FB7140">
+          NOV 08 - 2019
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -90,8 +90,8 @@ export const MyAssitance = () => {
         displayMd={tableheader[3].displayMd ? 'block' : 'none'}
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
-          NOV 08 - 28
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+          4:00 pm / 6:00 pm
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -111,22 +111,26 @@ export const MyAssitance = () => {
 
   const tableExpand = expanded && (
     <StyledTableItemExpand paddingLerft={tableheader[0].size}>
-      <StyledTableItem displayMd="none" displaySm="flex">
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
-          {tableheader[3].title}
+      <StyledTableItem
+        width={tableheader[3].size}
+        displayMd="none"
+        displaySm="flex"
+      >
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+          {tableheader[2].title}
         </StyledSpan>
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
-          NOV 08 - 28
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+          NOV 08 - 2019
         </StyledSpan>
-
         <StyledSpacer height="28px" />
       </StyledTableItem>
-      <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
-        {tableheader[2].title}
+
+      <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+        {tableheader[3].title}
       </StyledSpan>
-      <StyledH2 fontWeigth="600" color="#4F3C75">
-        Paco Pedro de la mar
-      </StyledH2>
+      <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+        4:00 pm / 6:00 pm
+      </StyledSpan>
     </StyledTableItemExpand>
   )
 
@@ -134,9 +138,8 @@ export const MyAssitance = () => {
     <StyledContainer>
       <Navigation />
       <TableComponent
-        title="My Assistance"
-        titleColor="#4F3C75"
-        tableItemsSizes={tableItemsSizes}
+        title="My Permissions"
+        titleColor="#FB7140"
         tableheader={tableheader}
         tableContent={tableContent}
         tableExpand={tableExpand}
