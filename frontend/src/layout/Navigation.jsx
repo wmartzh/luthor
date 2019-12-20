@@ -7,6 +7,7 @@ import { LinkComponent } from '../components/LinkComponent'
 
 export const Navigation = () => {
   const [selectMenu, setSelectMenu] = useState(false)
+
   const StyeledHeader = styled.header`
     width: 100%;
     height: 66px;
