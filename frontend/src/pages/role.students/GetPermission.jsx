@@ -8,19 +8,21 @@ import MenuItem from '@material-ui/core/es/MenuItem'
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
-import { statusColor } from '../constants/statusColor'
-import { Navigation } from '../layout/Navigation'
-import { ButtonComponent } from '../components/ButtonComponent'
-import { LinkComponent } from '../components/LinkComponent'
+import { userStatusColor } from '../../constants/statusColor'
+import { Navigation } from '../../layout/Navigation'
+import { ButtonComponent } from '../../components/ButtonComponent'
+import { LinkComponent } from '../../components/LinkComponent'
 
-import { StyledContainer } from '../styles/StyledContainer'
-import { StyledSpacer } from '../styles/StyledSpacer'
-import { StyledStatusBar } from '../styles/StyledStatusBar'
-import { StyledCard } from '../styles/StyledCard'
-import { StyledH1 } from '../styles/StyledH1'
-import { StyledBackButton } from '../styles/StyledBackButton'
+import { StyledContainer } from '../../styles/StyledContainer'
+import { StyledSpacer } from '../../styles/StyledSpacer'
+import { StyledStatusBar } from '../../styles/StyledStatusBar'
+import { StyledCard } from '../../styles/StyledCard'
+import { StyledH1 } from '../../styles/StyledH1'
+import { StyledBackButton } from '../../styles/StyledBackButton'
 
-export const GetPermission = () => {
+export const GetPermission = ({ user }) => {
+  const { status } = user
+
   const [type, setType] = useState('')
   const [place, setPlace] = useState('')
 
@@ -82,7 +84,7 @@ export const GetPermission = () => {
         <StyledSpacer height="10px" />
       </StyledCard>
       <StyledStatusBar
-        background={statusColor.allow}
+        background={userStatusColor(status)}
         width="340px"
         margin="auto"
       />

@@ -1,27 +1,49 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ThemeProvider } from './context/themeColor'
-import { Dashboard } from './pages/Dashboard'
 import { Login } from './pages/Login'
-import { GetPermission } from './pages/GetPermission'
 
 import { GlobalStyle } from './styles/GlobalStyle'
-import { MyAssitance } from './pages/MyAssitance'
-import { MyPermissions } from './pages/MyPermissions'
+import { studentRoute, guardRoute, globalRoutes } from './routes'
+import { UserProvider } from './context/UserContext'
+import { useUser } from './hooks/useUser'
 
 export const App = () => {
+  const { user } = useUser()
+
   return (
-    <ThemeProvider>
-      <Router>
-        <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/" component={Dashboard} />
-          <Route exact path="/get-permission" component={GetPermission} />
-          <Route exact path="/my-assistance" component={MyAssitance} />
-          <Route exact path="/my-permissions" component={MyPermissions} />
-        </Switch>
-      </Router>
-      <GlobalStyle />
-    </ThemeProvider>
+    <UserProvider>
+      <ThemeProvider>
+        <Router>
+          <Switch>
+            <Route exact path="/login" component={Login} />
+
+            {globalRoutes.map(({ path, component: Component }) => (
+              <Route
+                exact
+                path={path}
+                component={props => <Component user={user} />}
+                key={path}
+              />
+            ))}
+            {user.role === '0' &&
+              studentRoute.map(({ path, component: Component }) => (
+                <Route
+                  exact
+                  path={path}
+                  component={props => <Component user={user} />}
+                  key={path}
+                />
+              ))}
+
+            {user.role === '4' &&
+              guardRoute.map(({ path, component: Component }) => (
+                <Route exact path={path} component={Component} key={path} />
+              ))}
+          </Switch>
+        </Router>
+        <GlobalStyle />
+      </ThemeProvider>
+    </UserProvider>
   )
 }

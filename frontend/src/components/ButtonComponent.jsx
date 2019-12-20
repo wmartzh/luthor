@@ -4,18 +4,21 @@ import { LinkComponent } from './LinkComponent'
 
 export const ButtonComponent = ({
   children,
+  disable,
   background,
   color = '#fff',
   width = '100%',
+  height = '48px',
+  margin = '10px',
   to
 }) => {
   const StyledButton = styled.div`
     width: ${props => props.width};
-    height: 48px;
+    height: ${props => props.height};
     background: ${props => props.background};
     border-radius: 5px;
     color: ${props => props.color};
-    margin: 10px;
+    margin: ${props => props.margin};
     display: flex;
     align-items: center;
     span {
@@ -24,11 +27,17 @@ export const ButtonComponent = ({
       margin: auto;
     }
   `
-  return (
-    <LinkComponent to={to}>
-      <StyledButton background={background} color={color} width={width}>
-        <span>{children}</span>
-      </StyledButton>
-    </LinkComponent>
+  const button = (
+    <StyledButton
+      background={disable ? '#999' : background}
+      color={disable ? '#333' : color}
+      width={width}
+      height={height}
+      margin={margin}
+    >
+      <span>{children}</span>
+    </StyledButton>
   )
+
+  return disable ? button : <LinkComponent to={to}>{button}</LinkComponent>
 }
