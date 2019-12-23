@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Weekend;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class WeekendController extends Controller
 {
     /**
@@ -37,31 +37,53 @@ class WeekendController extends Controller
     {
         //
         $vD = $request->validate([
-            'user_code'=> 'required',
+            'user_code',
             'out_date_time' => 'required',
             'in_date_time' => 'required',
             'location' => 'required'
         ]);
         try{
 
+            if(Auth::check()){
+
+                $user_auth = Auth::user();
+                $usermodel = \App\User::findOrFail($user_auth->id);
+                if($usermodel['rol_id'] != 2 && $usermodel['rol_id']!=3){
+                    return response()->json(['error'=>'user can not make a request']);
+                }else{
+                    if($usermodel['status'] == 'penalized'){
+                        return response()->json(['message'=> 'Can not process, the user is penalized']);
+                    }else{
+                        $vD['user_code']=$usermodel['code'];
+                        $search = \App\Weekend::where([['user_code',$usermodel['code']],['state','in process']])->exists();
+
+                        if(!$search){
+
+                            \App\Weekend::create($vD);
+                            return response()->json(['message'=>'Permission requested']);
+                        }
+                        else{
+                            return response()->json(['message'=>'User already has a request in process']);
+                        }
+                    }
+
+
+                }
+
+            }
+
+
+
+
+
             //Search user
-            $res = \App\User::select()->where('code',$vD['user_code'])->get();
-            $user = $res->toArray();
-            $usermodel = \App\User::findOrFail($user[0]['id']);
+
+
 
             if($user[0]['status']=='penalized'){
                 return response()->json(['message'=> 'Can not process, the user is penalized']);
             }else{
-                $search = \App\Weekend::where([['user_code',$vD['user_code']],['state','in process']])->exists();
 
-                if(!$search){
-
-                    \App\Weekend::create($vD);
-                    return response()->json(['message'=>'Permission requested']);
-                }
-                else{
-                    return response()->json(['message'=>'User already has a request in process']);
-                }
 
             }
 

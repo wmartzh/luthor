@@ -33,6 +33,20 @@ Route::post('/logout','Api\AuthController@logout')->middleware('auth:api');
         Route::put('/','PermissionsController@update');
         Route::delete('/{id}','PermissionsController@destroy');
     });
+
+    ///Weekend Routes
+    Route::group(['prefix'  =>  '/weekends'], function () {
+        Route::get('/','WeekendController@index');
+        Route::get('/{id}','WeekendController@show');
+        Route::post('/','WeekendController@store');
+        Route::put('/','WeekendController@update');
+        Route::put('/{code}','WeekendController@recycle');
+        Route::delete('/{id}','WeekendController@destroy');
+    });
+
+
+
+
  });
 
 ///Event Routes
@@ -75,15 +89,7 @@ Route::group(['prefix'  =>  '/assistance'], function () {
 });
 
 
-///Weekend Routes
-Route::group(['prefix'  =>  '/weekends'], function () {
-    Route::get('/','WeekendController@index');
-    Route::get('/{id}','WeekendController@show');
-    Route::post('/','WeekendController@store');
-    Route::put('/','WeekendController@update');
-    Route::put('/{code}','WeekendController@recycle');
-    Route::delete('/{id}','WeekendController@destroy');
-});
+
 // });
 
 
