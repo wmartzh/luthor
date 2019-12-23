@@ -13,13 +13,14 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 //Register and login routes
 Route::post('/register','Api\AuthController@register');
 Route::post('/login','Api\AuthController@login');
+Route::post('/logout','Api\AuthController@logout')->middleware('auth:api');
 
 
 
@@ -67,13 +68,10 @@ Route::group(['prefix'  =>  '/alerts'], function () {
 
 ///Assitance Routes
 Route::group(['prefix'  =>  '/assistance'], function () {
-    Route::get('/','AssitanceController@index');
-    Route::get('/{id}','AssitanceController@show');
-    Route::post('/','AssitanceController@store');
-    Route::put('/{assitance}','AssitanceController@update');
-    Route::delete('/{id}','AssitanceController@destroy');
+    Route::post('/','AssistanceController@store')->middleware('auth:api');
+
 });
-// });
+
 
 ///Weekend Routes
 Route::group(['prefix'  =>  '/weekends'], function () {
@@ -87,4 +85,4 @@ Route::group(['prefix'  =>  '/weekends'], function () {
 // });
 
 
-Route::get('test/{event}','EventController@index');
+Route::get('test/','TestsController@test')->middleware('auth:api');

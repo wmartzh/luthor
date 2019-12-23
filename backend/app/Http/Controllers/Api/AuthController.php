@@ -6,6 +6,9 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use League\Flysystem\Exception;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Passport\HasApiTokens;
+
 
 
 class AuthController extends Controller
@@ -22,9 +25,9 @@ class AuthController extends Controller
         $validateData['password'] = bcrypt($request->password);
         $user =  User::create($validateData);
 
-        $accessToken = $user->createToken('authToken')->accessToken;
 
-        return response(['user'=>$user, 'access_token'=>$accessToken]);
+
+        return response(['user'=>$user]);
     }
 
    public function login(Request $request){
@@ -35,17 +38,36 @@ class AuthController extends Controller
         ]);
 
         try{
-            if(!auth()->attempt($loginData)){
+            if(!Auth::attempt($loginData)){
                 return response(['message'=>'Invalid Credentials']);
             }
+            $user = Auth::user();
+            $tokenResult = $user->createToken('Personal Access')-> accessToken;
 
-            $accessToken = auth()->user()->createToken('authToken')->accessToken;
-
-            return response(['user' => auth()->user(), 'access_token'=>$accessToken]);
+            return response(['access_token'=> $tokenResult]);
         }
         catch(Exception $e){
 
             echo ($e);
         }
+    }
+    public function logout(Request $request){
+        if(Auth::check()){
+
+            $user = Auth::user();
+            $user->token()->revoke();
+
+            return response()->json([
+                'message' => 'Logged out'
+            ]);
+        }else{
+            return response()->json([
+                'message' => 'User not exist'
+            ]);
+
+        }
+
+
+
     }
 }

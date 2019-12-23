@@ -35,12 +35,12 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $vD = request()->validate([
+        $data = request()->validate([
             'title'=> 'required',
             'start_time'=> 'required'
         ]);
         try{
-            \App\Event::create($vD);
+            \App\Event::create($data);
 
             return response()->json(['response'=> 201]);
 

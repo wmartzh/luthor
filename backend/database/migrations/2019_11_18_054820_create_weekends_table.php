@@ -17,11 +17,13 @@ class CreateWeekendsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_code');
             $table->enum('state',['in process', 'aproved','rejected','deprecated'])->default('in process');
+            $table->boolean('check_exit',[]);
             $table->enum('preceptor',['aproved','rejected','no-def',])->default('no-def');
             $table->enum('vicerector',['aproved','rejected','no-def'])->default('no-def');
             $table->dateTimeTz('out_date_time');
             $table->dateTimeTz('in_date_time');
             $table->string('location')->nullable();
+            $table->string('message')->nullable();
             $table->timestamps();
 
             //Relations

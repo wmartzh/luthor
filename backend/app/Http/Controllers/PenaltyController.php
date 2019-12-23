@@ -48,7 +48,10 @@ class PenaltyController extends Controller
             if($user[0]['status']=='penalized'){
                 return response()->json(['message'=>'the user now is penalized']);
             }else if($user[0]['status'] == 'out'){
-                return response()->json(['message'=>'the user now is out of the campus']);
+                $usermodel->update(['status'=>'penalized']);
+                $vD['active'] = true;
+                \App\Penalty::create($vD);
+                return response()->json(['message'=>'user penalized']);
 
             }else if($user[0]['status']=='in' || $user[0]['status'] == 'out'){
 

@@ -68,10 +68,6 @@ class WeekendController extends Controller
 
 
 
-
-
-
-
         }
         catch(Exception $e){
             return response()->json(['response'=> 400]);
@@ -151,7 +147,7 @@ class WeekendController extends Controller
         $weekendModel = \App\Weekend::findOrFail($weekendInf[0]['id']);
         $now = date("Y-m-d H:i:s");
 
-        if($now >$weekendInf[0]['in_date_time']){
+        if($now >$weekendInf[0]['in_date_time']){ //seach weekends out of date
             $weekendModel->update(['state'=>'deprecated']);
             return response()->json(['message'=>'Regs recycled']);
         }else{

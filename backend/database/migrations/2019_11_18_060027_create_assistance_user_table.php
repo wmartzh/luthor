@@ -26,7 +26,7 @@ class CreateAssistanceUserTable extends Migration
                     ->onDelete('cascade');
             $table->foreign('assistance_id')
                     ->references('id')
-                    ->on('assitances')
+                    ->on('assistances')
                     ->onDelete('cascade');
 
         });
