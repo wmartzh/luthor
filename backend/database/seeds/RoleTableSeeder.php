@@ -35,21 +35,6 @@ class RoleTableSeeder extends Seeder
             'name' => 'rector'
         ]);
 
-        //User
 
-        \App\User::create([
-            'nickname' => 'paquito',
-            'rol_id' => '2',
-            'code'=>'160049',
-            'email' => 'paquito@mail.com',
-            'password' => 'secret'
-        ]);
-        \App\User::create([
-            'nickname' => 'juanito',
-            'rol_id' => '2',
-            'code'=>'160050',
-            'email' => 'juanito@mail.com',
-            'password' => 'secret'
-        ]);
     }
 }

@@ -23,8 +23,17 @@ Route::post('/login','Api\AuthController@login');
 Route::post('/logout','Api\AuthController@logout')->middleware('auth:api');
 
 
+ Route::group(['middleware'  =>  ['auth:api']], function () {
 
-// Route::group(['middleware'  =>  ['auth:api']], function () {
+    ///Permissions Routes
+    Route::group(['prefix'  =>  '/permissions'], function () {
+        Route::get('/','PermissionsController@index');
+        Route::get('/{code}','PermissionsController@show');
+        Route::post('/','PermissionsController@store');
+        Route::put('/','PermissionsController@update');
+        Route::delete('/{id}','PermissionsController@destroy');
+    });
+ });
 
 ///Event Routes
     Route::group(['prefix'  =>  '/events'], function () {
@@ -46,15 +55,8 @@ Route::group(['prefix'  =>  '/penalties'], function () {
 });
 // });
 
-///Permissions Routes
-Route::group(['prefix'  =>  '/permissions'], function () {
-    Route::get('/','PermissionsController@index');
-    Route::get('/{code}','PermissionsController@show');
-    Route::post('/','PermissionsController@store');
-    Route::put('/','PermissionsController@update');
-    Route::delete('/{id}','PermissionsController@destroy');
-});
-// });
+
+
 
 ///Alterts Routes
 Route::group(['prefix'  =>  '/alerts'], function () {
@@ -66,7 +68,7 @@ Route::group(['prefix'  =>  '/alerts'], function () {
 });
 // });
 
-///Assitance Routes
+///Assitances Routes
 Route::group(['prefix'  =>  '/assistance'], function () {
     Route::post('/','AssistanceController@store')->middleware('auth:api');
 
