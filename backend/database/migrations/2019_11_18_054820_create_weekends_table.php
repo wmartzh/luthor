@@ -16,10 +16,10 @@ class CreateWeekendsTable extends Migration
         Schema::create('weekends', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_code');
-            $table->enum('state',['in process', 'aproved','rejected','deprecated'])->default('in process');
+            $table->enum('state',['in process', 'approved','rejected','deprecated'])->default('in process');
             $table->boolean('check_exit',[true,false])->default(false);
-            $table->enum('preceptor',['aproved','rejected','no-def',])->default('no-def');
-            $table->enum('vicerector',['aproved','rejected','no-def'])->default('no-def');
+            $table->enum('preceptor',['approved','rejected','no-def',])->default('no-def');
+            $table->enum('vicerector',['approved','rejected','no-def'])->default('no-def');
             $table->dateTimeTz('out_date_time');
             $table->dateTimeTz('in_date_time');
             $table->string('location')->nullable();

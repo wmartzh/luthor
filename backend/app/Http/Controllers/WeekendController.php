@@ -73,9 +73,6 @@ class WeekendController extends Controller
             }
 
 
-
-
-
             //Search user
 
 
@@ -126,21 +123,36 @@ class WeekendController extends Controller
         //
         $data = $request->validate([
             'user_code'=> 'required',
-            'state'=> 'required'
+            'state',
+            'preceptor',
+            'vicerector',
+            'check_exit'
         ]);
 
         try{
+            $auth_user = Auth::user();
 
-            $weekendInf = \App\Weekend::select()->where([['user_code',$data['user_code']],['state','in process']])->get();
-            $weekendModel = \App\Weekend::findOrFail($weekendInf[0]['id']);
-            $weekendModel->update($data);
 
-            if($data['state']=='aproved'){
-                return response()-json(['message'=>'Request approved']);
-            }else if($data['state']=='rejected'){
-                return response()-json(['message'=>'Request denied']);
+            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){
+                return response()->json(['message'=>'user Unauthorized']);
+            }else if($auth_user->rol_id == 4){
+                //Preceptor
+                $check_state = array_key_exists('state',$data);
+                dd($check_state);
+                if($check_state){
+
+                    $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code'],['state','in process']]])->get()->first();
+                    dd($weekendModel['state']);
+
+                }else{
+                    return response()->json(['message'=>'The given data was invalid',
+                                            'errors' => [
+                                                'state' => 'the state is required'
+                                            ]
+                    ]);
+                }
+
             }
-
 
 
         }catch(Exception $e){
@@ -177,6 +189,18 @@ class WeekendController extends Controller
         }
 
 
+
+    }
+    private function verifyData( Array $weekendModel){
+
+        if($weekendModel['vicerector'] == 'rejected' && $weekendModel['preceptor'] == 'approved'){
+            return false;
+        }
+        else if($weekendModel['vicerector']== 'approved' && $weekendModel['prceptor']=='rejected'){
+            return  false;
+        }else if($weekendModel['vicerector']== 'approved' && $weekendModel['prceptor']=='approved'){
+            return true;
+        }
 
     }
 }

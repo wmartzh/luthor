@@ -127,10 +127,10 @@ class PermissionsController extends Controller
                 $data['entry_date_time'] = date("Y-m-d H:i:s");
                 $data['status']= 'deprecated';
                 //Search active permissions
-                $permission = \App\Permissions::select()->where([['code_user',$data['code_user']],['status','active']])->get();
+                $permission = \App\Permissions::select()->where([['code_user',$data['user_code']],['status','active']])->get();
                 $permissionModel = \App\Permissions::findOrFail($permission[0]['id']);            //Search user
                 //Search user
-                $res = User::select()->where('code',$data['code_user'])->get();
+                $res = User::select()->where('code',$data['user_code'])->get();
                 $user = $res->toArray();
                 $usermodel = \App\User::findOrFail($user[0]['id']);
                 //Update user and permissions status
