@@ -40,7 +40,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
         Route::get('/{id}','WeekendController@show');
         Route::post('/','WeekendController@store');
         Route::put('/','WeekendController@update');
-        Route::put('/{code}','WeekendController@recycle');
+        Route::put('/recycle/','WeekendController@recycle');
         Route::delete('/{id}','WeekendController@destroy');
     });
 

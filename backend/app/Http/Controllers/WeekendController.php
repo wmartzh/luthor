@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Weekend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 class WeekendController extends Controller
 {
     /**
@@ -122,38 +123,196 @@ class WeekendController extends Controller
     {
         //
         $data = $request->validate([
-            'user_code'=> 'required',
-            'state',
-            'preceptor',
-            'vicerector',
-            'check_exit'
+            'user_code'=> 'nullable',
+            'state' =>'nullable',
+            'preceptor'=> 'nullable',
+            'vicerector' => 'nullable',
+            'check_exit' => 'nullable',
+            'message' => 'nullable'
         ]);
 
         try{
-            $auth_user = Auth::user();
+            $auth_user = Auth::user(); //verify auth
+            //chek request
 
 
-            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){
-                return response()->json(['message'=>'user Unauthorized']);
-            }else if($auth_user->rol_id == 4){
-                //Preceptor
-                $check_state = array_key_exists('state',$data);
-                dd($check_state);
-                if($check_state){
-
-                    $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code'],['state','in process']]])->get()->first();
-                    dd($weekendModel['state']);
-
-                }else{
-                    return response()->json(['message'=>'The given data was invalid',
-                                            'errors' => [
-                                                'state' => 'the state is required'
-                                            ]
-                    ]);
-                }
-
+            if(array_key_exists('user_code',$data)){
+                $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code'],['state','in process']]])->get()->first();
+            }else{
+                $weekendModel = \App\Weekend::select()->where([['user_code',$auth_user->code,['state','in process']]])->get()->first();
             }
 
+            $mdl = \App\Weekend::findOrFail($weekendModel['id']);
+
+                //Check if the auth user is a student
+                if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){//Student access
+
+                    if($weekendModel['state'] == 'approved'){
+                        return response(['message'=>'The last request was approved'],202);
+                    }else if($weekendModel['state'] == 'rejected'){
+                        return response(['message'=>'The last request was rejected'],202);
+                    }else if($weekendModel['state'] == 'in process'){
+                        if($weekendModel['vicerector']=='approved' && $weekendModel['preceptor']=='approved'){ //Check requirements
+                            $data['state'] = 'approved';
+                            $mdl->update($data);
+                            return response(['message'=>'updated'],202);
+                        }
+                        else if($weekendModel['vicerector']=='approved' && $weekendModel['preceptor']=='no-def' || $weekendModel['vicerector']=='no-def' && $weekendModel['preceptor']=='approved'){
+                            return response(['message'=>'Request in process'],202);
+                        }
+
+                        else if( $weekendModel['vicerector']=='rejected' && $weekendModel['preceptor']='rejected'){
+                            $data['state'] = 'rejected';
+                            $mdl->update($data);
+                            return response(['message'=>'updated'],202);
+                        }
+                    }else{
+                        return response([
+                            'message'=>'The given data was invalid',
+                            'errors' => [
+                                'state' => 'the state is invalid'
+                            ]
+                            ],400);
+                    }
+                }else if($auth_user->rol_id == 4){//preceptor access
+
+                    //Preceptor
+
+                    $check_state = array_key_exists('preceptor',$data);
+
+                    if($check_state){
+                        //evaluate requests already processed
+
+                        if($weekendModel['preceptor']=='rejected'){
+                            return response([
+                                'message'=>'Not found',
+                                'errors' => [
+                                    'preceptor' => 'user has a rejected request'
+                                ]
+                                ],404);
+                        }else if($weekendModel['preceptor']=='approved'){
+                            return response([
+                                'message'=>'Not found',
+                                'errors' => [
+                                    'preceptor' => 'user has a approved request'
+                                ]
+                                ],404);
+
+                        }else if($weekendModel['preceptor']=='no-def'){
+
+                            if($data['preceptor']=='approved'){ //Evaluate if the state is correct typed
+                                $mdl->update($data);
+                                return response(['message'=>'Acepted'],202);
+                            }else if($data['preceptor']=='rejected'){
+                                $mdl->update($data);
+                                return response(['message'=>'Rejected'],202);
+                            }else{
+                                return response([
+                                    'message'=>'The given data was invalid',
+                                    'errors' => [
+                                        'state' => 'the state is invalid'
+                                    ]
+                                    ],400);
+                            }
+
+                        }
+
+
+                    }else{
+                        return response(['message'=>'The given data was invalid',
+                                                'errors' => [
+                                                    'preceptor' => 'preceptor value is required'
+                                                ]
+                                                ],400);
+                    }
+
+                } else if($auth_user->rol_id == 6){ //vicerrector access
+
+                    ///Vicerector
+
+                    $check_state = array_key_exists('vicerector',$data);
+
+                    if($check_state){
+                        //evaluate requests already processed
+
+                        if($weekendModel['vicerector']=='rejected'){
+                            return response([
+                                'message'=>'Not found',
+                                'errors' => [
+                                    'preceptor' => 'user has a rejected request'
+                                ]
+                                ],404);
+                        }else if($weekendModel['vicerector']=='approved'){
+                            return response([
+                                'message'=>'Not found',
+                                'errors' => [
+                                    'preceptor' => 'user has a approved request'
+                                ]
+                                ],404);
+
+                        }else if($weekendModel['vicerector']=='no-def'){
+
+                            if($data['vicerector']=='approved'){ //Evaluate if the state is correct typed
+                                $mdl->update($data);
+                                return response(['message'=>'Acepted'],202);
+                            }else if($data['vicerector']=='rejected'){
+                                $mdl->update($data);
+                                return response(['message'=>'Rejected'],202);
+                            }else{
+                                return response([
+                                    'message'=>'The given data was invalid',
+                                    'errors' => [
+                                        'state' => 'the state is invalid'
+                                    ]
+                                    ],400);
+                            }
+
+                        }
+
+
+                    }else{
+                        return response(['message'=>'The given data was invalid',
+                                                'errors' => [
+                                                    'vicerector' => 'vicerector value is required'
+                                                ]
+                                                ],400);
+                    }
+            }else if($auth_user->rol_id == 5){ //guard access
+
+                if(array_key_exists('check_exit',$data)){
+                    if($weekendModel['state']== 'approved'){
+
+                        if($weekendModel['check_exit'] ==  true){
+
+                            return response(['message'=>'user alredy exit']);
+
+                        }else if($weekendModel['check_exit'] ==  false){
+                            $data['check_exit'] == true;
+                            $mdl->update($data);
+                            return response(['message'=>'Exit checked'],202);
+                        }
+
+
+
+                    }else{
+                        return response(['message'=>'Requirements not satisfied ',
+                                                    'errors' => [
+                                                        'state' => 'user has not approved requests'
+                                                    ]
+                                                    ],304);
+
+                    }
+
+                }else{
+                    return response(['message'=>'The given data was invalid',
+                                                'errors' => [
+                                                    'check_exit' => 'check_exit value is required'
+                                                ]
+                                                ],400);
+                }
+
+
+            }
 
         }catch(Exception $e){
             return response()->json(['message'=>'something was wrong'],$status=400);
@@ -175,32 +334,32 @@ class WeekendController extends Controller
         return response()->json(['message'=>'OK'],$status=402);
     }
 
-    public function recycle($code)
+    public function recycle()
     {
-        $weekendInf = \App\Weekend::select()->where([['user_code',$code],['state','aproved']])->get();
-        $weekendModel = \App\Weekend::findOrFail($weekendInf[0]['id']);
-        $now = date("Y-m-d H:i:s");
+        $auth_user = Auth::user();
 
-        if($now >$weekendInf[0]['in_date_time']){ //seach weekends out of date
-            $weekendModel->update(['state'=>'deprecated']);
-            return response()->json(['message'=>'Regs recycled']);
+        if($auth_user->rol_id == 2 || $auth_user->rol_id ==3){
+            $weekendInf = \App\Weekend::select()->where([['user_code',$auth_user->code],['state','approved']])->get()->first();
+            if($weekendInf == null){
+                return response(['message'=>'Available weekends does not exist'],404);
+            }else{
+                $weekendModel = \App\Weekend::findOrFail($weekendInf['id']);
+                $now = date("Y-m-d H:i:s");
+
+                if($now >$weekendInf[0]['in_date_time']){ //seach weekends out of date
+                    $weekendModel->update(['state'=>'deprecated']);
+                    return response(['message'=>'Regs recycled']);
+                }else{
+                    return response(['message'=>'Thers is nothing to recycle']);
+                }
+            }
+
         }else{
-            return response()->json(['message'=>'Thers is nothing to recycle']);
+            return response(['message'=>'user is not a student',404]);
         }
 
 
 
     }
-    private function verifyData( Array $weekendModel){
 
-        if($weekendModel['vicerector'] == 'rejected' && $weekendModel['preceptor'] == 'approved'){
-            return false;
-        }
-        else if($weekendModel['vicerector']== 'approved' && $weekendModel['prceptor']=='rejected'){
-            return  false;
-        }else if($weekendModel['vicerector']== 'approved' && $weekendModel['prceptor']=='approved'){
-            return true;
-        }
-
-    }
 }
