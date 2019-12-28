@@ -17,11 +17,33 @@ class PermissionsController extends Controller
     {
         //
         try{
-            $dta = \App\Permissions::all();
 
-            return response()->json(['data'=>$dta,'response'=>200]);
+            if(Auth::check()){
+
+                $user_auth = Auth::user();
+
+                if($user_auth->rol_id == 2 || $user_auth->rol_id == 3 ){ //student access
+                    $p_data = \App\Permissions::select('status',
+                    'output_date_time',
+                    'entry_date_time',
+                    'date',
+                    'place')->where('code_user',$user_auth->code)->get();
+                    return response(['data'=>$p_data],200);
+                }else if($user_auth->rol_id == 5){
+                    $p_data = \App\Permissions::select('code_user','status')->where('status','active')->get();
+                    return response(['data'=>$p_data],200);
+                }else {
+                    $p_data = \App\Permissions::all();
+                    return response(['data'=>$p_data],200);
+
+                }
+            }else{
+                return response(['message'=>'Unauthenticated'],400);
+
+            }
+
         }catch(Exception $e){
-
+            return response($e,500);
         }
     }
 
@@ -127,12 +149,11 @@ class PermissionsController extends Controller
                 $data['entry_date_time'] = date("Y-m-d H:i:s");
                 $data['status']= 'deprecated';
                 //Search active permissions
-                $permission = \App\Permissions::select()->where([['code_user',$data['user_code']],['status','active']])->get();
-                $permissionModel = \App\Permissions::findOrFail($permission[0]['id']);            //Search user
+                $permission = \App\Permissions::select()->where([['code_user',$data['user_code']],['status','active']])->get()->first();
+                $permissionModel = \App\Permissions::findOrFail($permission['id']);            //Search user
                 //Search user
-                $res = User::select()->where('code',$data['user_code'])->get();
-                $user = $res->toArray();
-                $usermodel = \App\User::findOrFail($user[0]['id']);
+                $res = User::select()->where('code',$data['user_code'])->get()->first();
+                $usermodel = \App\User::findOrFail($res['id']);
                 //Update user and permissions status
                 $usermodel->update(['status'=>'in']);
                 $permissionModel->update($data);
