@@ -40,12 +40,12 @@ class AssistanceController extends Controller
             $user = Auth::user();
             if($user->rol_id ==3 || $user->rol_id == 4 || $user->rol_id ==6){
 
-                $data['monitor_id']= $user->id;
+                $data['monitor_id']= $user->id; // get user that check the assistance
                 date_default_timezone_set("America/Costa_Rica");
                 $data['time'] =  date('H:i:s');    //"06:17:00";
                 $extratime = 30;
                 $event = \App\Event::select()->where('id',$data['event_id'])->get()->first();
-               
+
                 $time_check = strtotime($event[0]['start_time'])+600;
                 $time_check2 = strtotime($event[0]['start_time'])+1000;
 

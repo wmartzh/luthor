@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Penalty;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class PenaltyController extends Controller
 {
     /**
@@ -33,7 +33,7 @@ class PenaltyController extends Controller
     public function store(Request $request)
     {
         //
-        $vD = request()->validate([
+        $data = request()->validate([
             'user_code'=> 'required',
             'active'
         ]);
@@ -41,30 +41,27 @@ class PenaltyController extends Controller
 
 
         try{
-            $res = \App\User::select()->where('code',$vD['user_code'])->get();
-            $user = $res->toArray();
-            $usermodel = \App\User::findOrFail($user[0]['id']);
 
-            if($user[0]['status']=='penalized'){
-                return response()->json(['message'=>'the user now is penalized']);
-            }else if($user[0]['status'] == 'out'){
-                $usermodel->update(['status'=>'penalized']);
-                $vD['active'] = true;
-                \App\Penalty::create($vD);
-                return response()->json(['message'=>'user penalized']);
+            $auth_user = Auth::user();
 
-            }else if($user[0]['status']=='in' || $user[0]['status'] == 'out'){
+            //check rol id --- only rector and preceptor can access
+            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 || $auth_user->rol_id == 5){
+                return response(['message'=>'user can not access'],401);
+            }else{
+                $req = \App\User::select()->where('code',$data['user_code'])->get()->first();
+                $student = \App\User::findOrFail($req['id']);
+                //Check if user is already penalized
 
-                $usermodel->update(['status'=>'penalized']);
-                $vD['active'] = true;
-                \App\Penalty::create($vD);
-                return response()->json(['message'=>'user penalized']);
+                if($student['status'] == 'penalized'){
+                    return response(['message'=>'user is already penalized'],409);
+                }else{
+                    $data['active']= true;
+                    $student->update(['status'=>'penalized']);
+                    \App\Penalty::create($data);
+                    return response(['message'=>'user penalized'],201);
+                }
 
             }
-
-
-
-
 
         }catch(Exception $e){
             return response()->json(['response'=> 400]);
@@ -105,28 +102,33 @@ class PenaltyController extends Controller
             'active'
         ]);
         try{
-            //get active penalties
-            $penalties = \App\Penalty::select()->where([['user_code',$data['user_code']],['active',true]])->get();
-            $penaltiesActive = $penalties->toArray();
 
-            if($penaltiesActive[0]['active']==false){ //check if active penalties exists
-                return response()->json(['message'=>'user has not active penalties']);
+            $auth_user = Auth::user();
 
-            }else if($penaltiesActive[0]['active']==true){
+            //check rol id --- only rector and preceptor can access
+            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 || $auth_user->rol_id == 5){
 
-                //obtain user and penalty info
-                $res = \App\User::select()->where('code',$data['user_code'])->get();
-                $user = $res->toArray();
-                $usermodel = \App\User::findOrFail($user[0]['id']);
-                $penalty = \App\Penalty::findOrFail($penaltiesActive[0]['id']);
+                return response(['message'=>'user cant access'],401);
+            }else{
+                $penalty_active = \App\Penalty::select()->where([['user_code',$data['user_code']],['active',true]])->get()->first();
+                if($penalty_active==null){
+                    return response(['message'=>'user has not active penalties'],404);
+                }else{
+                    $p_mdl = \App\Penalty::findOrFail($penalty_active['id']);
+                    $user = \App\User::select()->where('code',$data['user_code'])->get()->first();
+                    $u_mdl = \App\User::findOrFail($user['id']);
 
-                //update data
-                $data['active']=false;
-                $usermodel->update(['status','in']);
-                $penalty->update($data);
+                    //check if there are active penalties
+                    $data['active'] = false;
+                    $p_mdl->update($data);
+                    $u_mdl->update(['status'=>'in']);
+                    return response(['message'=>'Penalty removed'],200);
 
-                return response()->json(['message'=>'penalty removed']);
+
+                }
             }
+
+
 
 
         }catch(Exception $e){

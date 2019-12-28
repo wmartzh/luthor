@@ -43,9 +43,15 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
         Route::put('/recycle/','WeekendController@recycle');
         Route::delete('/{id}','WeekendController@destroy');
     });
+    ///Penalty Routes
+    Route::group(['prefix'  =>  '/penalties'], function () {
+        Route::get('/','PenaltyController@index');
+        Route::get('/{code}','PenaltyController@show');
+        Route::post('/','PenaltyController@store');
+        Route::put('/','PenaltyController@update');
+        Route::delete('/{id}','PenaltyController@destroy');
 
-
-
+    });
 
  });
 
@@ -62,15 +68,8 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
     });
 // });
 
-///Penalty Routes
-Route::group(['prefix'  =>  '/penalties'], function () {
-    Route::get('/','PenaltyController@index');
-    Route::get('/{code}','PenaltyController@show');
-    Route::post('/','PenaltyController@store');
-    Route::put('/','PenaltyController@update');
-    Route::delete('/{id}','PenaltyController@destroy');
-});
-// });
+
+
 
 
 
