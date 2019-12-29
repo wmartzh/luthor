@@ -3,29 +3,25 @@ import React from 'react'
 import userPhoto from '../assets/img/person_image.jpg'
 import { ButtonComponent } from '../components/ButtonComponent'
 import { userStatusColor } from '../constants/statusColor'
-import { Navigation } from '../layout/Navigation'
 import { StyledH1 } from '../styles/StyledH1'
 import { StyledSpan } from '../styles/StyledSpan'
 import { StyledCard } from '../styles/StyledCard'
 import { StyledSpacer } from '../styles/StyledSpacer'
 import { StyledAvatar } from '../styles/StyledAvatar'
-import { StyledContainer } from '../styles/StyledContainer'
 import { StyledStatusBar } from '../styles/StyledStatusBar'
 
 export const Dashboard = ({ user }) => {
   const { username, role, status, code } = user
 
   return (
-    <StyledContainer>
-      <Navigation />
-      <StyledSpacer height="54px" />
+    <>
       <StyledCard flexDirection="column" roundedTop width="340px">
         <StyledAvatar image={userPhoto} />
         <StyledH1 style={{ margin: '0 0 8px 0' }}>{username}</StyledH1>
         <StyledSpan>{code}</StyledSpan>
         <StyledSpacer height="20px" />
         {/* Student View */}
-        {role === '0' && (
+        {role === '1' && (
           <>
             <ButtonComponent
               to="/get-permission"
@@ -97,6 +93,6 @@ export const Dashboard = ({ user }) => {
         width="340px"
         margin="auto"
       />
-    </StyledContainer>
+    </>
   )
 }

@@ -26,7 +26,7 @@ export const App = () => {
                 key={path}
               />
             ))}
-            {user.role === '0' &&
+            {user.role === '1' &&
               studentRoute.map(({ path, component: Component }) => (
                 <Route
                   exact

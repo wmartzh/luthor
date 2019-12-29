@@ -1,10 +1,10 @@
 import { Settings } from '../pages/Settings'
-import { Dashboard } from '../pages/Dashboard'
+import { MainPage } from '../pages/MainPage'
 
 export const globalRoutes = [
   {
     path: '/',
-    component: Dashboard
+    component: MainPage
   },
   {
     path: '/settings',

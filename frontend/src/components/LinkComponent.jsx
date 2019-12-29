@@ -8,6 +8,9 @@ export const LinkComponent = ({ children, to, color = '#000' }) => {
       color: ${color};
       text-decoration: none;
     }
+    @media (max-width: 555px) {
+      width: 100%;
+    }
   `
   return (
     <StyledLink>
