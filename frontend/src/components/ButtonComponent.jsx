@@ -10,7 +10,8 @@ export const ButtonComponent = ({
   width = '100%',
   height = '48px',
   margin = '10px',
-  to
+  to = undefined,
+  click
 }) => {
   const StyledButton = styled.div`
     width: ${props => props.width};
@@ -21,6 +22,7 @@ export const ButtonComponent = ({
     margin: ${props => props.margin};
     display: flex;
     align-items: center;
+    cursor: pointer;
     span {
       font-size: 0.875rem;
       font-weight: 500;
@@ -39,5 +41,15 @@ export const ButtonComponent = ({
     </StyledButton>
   )
 
-  return disable ? button : <LinkComponent to={to}>{button}</LinkComponent>
+  return to !== undefined ? (
+    disable ? (
+      button
+    ) : (
+      <LinkComponent to={to}>{button}</LinkComponent>
+    )
+  ) : disable ? (
+    button
+  ) : (
+    <div onClick={click}>{button}</div>
+  )
 }

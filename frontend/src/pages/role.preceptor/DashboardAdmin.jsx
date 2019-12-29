@@ -57,7 +57,7 @@ export const DashboardAdmin = ({ user }) => {
   )
 
   return (
-    <StyledContainer maxWidth="490px">
+    <StyledContainer maxWidth="520px">
       {/* <Navigation />
       <StyledSpacer height="54px" /> */}
       <StyledSectionHeader>

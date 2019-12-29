@@ -25,6 +25,8 @@ export const GetPermission = ({ user }) => {
 
   const [type, setType] = useState('')
   const [place, setPlace] = useState('')
+  const [entry, setEntry] = useState('')
+  const [location, setLocation] = useState('')
 
   const inputLabel = useRef(null)
   const [labelWidth, setLabelWidth] = React.useState(0)
@@ -67,16 +69,46 @@ export const GetPermission = ({ user }) => {
             <MenuItem value={'weekends'}>Weekends</MenuItem>
           </Select>
         </FormControl>
-        <TextField
-          variant="outlined"
-          label="Place"
-          margin="normal"
-          fullWidth
-          id="place"
-          onChange={e => setPlace(e.target.value)}
-          value={place}
-          required
-        />
+
+        {type === 'normal' && (
+          <TextField
+            variant="outlined"
+            label="Place"
+            margin="normal"
+            fullWidth
+            id="place"
+            onChange={e => setPlace(e.target.value)}
+            value={place}
+            required
+          />
+        )}
+
+        {/* TODO: add the google maps api here!! */}
+        {type === 'weekends' && (
+          <>
+            <TextField
+              variant="outlined"
+              label="Entry Time"
+              margin="normal"
+              fullWidth
+              id="entry"
+              onChange={e => setEntry(e.target.value)}
+              value={entry}
+              required
+            />
+            <TextField
+              variant="outlined"
+              label="Location"
+              margin="normal"
+              fullWidth
+              id="location"
+              onChange={e => setLocation(e.target.value)}
+              value={location}
+              required
+            />
+          </>
+        )}
+
         <StyledSpacer height="40px" />
         <ButtonComponent to="/" background="#12B6C6" width="300px">
           Confirm

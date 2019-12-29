@@ -1,19 +1,22 @@
 import { GetPermission } from '../pages/role.students/GetPermission'
 import { MyAssitance } from '../pages/role.students/MyAssistance'
 import { MyPermissions } from '../pages/role.students/MyPermissions'
+import { StudentsOut } from '../pages/role.preceptor/StudentsOut'
+import { AssistanceDay } from '../pages/role.preceptor/AssistanceDay'
+import { Penalties } from '../pages/role.preceptor/Penalties'
 
 export const preceptorRoutes = [
   {
     path: '/students-out',
-    component: GetPermission
+    component: StudentsOut
   },
   {
     path: '/assistance-day',
-    component: MyAssitance
+    component: AssistanceDay
   },
   {
     path: '/total-penalties',
-    component: MyAssitance
+    component: Penalties
   },
   {
     path: '/create-events',
