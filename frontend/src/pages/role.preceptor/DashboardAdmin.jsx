@@ -6,17 +6,19 @@ import plusCircleIcon from '../../assets/svg/plus-circle.svg'
 import checkCircleIcon from '../../assets/svg/check-circle.svg'
 
 import userPhoto from '../../assets/img/person_image.jpg'
-import { StyledTypography } from '../../styles/StyledTypography'
 import { StyledCard } from '../../styles/StyledCard'
 import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledAvatar } from '../../styles/StyledAvatar'
 import { StyledContainer } from '../../styles/StyledContainer'
+import { StyledTypography } from '../../styles/StyledTypography'
 import { BigButtonComponent } from '../../components/BigButtonComponent'
 import { StyledItemsContainer } from '../../styles/StyledItemsContainer'
 import { IcoButtonComponent } from '../../components/IcoButtonComponent'
+import { preceptorRoutes } from '../../routes'
+// import { Navigation } from '../../layout/Navigation'
 
 export const DashboardAdmin = ({ user }) => {
-  const { username, role, code } = user
+  const { username, code } = user
 
   const StyledSectionHeader = styled.section`
     display: flex;
@@ -56,6 +58,8 @@ export const DashboardAdmin = ({ user }) => {
 
   return (
     <StyledContainer maxWidth="490px">
+      {/* <Navigation />
+      <StyledSpacer height="54px" /> */}
       <StyledSectionHeader>
         <div>
           <StyledTypography fontWeigth="800" color="#002D62" fontSize="26px">
@@ -87,19 +91,19 @@ export const DashboardAdmin = ({ user }) => {
             color="#4F3C75"
             label={labels('Students out', 'per day', '#4F3C75', '#B0A3CC')}
             content="24"
-            to="students-out"
+            to={preceptorRoutes[0].path}
           />
           <BigButtonComponent
             color="#12B6C6"
             label={labels('Assistance', 'per day', '#12B6C6', '#77B0C8')}
             content="88"
-            to="assistance-day"
+            to={preceptorRoutes[1].path}
           />
           <BigButtonComponent
             color="#FF004C"
             label={labels('Penalties', 'per month', '#FF004C', '#FF719B')}
             content="11"
-            to="total-penalties"
+            to={preceptorRoutes[2].path}
           />
         </div>
       </StyledItemsContainer>
@@ -109,19 +113,19 @@ export const DashboardAdmin = ({ user }) => {
             label="Events"
             color="#FBB13C"
             svg={plusCircleIcon}
-            to="/create-events"
+            to={preceptorRoutes[3].path}
           />
           <IcoButtonComponent
             label="Students"
             color="#007991"
             svg={usersIcon}
-            to="/students-list"
+            to={preceptorRoutes[4].path}
           />
           <IcoButtonComponent
             label="Validate Permissions"
             color="#A1C010"
             svg={checkCircleIcon}
-            to="/validate-permissions"
+            to={preceptorRoutes[5].path}
           />
         </div>
         <div>

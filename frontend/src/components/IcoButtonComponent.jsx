@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+
 import { LinkComponent } from './LinkComponent'
 import { StyledImageContainer } from '../styles/StyledImageContainer'
 

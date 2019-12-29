@@ -14,8 +14,10 @@ export const MainPage = ({ user }) => {
     <StyledContainer>
       <Navigation />
       <StyledSpacer height="54px" />
-      {role === '1' || role === '4' ? <Dashboard user={user} /> : null}
-      {role === '3' && <DashboardAdmin user={user} />}
+      {role === '2' || role === '3' || role === '5' ? (
+        <Dashboard user={user} />
+      ) : null}
+      {role === '4' || role === '6' ? <DashboardAdmin user={user} /> : null}
     </StyledContainer>
   )
 }
