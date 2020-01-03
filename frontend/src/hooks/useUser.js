@@ -4,7 +4,7 @@ import { useState } from 'react'
 export const useUser = () => {
   const [user, setUser] = useState({
     username: 'Sandra Wells',
-    role: '4',
+    role: '2',
     status: 'in',
     code: '#202066'
   })

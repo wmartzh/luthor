@@ -10,11 +10,13 @@ import {
 } from '../routes'
 
 import { Login } from '../pages/Login'
+import { ToTest } from '../layout/ToTEst'
 
 export const RouterHelper = ({ user }) => {
   return (
     <>
       <Route exact path="/login" component={Login} />
+      <Route exact path="/test" component={ToTest} />
       {globalRoutes.map(({ path, component: Component }) => (
         <Route
           exact
