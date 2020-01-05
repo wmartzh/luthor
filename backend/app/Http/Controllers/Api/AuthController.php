@@ -39,12 +39,17 @@ class AuthController extends Controller
 
         try{
             if(!Auth::attempt($loginData)){
-                return response(['message'=>'Invalid Credentials']);
+                return response()->json(['message'=>'Invalid Credentials'], 401);
             }
             $user = Auth::user();
             $tokenResult = $user->createToken('Personal Access')-> accessToken;
 
-            return response(['access_token'=> $tokenResult]);
+            return response()->json([
+                'username' => Auth::user()->nickname,
+                'code' => Auth::user()->code,
+                'status' => Auth::user()->status,
+                'token' => Auth::user()->rol_id.$tokenResult // the role will be embedded into the token for security
+            ]);
         }
         catch(Exception $e){
 
