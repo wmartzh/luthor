@@ -13,7 +13,7 @@ class Weekend extends Model
     ];
 
 
-    public function users(){
-        return $this->belongsToMany(User::class);
+    public function user(){
+        return $this->belongsTo('App\User','foreign_key');
     }
 }

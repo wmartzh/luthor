@@ -15,8 +15,8 @@ class CreateAssistancesTable extends Migration
     {
         Schema::create('assistances', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_code');
-            $table->integer('monitor_id');
+            $table->integer('user_code')->nullable();
+            $table->unsignedBigInteger('monitor_id');
             $table->unsignedBigInteger('event_id');
             $table->enum('status',['present','absent','late'])->default('absent');
             $table->date('date');
@@ -24,13 +24,17 @@ class CreateAssistancesTable extends Migration
             $table->timestamps();
 
             //Relations
-      
+
             $table->foreign('event_id')
                   ->references('id')
                   ->on('events')
                   ->onDelete('cascade');
             $table->foreign('user_code')
                 ->references('code')
+                ->on('users')
+                ->onDelete('cascade');
+                $table->foreign('monitor_id')
+                ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
 

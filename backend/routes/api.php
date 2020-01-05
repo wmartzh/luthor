@@ -25,6 +25,13 @@ Route::post('/logout','Api\AuthController@logout')->middleware('auth:api');
 
 Route::group(['middleware'  =>  ['auth:api']], function () {
 
+    ///Students
+    Route::group(['prefix'  =>  '/students'], function () {
+        Route::get('/','UserController@index');
+        Route::get('/{code}','UsersController@show');
+        Route::put('/','UsersController@update');
+        Route::delete('/{id}','UsersController@destroy');
+    });
     ///Permissions Routes
     Route::group(['prefix'  =>  '/permissions'], function () {
         Route::get('/','PermissionsController@index');
@@ -59,14 +66,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
         Route::get('/','AssistanceController@index');
 
     });
-
-
- });
-
-
-
-
-///Event Routes
+    ///Event Routes
     Route::group(['prefix'  =>  '/events'], function () {
         Route::get('/','EventController@index');
         Route::get('/{id}','EventController@show');
@@ -74,6 +74,20 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
         Route::put('/{event}','EventController@update');
         Route::delete('/{id}','EventController@destroy');
     });
+    ///Alterts Routes
+    Route::group(['prefix'  =>  '/alerts'], function () {
+        Route::get('/','AlertController@index');
+        Route::get('/{id}','AlertController@show');
+        Route::post('/','AlertController@store');
+        Route::put('/{alert}','AlertController@update');
+        Route::delete('/{id}','AlertController@destroy');
+    });
+
+
+
+
+
+ });
 
 
 
@@ -82,14 +96,9 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
 
 
 
-///Alterts Routes
-Route::group(['prefix'  =>  '/alerts'], function () {
-    Route::get('/','AlertController@index');
-    Route::get('/{id}','AlertController@show');
-    Route::post('/','AlertController@store');
-    Route::put('/{alert}','AlertController@update');
-    Route::delete('/{id}','AlertController@destroy');
-});
+
+
+
 
 
 

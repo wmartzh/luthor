@@ -15,9 +15,22 @@ class PenaltyController extends Controller
     public function index()
     {
         try{
-            $dta = \App\Penalty::all();
 
-            return response()->json(['data'=>$dta,'response'=>200]);
+            //
+            $auth_user = Auth::user();
+
+            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){
+
+                $data  = \App\Penalty::select('user_code','active','created_at','updated_at')->where('user_code',$auth_user->code)->get();
+                return response(['data'=>$data],200);
+                
+            }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6){
+                $data  = \App\Penalty::select('user_code','active','created_at','updated_at')->get();
+                return response(['data'=>$data],200);
+            }
+
+
+
         }catch(Exception $e){
 
         }
@@ -44,10 +57,11 @@ class PenaltyController extends Controller
 
             $auth_user = Auth::user();
 
+
             //check rol id --- only rector and preceptor can access
             if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 || $auth_user->rol_id == 5){
                 return response(['message'=>'user can not access'],401);
-            }else{
+            }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6 ){
                 $req = \App\User::select()->where('code',$data['user_code'])->get()->first();
                 $student = \App\User::findOrFail($req['id']);
                 //Check if user is already penalized

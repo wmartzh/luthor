@@ -34,6 +34,8 @@ class AssistanceController extends Controller
                     $query->select('id','title');
                 }])->select('user_code','date','time','event_id')->get();
                 return response(['data'=>$assistances],200);
+            }else{
+                return response(['message'=>'user Unauthorized'],401);
             }
 
 

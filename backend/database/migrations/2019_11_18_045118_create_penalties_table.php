@@ -15,7 +15,7 @@ class CreatePenaltiesTable extends Migration
     {
         Schema::create('penalties', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_code');
+            $table->integer('user_code')->nullable();
             $table->boolean('active',[true, false])->default(false);
             $table->timestamps();
 
