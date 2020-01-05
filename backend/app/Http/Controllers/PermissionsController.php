@@ -61,7 +61,7 @@ class PermissionsController extends Controller
 
             $data = request()->validate([
                 'code_user',
-                'output_date_time' => 'required',
+                'output_date_time',
                 'date' => 'required',
                 'place' => 'required',
                 'status'

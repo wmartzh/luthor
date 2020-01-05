@@ -18,7 +18,7 @@ class CreatePermissionsTable extends Migration
             $table->integer('code_user');
             $table->boolean('check_exit')->default(false);
             $table->enum('status',['active','rejected','deprecated'])->default('active');
-            $table->dateTimeTz('output_date_time');
+            $table->dateTimeTz('output_date_time')->nullable();
             $table->dateTimeTz('entry_date_time')->nullable();
             $table->date('date');
             $table->string('place');

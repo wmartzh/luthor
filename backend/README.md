@@ -14,16 +14,67 @@ database_name: db_luthor
 
 To request data run the next commads
 
-  
+## Installation
 
-###  run server
+### Composer install
+```
+composer install
+```
 
-$ php artisan serve
+### Config ENV
+Example
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=db_luthor
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-###  run migrations
+### Config CORS
+```
+php artisan vendor:publish --tag="cors"
+```
+More info on [CORS Middleware for Laravel](https://github.com/fruitcake/laravel-cors#configuration)
 
-$php artisan migrate
+### Run migrations and seeders
+```
+php artisan migrate --seed
+```
 
-###  run seeds
+### Install passport
+```
+php artisan passport:install
+```
 
-$php artisan db:seed
+### Generate laravel keys
+```
+php artisan key:generate 
+```
+
+###  Server Start
+```
+php artisan serve
+```
+
+# Changes by F34th3R
+* CORS middleware
+    - New composer package was installed, more info More info on [CORS Middleware for Laravel](https://github.com/fruitcake/laravel-cors#configuration)
+     
+* AuthController
+    - `login` was updated, just the response
+    ```php
+    return response()->json([
+        'username' => Auth::user()->nickname,
+        'code' => Auth::user()->code,
+        'status' => Auth::user()->status,
+        'token' => Auth::user()->rol_id.$tokenResult // the role will be embedded into the token for security
+    ]);
+    ```
+
+* In Permissions_table
+    - The field `output_date_time` was change it to `nullable`. This change is because, when the student role is creating a permission, the client just going to pass `place, and the current date`
+    ```
+    PermissionsController.php Line 64
+    ```
