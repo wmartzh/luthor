@@ -53,6 +53,14 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
 
     });
 
+    ///Assitances Routes
+    Route::group(['prefix'  =>  '/assistance'], function () {
+        Route::post('/','AssistanceController@store');
+        Route::get('/','AssistanceController@index');
+
+    });
+
+
  });
 
 
@@ -66,7 +74,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
         Route::put('/{event}','EventController@update');
         Route::delete('/{id}','EventController@destroy');
     });
-// });
+
 
 
 
@@ -82,17 +90,7 @@ Route::group(['prefix'  =>  '/alerts'], function () {
     Route::put('/{alert}','AlertController@update');
     Route::delete('/{id}','AlertController@destroy');
 });
-// });
 
-///Assitances Routes
-Route::group(['prefix'  =>  '/assistance'], function () {
-    Route::post('/','AssistanceController@store')->middleware('auth:api');
-
-});
-
-
-
-// });
 
 
 Route::get('test/','TestsController@test')->middleware('auth:api');

@@ -75,24 +75,30 @@ class PermissionsController extends Controller
                 return response()->json(['error'=> 'user can not request a permission']);
             }else{
 
-                if($usermodel['status'] =='penalized'){//check status
-                    //create reg
-                    $data['status'] = 'rejected';
-                    \App\Permissions::create($data);
-                    return response()->json(['response'=>'Unauthorized']);
+                $a_permission = \App\Permissions::select()->where([['code_user',$data['code_user'],['status','active']]])->get()->first();
+
+                if($a_permission == null ){
+                    if($usermodel['status'] =='penalized'){//check status
+                        //create reg
+                        $data['status'] = 'rejected';
+                        \App\Permissions::create($data);
+                        return response()->json(['response'=>'Unauthorized']);
 
 
-                }else if($usermodel['status']=='in'){//check status
+                    }else if($usermodel['status']=='in'){//check status
 
-                    //create reg
+                        //create reg
 
-                    $data['status'] = 'active';
-                    \App\Permissions::create($data);
-                    $usermodel->update(['status'=>'out']); //update user status
-                    return response()->json(['response'=> 'Authorized']);
-                }
-                else{
-                    return response()->json(['response'=> 'User is out']);
+                        $data['status'] = 'active';
+                        \App\Permissions::create($data);
+                        return response()->json(['response'=> 'Authorized']);
+                    }
+                    else{
+                        return response()->json(['response'=> 'user has already a request']);
+                    }
+
+                }else{
+                    return response(['message'=>'User has already permission request']);
                 }
             }
 
@@ -136,6 +142,7 @@ class PermissionsController extends Controller
         //
         $data = $request->validate([
             'user_code'=> 'required',
+            'check_exit'=>'nullable',
             'entry_date_time',
             'status'
         ]);
@@ -146,18 +153,47 @@ class PermissionsController extends Controller
 
             if($auth_user->rol_id == 5){
 
-                $data['entry_date_time'] = date("Y-m-d H:i:s");
-                $data['status']= 'deprecated';
                 //Search active permissions
                 $permission = \App\Permissions::select()->where([['code_user',$data['user_code']],['status','active']])->get()->first();
-                $permissionModel = \App\Permissions::findOrFail($permission['id']);            //Search user
-                //Search user
-                $res = User::select()->where('code',$data['user_code'])->get()->first();
-                $usermodel = \App\User::findOrFail($res['id']);
-                //Update user and permissions status
-                $usermodel->update(['status'=>'in']);
-                $permissionModel->update($data);
-                return response()->json(['message'=> 'accepted']);
+
+                if($permission != null){
+                    $permissionModel = \App\Permissions::findOrFail($permission['id']);            //Search user
+                    //Search user
+                    $res = User::select()->where('code',$data['user_code'])->get()->first();
+                    $usermodel = \App\User::findOrFail($res['id']);
+
+                    if(array_key_exists('check_exit',$data)){
+
+
+                        if(!$data['check_exit']){//check entry
+                            $data['entry_date_time'] = date("Y-m-d H:i:s");
+                            $data['status']= 'deprecated';
+                            //Update user and permissions status
+                            $usermodel->update(['status'=>'in']);
+                            $permissionModel->update($data);
+                            return response()->json(['message'=> 'accepted']);
+
+                        }else{//check exit
+                            //Update user and permissions status
+                            $usermodel->update(['status'=>'out']);
+                            $permissionModel->update($data);
+                            return response()->json(['message'=> 'accepted']);
+                        }
+
+                    }else{
+                        return response(['message'=>'The given data was invalid',
+                                                    'errors' => [
+                                                        'check_exit' => 'check_exit value is required'
+                                                    ]
+                                                    ],400);
+                    }
+
+                }else{
+                    return response()->json(['message'=> 'user has not active permissions']);
+                }
+
+
+
 
             }else{
                 return response()->json(['error'=> 'user unauthorized']);

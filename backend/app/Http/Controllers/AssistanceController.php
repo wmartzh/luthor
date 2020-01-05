@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Assistance;
 class AssistanceController extends Controller
 {
     /**
@@ -13,7 +14,32 @@ class AssistanceController extends Controller
      */
     public function index()
     {
-        //
+        try {
+
+            $auth_user = Auth::user();
+
+            if($auth_user->rol_id == 2  || $auth_user->rol_id == 3 ){
+
+
+                $assistances =\App\Assistance::with(['event' => function($query){
+                    $query->select('id','title');
+                }])->where('user_code',$auth_user->code)->select('date','time','event_id')->get();
+
+                return response(['data'=>$assistances],200);
+
+
+
+            }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6){
+                $assistances =\App\Assistance::with(['event' => function($query){
+                    $query->select('id','title');
+                }])->select('user_code','date','time','event_id')->get();
+                return response(['data'=>$assistances],200);
+            }
+
+
+        } catch(Exception $e){
+            return response()->json(['message'=>'something was wrong'],$status=400);
+        }
     }
 
     /**
@@ -40,18 +66,36 @@ class AssistanceController extends Controller
             $user = Auth::user();
             if($user->rol_id ==3 || $user->rol_id == 4 || $user->rol_id ==6){
 
+
                 $data['monitor_id']= $user->id; // get user that check the assistance
                 date_default_timezone_set("America/Costa_Rica");
-                $data['time'] =  date('H:i:s');    //"06:17:00";
-                $extratime = 30;
+                $data['time'] = date('H:i:s');    //"06:17:00";
                 $event = \App\Event::select()->where('id',$data['event_id'])->get()->first();
 
-                $time_check = strtotime($event[0]['start_time'])+600;
-                $time_check2 = strtotime($event[0]['start_time'])+1000;
+                $time_check = strtotime($event['start_time'])+600; //present  5 min
+                $time_check2 = strtotime($event['start_time'])+1000; //late 10 min
+
+                $data['date'] = date("Y-m-d");
+
+                $same_assistance = \App\Assistance::select()->where([['user_code',$data['user_code']],['date',date('Y-m-d')]])->get()->first();
+
+                /**
+                 * Check if there are more than one try to take assistance
+                 * Disable develop only
+                 *        |
+                 *        |
+                 *        V
+                 */
+
+                // if($same_assistance == null){
+
+                // }else{
+
+                // }
+
 
                 if(strtotime($data['time']) <= $time_check){
                     $data['status']='present';
-                    $data['date'] = date("Y-m-d");
 
                     \App\Assistance::create($data);
                     return response()->json(['message'=>'Assistance checked']);
@@ -59,13 +103,10 @@ class AssistanceController extends Controller
 
                 }else if(strtotime($data['time']) > $time_check && strtotime($data['time']) < $time_check2){
                     $data['status']='late';
-                    $data['date'] = date("Y-m-d");
-
                     \App\Assistance::create($data);
                     return response()->json(['message'=>'Assistance checked']);
                 }else {
                     $data['status']='absent';
-                    $data['date'] = date("Y-m-d");
                     \App\Assistance::create($data);
                     return response()->json(['message'=>'Assistance checked']);
 
@@ -74,10 +115,6 @@ class AssistanceController extends Controller
             }else{
                 return response()->json(['error'=>'user unauthorized']);
             }
-
-
-
-
         } catch (Exception $e) {
 
             return response()->json(['error'=>$e]);

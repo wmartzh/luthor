@@ -16,6 +16,7 @@ class CreatePermissionsTable extends Migration
         Schema::create('permissions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('code_user');
+            $table->boolean('check_exit')->default(false);
             $table->enum('status',['active','rejected','deprecated'])->default('active');
             $table->dateTimeTz('output_date_time');
             $table->dateTimeTz('entry_date_time')->nullable();

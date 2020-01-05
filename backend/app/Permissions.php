@@ -10,6 +10,7 @@ class Permissions extends Model
     protected $fillable =[
         'code_user',
         'status',
+        'check_exit',
         'output_date_time',
         'entry_date_time',
         'date',
