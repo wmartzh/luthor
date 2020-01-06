@@ -4,13 +4,20 @@ import { useUser } from '../hooks/useUser'
 export const UserContext = createContext()
 
 export const UserProvider = ({ children }) => {
-  const { user, setUser } = useUser()
+  const { user, setUser, token, setToken } = useUser()
 
   return (
-    <UserContext.Provider value={(user, setUser)}>
+    <UserContext.Provider
+      value={{
+        user,
+        setUser,
+        token,
+        setToken
+      }}
+    >
       {children}
     </UserContext.Provider>
   )
 }
 
-export const usePostValues = () => useContext(UserContext)
+export const useUserValues = () => useContext(UserContext)

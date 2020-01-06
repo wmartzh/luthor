@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
+import { axios } from '../../plugins/axios'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import {
   TableComponent,
   StyledTableItem,
-  StyledTableItemExpand
+  StyledTableItemExpand,
+  StyledTableBody
 } from '../../components/TableComponent'
 
 import { Navigation } from '../../layout/Navigation'
@@ -13,9 +15,27 @@ import { StyledH2 } from '../../styles/StyledH2'
 import { StyledSpan } from '../../styles/StyledSpan'
 import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledContainer } from '../../styles/StyledContainer'
+import { API_ROUTES } from '../../constants/apiRoutes'
+import { StyledCard } from '../../styles/StyledCard'
 
 export const MyPermissions = () => {
   const [expanded, setExpanded] = useState(false)
+  const [permission, setPermission] = useState([])
+
+  // TODO: create a loading component
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const request = await axios({
+        method: 'GET',
+        url: API_ROUTES.getPermission
+      })
+      if (request.status === 200) {
+        setPermission(request.data.data)
+      }
+    }
+    fetchData()
+  }, [])
 
   const tableheader = [
     {
@@ -52,8 +72,8 @@ export const MyPermissions = () => {
     }
   ]
 
-  const tableContent = (
-    <>
+  const tableContent = (status, place, date, out, entry) => (
+    <StyledTableBody>
       <StyledTableItem
         width={tableheader[0].size}
         display={tableheader[0].display ? 'block' : 'none'}
@@ -61,7 +81,7 @@ export const MyPermissions = () => {
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
-          Normal
+          {status}
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -71,7 +91,7 @@ export const MyPermissions = () => {
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#FB7140">
-          Culto Despertino
+          {place}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -81,7 +101,7 @@ export const MyPermissions = () => {
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#FB7140">
-          NOV 08 - 2019
+          {date}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -91,7 +111,7 @@ export const MyPermissions = () => {
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-          4:00 pm / 6:00 pm
+          {`${out || '--'} / ${entry || '--'}`}
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -106,33 +126,34 @@ export const MyPermissions = () => {
           onClick={() => setExpanded(prev => !prev)}
         />
       </StyledTableItem>
-    </>
+    </StyledTableBody>
   )
 
-  const tableExpand = expanded && (
-    <StyledTableItemExpand paddingLerft={tableheader[0].size}>
-      <StyledTableItem
-        width={tableheader[3].size}
-        displayMd="none"
-        displaySm="flex"
-      >
+  const tableExpand = (date, out, entry) =>
+    expanded && (
+      <StyledTableItemExpand paddingLerft={tableheader[0].size}>
+        <StyledTableItem
+          width={tableheader[3].size}
+          displayMd="none"
+          displaySm="flex"
+        >
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+            {tableheader[2].title}
+          </StyledSpan>
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+            NOV 08 - 2019
+          </StyledSpan>
+          <StyledSpacer height="28px" />
+        </StyledTableItem>
+
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
-          {tableheader[2].title}
+          {tableheader[3].title}
         </StyledSpan>
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-          NOV 08 - 2019
+          4:00 pm / 6:00 pm
         </StyledSpan>
-        <StyledSpacer height="28px" />
-      </StyledTableItem>
-
-      <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
-        {tableheader[3].title}
-      </StyledSpan>
-      <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-        4:00 pm / 6:00 pm
-      </StyledSpan>
-    </StyledTableItemExpand>
-  )
+      </StyledTableItemExpand>
+    )
 
   return (
     <StyledContainer>
@@ -141,9 +162,42 @@ export const MyPermissions = () => {
         title="My Permissions"
         titleColor="#FB7140"
         tableheader={tableheader}
-        tableContent={tableContent}
-        tableExpand={tableExpand}
-      />
+      >
+        {(permission &&
+          permission.map(
+            ({
+              id,
+              place,
+              date,
+              status,
+              output_date_time,
+              entry_date_time
+            }) => (
+              <StyledCard
+                width="100%"
+                flexDirection="column"
+                alignItems="start"
+                margin="0 0 16px 0"
+                key={id}
+              >
+                {tableContent(
+                  status,
+                  place,
+                  date,
+                  output_date_time,
+                  entry_date_time
+                )}
+                {tableExpand(date, output_date_time, entry_date_time)}
+              </StyledCard>
+            )
+          )) || (
+          <StyledCard width="100%" flexDirection="column" alignItems="center">
+            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+              No data
+            </StyledSpan>
+          </StyledCard>
+        )}
+      </TableComponent>
     </StyledContainer>
   )
 }
