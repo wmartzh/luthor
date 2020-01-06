@@ -21,9 +21,13 @@ class AssistanceController extends Controller
             if($auth_user->rol_id == 2  || $auth_user->rol_id == 3 ){
 
 
-                $assistances =\App\Assistance::with(['event' => function($query){
-                    $query->select('id','title');
-                }])->where('user_code',$auth_user->code)->select('date','time','event_id')->get();
+                $assistances =\App\Assistance::with(
+                  ['event'=>function($query){$query->select('id','title');}],
+
+                )->with(
+                    ['user'=> function($query){$query->select('code','first_name','last_name');}]
+                )
+                ->where('user_code',$auth_user->code)->select('user_code','date','time','event_id')->get();
 
                 return response(['data'=>$assistances],200);
 

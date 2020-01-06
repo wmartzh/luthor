@@ -23,12 +23,13 @@ class WeekendController extends Controller
                 $data = \App\Weekend::select('state','vicerector','preceptor','in_date_time','out_date_time','location')->where('user_code',$auth_user->code)->get();
                 return response(['data'=> $data],200);
             }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6){
-                $data = \App\Weekend::with(['user' => function($query){
-                    $query->select('id','code','first_name');
+                $data = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
+                ->with(['user' => function($query){
+                    $query->select('code','first_name','last_name');
 
                 }])
-                ->select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')->get();
-               
+                ->get();
+
                 return response(['data'=> $data],200);
             }
 

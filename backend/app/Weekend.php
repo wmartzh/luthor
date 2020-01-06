@@ -14,6 +14,6 @@ class Weekend extends Model
 
 
     public function user(){
-        return $this->belongsTo('App\User','foreign_key');
+        return $this->hasOne('App\User','code','user_code');
     }
 }
