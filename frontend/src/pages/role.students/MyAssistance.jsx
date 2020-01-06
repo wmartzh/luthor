@@ -1,23 +1,42 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { axios } from '../../plugins/axios'
 
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import {
   TableComponent,
   StyledTableItem,
-  StyledTableItemExpand
+  StyledTableItemExpand,
+  StyledTableBody
 } from '../../components/TableComponent'
 
-import { Navigation } from '../../layout/Navigation'
+import { API_ROUTES } from '../../constants/apiRoutes'
+
 import { StyledH2 } from '../../styles/StyledH2'
+import { StyledCard } from '../../styles/StyledCard'
 import { StyledSpan } from '../../styles/StyledSpan'
+import { Navigation } from '../../layout/Navigation'
 import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledContainer } from '../../styles/StyledContainer'
 import { StyledStatusCube } from '../../styles/StyledStatusCube'
+import { assistanceStatusColor } from '../../constants/statusColor'
 
 export const MyAssitance = () => {
   const [expanded, setExpanded] = useState(false)
-  const tableItemsSizes = ['74px', '340px', '240px', '100px', '24px']
+  const [assistance, setAssistance] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const request = await axios({
+        method: 'GET',
+        url: API_ROUTES.getAssistance
+      })
+      if (request.status === 200) {
+        setAssistance(request.data.data)
+      }
+    }
+    fetchData()
+  }, [])
 
   const tableheader = [
     {
@@ -54,15 +73,15 @@ export const MyAssitance = () => {
     }
   ]
 
-  const tableContent = (
-    <>
+  const tableContent = (status, date, title, monitor) => (
+    <StyledTableBody>
       <StyledTableItem
         width={tableheader[0].size}
         display={tableheader[0].display ? 'block' : 'none'}
         displayMd={tableheader[0].displayMd ? 'block' : 'none'}
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
-        <StyledStatusCube background="#F45953" />
+        <StyledStatusCube background={assistanceStatusColor(status)} />
       </StyledTableItem>
       <StyledTableItem
         width={tableheader[1].size}
@@ -71,7 +90,7 @@ export const MyAssitance = () => {
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#4F3C75">
-          Culto Despertino
+          {title}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -81,7 +100,7 @@ export const MyAssitance = () => {
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#4F3C75">
-          Paco Pedro de la mar
+          {monitor}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -91,7 +110,7 @@ export const MyAssitance = () => {
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
-          NOV 08 - 28
+          {date}
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -106,29 +125,30 @@ export const MyAssitance = () => {
           onClick={() => setExpanded(prev => !prev)}
         />
       </StyledTableItem>
-    </>
+    </StyledTableBody>
   )
 
-  const tableExpand = expanded && (
-    <StyledTableItemExpand paddingLerft={tableheader[0].size}>
-      <StyledTableItem displayMd="none" displaySm="flex">
+  const tableExpand = (date, monitor) =>
+    expanded && (
+      <StyledTableItemExpand paddingLerft={tableheader[0].size}>
+        <StyledTableItem displayMd="none" displaySm="flex">
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
+            {tableheader[3].title}
+          </StyledSpan>
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
+            NOV 08 - 28
+          </StyledSpan>
+
+          <StyledSpacer height="28px" />
+        </StyledTableItem>
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
-          {tableheader[3].title}
+          {tableheader[2].title}
         </StyledSpan>
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
-          NOV 08 - 28
-        </StyledSpan>
-
-        <StyledSpacer height="28px" />
-      </StyledTableItem>
-      <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
-        {tableheader[2].title}
-      </StyledSpan>
-      <StyledH2 fontWeigth="600" color="#4F3C75">
-        Paco Pedro de la mar
-      </StyledH2>
-    </StyledTableItemExpand>
-  )
+        <StyledH2 fontWeigth="600" color="#4F3C75">
+          Paco Pedro de la mar
+        </StyledH2>
+      </StyledTableItemExpand>
+    )
 
   return (
     <StyledContainer>
@@ -136,11 +156,30 @@ export const MyAssitance = () => {
       <TableComponent
         title="My Assistance"
         titleColor="#4F3C75"
-        tableItemsSizes={tableItemsSizes}
         tableheader={tableheader}
-        tableContent={tableContent}
-        tableExpand={tableExpand}
-      />
+      >
+        {assistance &&
+          assistance.map(
+            ({
+              time: id,
+              date,
+              status,
+              event: { title },
+              monitor: { first_name: monitor }
+            }) => (
+              <StyledCard
+                width="100%"
+                flexDirection="column"
+                alignItems="start"
+                margin="0 0 16px 0"
+                key={id}
+              >
+                {tableContent(status, date, title, monitor)}
+                {tableExpand(date, monitor)}
+              </StyledCard>
+            )
+          )}
+      </TableComponent>
     </StyledContainer>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-
 import { axios } from '../../plugins/axios'
+
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import {
@@ -10,13 +10,14 @@ import {
   StyledTableBody
 } from '../../components/TableComponent'
 
-import { Navigation } from '../../layout/Navigation'
+import { API_ROUTES } from '../../constants/apiRoutes'
+
 import { StyledH2 } from '../../styles/StyledH2'
+import { StyledCard } from '../../styles/StyledCard'
 import { StyledSpan } from '../../styles/StyledSpan'
+import { Navigation } from '../../layout/Navigation'
 import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledContainer } from '../../styles/StyledContainer'
-import { API_ROUTES } from '../../constants/apiRoutes'
-import { StyledCard } from '../../styles/StyledCard'
 
 export const MyPermissions = () => {
   const [expanded, setExpanded] = useState(false)
