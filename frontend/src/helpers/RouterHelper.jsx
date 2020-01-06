@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Route } from 'react-router-dom'
 
 import {
@@ -10,13 +10,15 @@ import {
 } from '../routes'
 
 import { Login } from '../pages/Login'
-import { ToTest } from '../layout/ToTEst'
+import { useUserValues } from '../context/UserContext'
 
-export const RouterHelper = ({ user }) => {
+export const RouterHelper = () => {
+  const { user } = useUserValues()
+
   return (
     <>
       <Route exact path="/login" component={Login} />
-      <Route exact path="/test" component={ToTest} />
+      {/* <Route exact path="/test" component={ToTest} /> */}
       {globalRoutes.map(({ path, component: Component }) => (
         <Route
           exact

@@ -23,7 +23,7 @@ export const Dashboard = ({ user }) => {
       <StyledCard flexDirection="column" roundedTop width="340px">
         <StyledAvatar image={userPhoto} />
         <StyledH1 style={{ margin: '0 0 8px 0' }}>{username}</StyledH1>
-        <StyledSpan>{code}</StyledSpan>
+        <StyledSpan>#{code}</StyledSpan>
         <StyledSpacer height="20px" />
 
         <DashboardButtonsComponent role={role} />

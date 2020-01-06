@@ -6,7 +6,7 @@ export const StyledAvatar = styled.div`
   border-radius: ${props => (props.radius ? props.radius : '5px')};
   margin-bottom: 10px;
   background: ${props =>
-    props.background ? props.background : `url(${props => props.image})`};
+    props.background ? props.background : `url(${props.image})`};
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

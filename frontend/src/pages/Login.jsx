@@ -1,6 +1,8 @@
-import React from 'react'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import React, { useState, useEffect } from 'react'
 
+import { axios } from '../plugins/axios'
+
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import TextField from '@material-ui/core/es/TextField'
 
 import { Copyright } from '../components/Copyright'
@@ -12,9 +14,61 @@ import { StyledTypography } from '../styles/StyledTypography'
 import { StyledAvatar } from '../styles/StyledAvatar'
 import { StyledCard } from '../styles/StyledCard'
 import { StyledContainer } from '../styles/StyledContainer'
+import { API_ROUTES } from '../constants/apiRoutes'
+import { useUserValues } from '../context/UserContext'
+import { getCurrentRole } from '../helpers/getCurrentLocalStorage'
 
-export const Login = () => {
-  const submitHandle = () => {}
+export const Login = ({ history, location }) => {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+
+  const { setUser, setToken } = useUserValues()
+
+  const [email, setEmail] = useState('studentMale@mail.com')
+  const [password, setPassword] = useState('secret')
+
+  useEffect(() => {
+    localStorage.removeItem('user')
+    localStorage.removeItem('token')
+    setUser({})
+  }, [setUser])
+
+  const submitHandle = async () => {
+    if (!email && !password) {
+      setError('Some fields are empty 😢.')
+      return
+    }
+    setError()
+    setLoading(true)
+    try {
+      const request = await axios({
+        method: 'POST',
+        url: API_ROUTES.login,
+        data: {
+          email,
+          password
+        }
+      })
+      console.log(request.status)
+      if (request.status === 401) {
+        setError(request.data.message)
+        return
+      }
+      const { username, status, code, token } = request.data
+      localStorage.setItem('token', JSON.stringify(token))
+      localStorage.setItem('user', JSON.stringify({ username, status, code }))
+      setUser({ username, status, code, role: token[0] })
+      setToken(token)
+    } catch (err) {
+      err.message === 'Request failed with status code 401'
+        ? setError('Invalid Credentials, please try again')
+        : setError('Error, please try again')
+    }
+    setLoading(false)
+    console.log(getCurrentRole)
+    const { from } = location.state || { from: { pathname: '/' } }
+    history.push(from)
+  }
 
   return (
     <StyledContainer maxWidth="380px">
@@ -24,28 +78,45 @@ export const Login = () => {
           <LockOutlinedIcon />
         </StyledAvatar>
         <StyledTypography fontSize="20px">Sign In</StyledTypography>
-        <StyledSpacer height="20px" />
+        {error && (
+          <>
+            <StyledSpacer height="20px" />
+            <StyledTypography fontSize="14px" color="red">
+              {error}
+            </StyledTypography>
+          </>
+        )}
+        {loading && (
+          <StyledTypography fontSize="14px" color="green">
+            {loading}
+          </StyledTypography>
+        )}
+        {!error && <StyledSpacer height="20px" />}
         <TextField
           variant="outlined"
           margin="normal"
-          required
-          fullWidth
-          id="email"
-          label="Email Address"
           name="email"
+          label="Email Address"
+          id="email"
           autoComplete="email"
+          onChange={e => setEmail(e.target.value)}
+          value={email}
           autoFocus
+          fullWidth
+          required
         />
         <TextField
           variant="outlined"
           margin="normal"
-          required
-          fullWidth
+          type="password"
           name="password"
           label="Password"
-          type="password"
           id="password"
           autoComplete="current-password"
+          onChange={e => setPassword(e.target.value)}
+          value={password}
+          fullWidth
+          required
         />
         {/* <FormControlLabel
           control={<Checkbox value="remember" color="primary" />}

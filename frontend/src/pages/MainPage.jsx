@@ -8,7 +8,6 @@ import { DashboardAdmin } from './role.preceptor/DashboardAdmin'
 
 export const MainPage = ({ user }) => {
   const { role } = user
-  console.log(role)
 
   return (
     <StyledContainer>

@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
-import { StyledCard } from '../styles/StyledCard'
 import { StyledSpacer } from '../styles/StyledSpacer'
 import { StyledH1 } from '../styles/StyledH1'
 import { StyledBackButton } from '../styles/StyledBackButton'
@@ -26,6 +25,19 @@ export const StyledTableItem = styled.div`
   }
 `
 
+export const StyledTableBody = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  .last-item:last-child {
+    position: absolute;
+    right: 10px;
+  }
+`
+
 export const StyledTableItemExpand = styled.div`
   width: 100%;
   padding: 28px 0 0 ${props => props.paddingLerft};
@@ -37,12 +49,12 @@ export const StyledTableItemExpand = styled.div`
 `
 
 export const TableComponent = ({
+  children,
   title,
   titleColor,
   subtitle,
   tableheader,
-  tableContent,
-  tableExpand
+  tableContent
 }) => {
   const StyledTableHeader = styled.div`
     display: flex;
@@ -50,18 +62,6 @@ export const TableComponent = ({
     flex-direction: row;
     padding: 0 20px;
     position: relative;
-    .last-item:last-child {
-      position: absolute;
-      right: 10px;
-    }
-  `
-  const StyledTableBody = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: start;
-    flex-direction: row;
-    position: relative;
-    align-items: center;
     .last-item:last-child {
       position: absolute;
       right: 10px;
@@ -101,24 +101,26 @@ export const TableComponent = ({
       <StyledSpacer height="20px" />
 
       <StyledTableHeader>
-        {tableheader.map(content => (
-          <StyledTableItem
-            key={content.title}
-            width={content.size}
-            display={content.display ? 'block' : 'none'}
-            displayMd={content.displayMd ? 'block' : 'none'}
-            displaySm={content.displaySm ? 'block' : 'none'}
-          >
-            <StyledTypography
-              fontFamily="Segoe UI"
-              fontSize="14px"
-              fontWeigth="600"
-              color={content.color}
+        {tableheader.map(
+          ({ title, size, display, displayMd, displaySm, color }) => (
+            <StyledTableItem
+              key={title}
+              width={size}
+              display={display ? 'block' : 'none'}
+              displayMd={displayMd ? 'block' : 'none'}
+              displaySm={displaySm ? 'block' : 'none'}
             >
-              {content.title}
-            </StyledTypography>
-          </StyledTableItem>
-        ))}
+              <StyledTypography
+                fontFamily="Segoe UI"
+                fontSize="14px"
+                fontWeigth="600"
+                color={color}
+              >
+                {title}
+              </StyledTypography>
+            </StyledTableItem>
+          )
+        )}
         <StyledTableItem
           className="last-item"
           width="24px"
@@ -127,10 +129,7 @@ export const TableComponent = ({
         ></StyledTableItem>
       </StyledTableHeader>
       <StyledSpacer height="20px" />
-      <StyledCard width="100%" flexDirection="column" alignItems="start">
-        <StyledTableBody>{tableContent}</StyledTableBody>
-        {tableExpand}
-      </StyledCard>
+      {children}
     </>
   )
 }
