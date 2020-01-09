@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import moment from 'moment'
 
 import Select from '@material-ui/core/es/Select'
 import InputLabel from '@material-ui/core/es/InputLabel'
@@ -19,21 +20,67 @@ import { StyledStatusBar } from '../../styles/StyledStatusBar'
 import { StyledCard } from '../../styles/StyledCard'
 import { StyledH1 } from '../../styles/StyledH1'
 import { StyledBackButton } from '../../styles/StyledBackButton'
+import { axios } from '../../plugins/axios'
+import { API_ROUTES } from '../../constants/apiRoutes'
+import { StyledTypography } from '../../styles/StyledTypography'
 
-export const GetPermission = ({ user }) => {
+export const GetPermission = ({ user, history, location }) => {
   const { status } = user
 
+  const [error, setError] = useState(false)
   const [type, setType] = useState('')
   const [place, setPlace] = useState('')
   const [entry, setEntry] = useState('')
-  const [location, setLocation] = useState('')
+  const [googleLocation, setGoogleLocation] = useState('test location')
 
   const inputLabel = useRef(null)
   const [labelWidth, setLabelWidth] = React.useState(0)
 
   useEffect(() => {
     setLabelWidth(inputLabel.current.offsetWidth)
+    // TODO: get the update user's status
   }, [])
+
+  const axiosQuery = async (method, url, data) => {
+    const request = await axios({
+      method: method,
+      url: url,
+      data: data
+    })
+    console.log(request.data.message)
+    if (request.data.message === 'User has already permission request') {
+      setError('You already have a permission')
+    } else {
+      // const { from } = location.state || { from: { pathname: '/' } }
+      // history.push(from)
+    }
+  }
+  const submitHandle = async () => {
+    if (type === 'normal') {
+      axiosQuery(
+        API_ROUTES.requestPermission.method,
+        API_ROUTES.requestPermission.url,
+        { place, date: moment().format('YYYY/MM/DD') }
+      )
+    } else {
+      axiosQuery(
+        API_ROUTES.requestPermission.method,
+        API_ROUTES.requestPermission.url,
+        { place, entry, googleLocation, date: moment().format('YYYY/MM/DD') }
+      )
+    }
+  }
+
+  const button = disable => (
+    <ButtonComponent
+      click={submitHandle}
+      background="#12B6C6"
+      width="300px"
+      disable={disable}
+    >
+      Confirm
+    </ButtonComponent>
+  )
 
   return (
     <StyledContainer>
@@ -102,17 +149,31 @@ export const GetPermission = ({ user }) => {
               margin="normal"
               fullWidth
               id="location"
-              onChange={e => setLocation(e.target.value)}
-              value={location}
+              onChange={e => setGoogleLocation(e.target.value)}
+              value={googleLocation}
               required
             />
           </>
         )}
 
-        <StyledSpacer height="40px" />
-        <ButtonComponent to="/" background="#12B6C6" width="300px">
-          Confirm
-        </ButtonComponent>
+        {!error && <StyledSpacer height="40px" />}
+        {error && (
+          <>
+            <StyledSpacer height="21px" />
+            <StyledTypography color="red" fontSize="16px">
+              {error}
+            </StyledTypography>
+          </>
+        )}
+        {type === ' normal' ? (
+          place ? (
+            button(true)
+          ) : (
+            button(false)
+          )
+        ) : (
+          <div>hola</div>
+        )}
         <StyledSpacer height="10px" />
       </StyledCard>
       <StyledStatusBar

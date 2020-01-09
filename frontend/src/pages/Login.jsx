@@ -65,7 +65,6 @@ export const Login = ({ history, location }) => {
         : setError('Error, please try again')
     }
     setLoading(false)
-    console.log(getCurrentRole)
     const { from } = location.state || { from: { pathname: '/' } }
     history.push(from)
   }

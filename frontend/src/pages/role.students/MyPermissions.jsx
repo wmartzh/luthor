@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import moment from 'moment'
 import { axios } from '../../plugins/axios'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
@@ -10,13 +10,14 @@ import {
   StyledTableBody
 } from '../../components/TableComponent'
 
-import { Navigation } from '../../layout/Navigation'
+import { API_ROUTES } from '../../constants/apiRoutes'
+
 import { StyledH2 } from '../../styles/StyledH2'
+import { StyledCard } from '../../styles/StyledCard'
 import { StyledSpan } from '../../styles/StyledSpan'
+import { Navigation } from '../../layout/Navigation'
 import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledContainer } from '../../styles/StyledContainer'
-import { API_ROUTES } from '../../constants/apiRoutes'
-import { StyledCard } from '../../styles/StyledCard'
 
 export const MyPermissions = () => {
   const [expanded, setExpanded] = useState(false)
@@ -101,7 +102,7 @@ export const MyPermissions = () => {
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#FB7140">
-          {date}
+          {moment(date).format('DD-MMM-YYYY')}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -111,7 +112,9 @@ export const MyPermissions = () => {
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-          {`${out || '--'} / ${entry || '--'}`}
+          {`${out ? moment(out).format('DD-MMM-YYYY') : '--'} / ${
+            entry ? moment(entry).format('DD-MMM-YYYY') : '--'
+          }`}
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -141,7 +144,7 @@ export const MyPermissions = () => {
             {tableheader[2].title}
           </StyledSpan>
           <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-            NOV 08 - 2019
+            {moment(date).format('DD-MMM-YYYY')}
           </StyledSpan>
           <StyledSpacer height="28px" />
         </StyledTableItem>
@@ -150,7 +153,9 @@ export const MyPermissions = () => {
           {tableheader[3].title}
         </StyledSpan>
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-          4:00 pm / 6:00 pm
+          {`${out ? moment(out).format('DD-MMM-YYYY') : '--'} / ${
+            entry ? moment(entry).format('DD-MMM-YYYY') : '--'
+          }`}
         </StyledSpan>
       </StyledTableItemExpand>
     )
