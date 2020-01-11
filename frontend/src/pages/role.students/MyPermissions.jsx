@@ -22,11 +22,13 @@ import { StyledContainer } from '../../styles/StyledContainer'
 export const MyPermissions = () => {
   const [expanded, setExpanded] = useState(false)
   const [permission, setPermission] = useState([])
+  const [loading, setLoading] = useState(false)
 
   // TODO: create a loading component
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       const request = await axios({
         method: 'GET',
         url: API_ROUTES.getPermission
@@ -34,6 +36,7 @@ export const MyPermissions = () => {
       if (request.status === 200) {
         setPermission(request.data.data)
       }
+      setLoading(false)
     }
     fetchData()
   }, [])
@@ -168,6 +171,13 @@ export const MyPermissions = () => {
         titleColor="#FB7140"
         tableheader={tableheader}
       >
+        {loading && (
+          <StyledCard width="100%" flexDirection="column" alignItems="center">
+            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+              Loading...
+            </StyledSpan>
+          </StyledCard>
+        )}
         {(permission &&
           permission.map(
             ({

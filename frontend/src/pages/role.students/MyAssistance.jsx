@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import moment from 'moment'
 import { axios } from '../../plugins/axios'
 
 import ExpandMore from '@material-ui/icons/ExpandMore'
@@ -24,9 +25,11 @@ import { assistanceStatusColor } from '../../constants/statusColor'
 export const MyAssitance = () => {
   const [expanded, setExpanded] = useState(false)
   const [assistance, setAssistance] = useState([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       const request = await axios({
         method: 'GET',
         url: API_ROUTES.getAssistance
@@ -34,6 +37,7 @@ export const MyAssitance = () => {
       if (request.status === 200) {
         setAssistance(request.data.data)
       }
+      setLoading(false)
     }
     fetchData()
   }, [])
@@ -110,7 +114,7 @@ export const MyAssitance = () => {
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
-          {date}
+          {moment(date).format('DD-MMM-YYYY')}
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -136,7 +140,7 @@ export const MyAssitance = () => {
             {tableheader[3].title}
           </StyledSpan>
           <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
-            NOV 08 - 28
+          {moment(date).format('DD-MMM-YYYY')}
           </StyledSpan>
 
           <StyledSpacer height="28px" />
@@ -145,7 +149,7 @@ export const MyAssitance = () => {
           {tableheader[2].title}
         </StyledSpan>
         <StyledH2 fontWeigth="600" color="#4F3C75">
-          Paco Pedro de la mar
+          {monitor}
         </StyledH2>
       </StyledTableItemExpand>
     )
@@ -158,6 +162,13 @@ export const MyAssitance = () => {
         titleColor="#4F3C75"
         tableheader={tableheader}
       >
+        {loading && (
+          <StyledCard width="100%" flexDirection="column" alignItems="center">
+            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
+              Loading...
+            </StyledSpan>
+          </StyledCard>
+        )}
         {assistance &&
           assistance.map(
             ({

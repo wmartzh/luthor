@@ -6,6 +6,7 @@ import InputLabel from '@material-ui/core/es/InputLabel'
 import FormControl from '@material-ui/core/es/FormControl'
 import TextField from '@material-ui/core/es/TextField'
 import MenuItem from '@material-ui/core/es/MenuItem'
+// import { KeyboardTimePicker } from '@material-ui/pickers'
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
@@ -71,7 +72,11 @@ export const GetPermission = ({ user, history, location }) => {
     }
   }
 
-  const button = disable => (
+  const handleDateChange = date => {
+    setEntry(date)
+  }
+
+  const button = (disable = false) => (
     <ButtonComponent
       click={submitHandle}
       background="#12B6C6"
@@ -137,12 +142,30 @@ export const GetPermission = ({ user, history, location }) => {
               variant="outlined"
               label="Entry Time"
               margin="normal"
+              type="time"
+              defaultValue="07:30 "
+              InputLabelProps={{
+                shrink: true
+              }}
+              inputProps={{
+                step: 300 // 5 min
+              }}
               fullWidth
               id="entry"
               onChange={e => setEntry(e.target.value)}
               value={entry}
               required
             />
+            {/* <KeyboardTimePicker
+              margin="normal"
+              id="time-picker"
+              label="Time picker"
+              value={entry}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change time'
+              }}
+            /> */}
             <TextField
               variant="outlined"
               label="Location"
@@ -165,15 +188,15 @@ export const GetPermission = ({ user, history, location }) => {
             </StyledTypography>
           </>
         )}
-        {type === ' normal' ? (
-          place ? (
-            button(true)
-          ) : (
-            button(false)
-          )
-        ) : (
-          <div>hola</div>
-        )}
+        {type === 'normal'
+          ? !place
+            ? button(true)
+            : button(false)
+          : type === 'weekends'
+          ? !place && !entry && !googleLocation
+            ? button(true)
+            : button(false)
+          : null}
         <StyledSpacer height="10px" />
       </StyledCard>
       <StyledStatusBar
