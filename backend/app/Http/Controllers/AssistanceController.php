@@ -78,16 +78,19 @@ class AssistanceController extends Controller
                 $data['time'] = date('H:i:s');    //"06:17:00";
                 $event = \App\Event::select()->where('id',$data['event_id'])->get()->first();
 
+                $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();
+
                 $time_check = strtotime($event['start_time'])+600; //present  5 min
                 $time_check2 = strtotime($event['start_time'])+1000; //late 10 min
 
                 $data['date'] = date("Y-m-d");
 
+                /// use when the user was checked
                 $same_assistance = \App\Assistance::select()->where([['user_code',$data['user_code']],['date',date('Y-m-d')]])->get()->first();
 
                 /**
                  * Check if there are more than one try to take assistance
-                 * Disable develop only
+                 * Disable to develop only
                  *        |
                  *        |
                  *        V
@@ -98,25 +101,32 @@ class AssistanceController extends Controller
                 // }else{
 
                 // }
+                if($intership['intership'] == $user->intership){ //intership  check
+                    if(strtotime($data['time']) <= $time_check){
+                        $data['status']='present';
+
+                        \App\Assistance::create($data);
+                        return response()->json(['message'=>'Assistance checked']);
 
 
-                if(strtotime($data['time']) <= $time_check){
-                    $data['status']='present';
+                    }else if(strtotime($data['time']) > $time_check && strtotime($data['time']) < $time_check2){
+                        $data['status']='late';
+                        \App\Assistance::create($data);
+                        return response()->json(['message'=>'Assistance checked']);
+                    }else {
+                        $data['status']='absent';
+                        \App\Assistance::create($data);
+                        return response()->json(['message'=>'Assistance checked']);
 
-                    \App\Assistance::create($data);
-                    return response()->json(['message'=>'Assistance checked']);
+                    }
 
+                }else{
 
-                }else if(strtotime($data['time']) > $time_check && strtotime($data['time']) < $time_check2){
-                    $data['status']='late';
-                    \App\Assistance::create($data);
-                    return response()->json(['message'=>'Assistance checked']);
-                }else {
-                    $data['status']='absent';
-                    \App\Assistance::create($data);
-                    return response()->json(['message'=>'Assistance checked']);
-
+                    return response(['message' => 'Invalid operation',
+                                    'errors' => ['user_code' => 'wrong intership']],401);
                 }
+
+
 
             }else{
                 return response()->json(['error'=>'user unauthorized']);

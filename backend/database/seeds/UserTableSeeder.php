@@ -87,7 +87,16 @@ class UserTableSeeder extends Seeder
             'rol_id' => '4',
             'code'=>'00002',
             'email' => 'cristian@mail.com',
-            'password' => bcrypt('secret')
+            'password' => bcrypt('secret'),
+            'intership' => 'boys'
+        ]);
+        \App\User::create([
+            'nickname' => 'Cristina',
+            'rol_id' => '4',
+            'code'=>'00022',
+            'email' => 'cristina@mail.com',
+            'password' => bcrypt('secret'),
+            'intership' => 'boys'
         ]);
         \App\User::create([
             'nickname' => 'Scot',

@@ -22,10 +22,19 @@ class WeekendController extends Controller
             if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 ){
                 $data = \App\Weekend::select('state','vicerector','preceptor','in_date_time','out_date_time','location')->where('user_code',$auth_user->code)->get();
                 return response(['data'=> $data],200);
-            }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6){
+            }else if($auth_user->rol_id == 4 ){
+
                 $data = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
                 ->with(['user' => function($query){
-                    $query->select('code','first_name','last_name');
+                    $query->select('code','first_name','last_name')
+                }])
+                ->get();
+
+                return response(['data'=> $data],200);
+            }else if($auth_user->rol_id == 6){
+                $data = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
+                ->with(['user' => function($query){
+                    $query->select('code','first_name','last_name','intership');
 
                 }])
                 ->get();
@@ -152,6 +161,11 @@ class WeekendController extends Controller
 
             if(array_key_exists('user_code',$data)){
                 $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code'],['state','in process']]])->get()->first();
+
+                if($weekendModel == null){
+                    return response(['message'=>'no data exist',
+                        'errors' =>['user has not requests']]);
+                }
             }else{
                 $weekendModel = \App\Weekend::select()->where([['user_code',$auth_user->code,['state','in process']]])->get()->first();
             }
@@ -171,11 +185,11 @@ class WeekendController extends Controller
                             $mdl->update($data);
                             return response(['message'=>'updated'],202);
                         }
-                        else if($weekendModel['vicerector']=='approved' && $weekendModel['preceptor']=='no-def' || $weekendModel['vicerector']=='no-def' && $weekendModel['preceptor']=='approved'){
+                        else if($weekendModel['vicerector']=='approved' && $weekendModel['preceptor']=='no-def' || $weekendModel['vicerector']=='no-def' && $weekendModel['preceptor']=='approved' || $weekendModel['vicerector']=='no-def' && $weekendModel['preceptor']=='no-def'){
                             return response(['message'=>'Request in process'],202);
                         }
 
-                        else if( $weekendModel['vicerector']=='rejected' && $weekendModel['preceptor']='rejected'){
+                        else if( $weekendModel['vicerector']=='rejected' && $weekendModel['preceptor']='rejected' ){
                             $data['state'] = 'rejected';
                             $mdl->update($data);
                             return response(['message'=>'updated'],202);
@@ -191,45 +205,55 @@ class WeekendController extends Controller
                 }else if($auth_user->rol_id == 4){//preceptor access
 
                     //Preceptor
+                    $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();
 
                     $check_state = array_key_exists('preceptor',$data);
 
                     if($check_state){
                         //evaluate requests already processed
 
-                        if($weekendModel['preceptor']=='rejected'){
-                            return response([
-                                'message'=>'Not found',
-                                'errors' => [
-                                    'preceptor' => 'user has a rejected request'
-                                ]
-                                ],404);
-                        }else if($weekendModel['preceptor']=='approved'){
-                            return response([
-                                'message'=>'Not found',
-                                'errors' => [
-                                    'preceptor' => 'user has a approved request'
-                                ]
-                                ],404);
+                        if($intership['intership'] == $auth_user->intership){ //check intership
 
-                        }else if($weekendModel['preceptor']=='no-def'){
-
-                            if($data['preceptor']=='approved'){ //Evaluate if the state is correct typed
-                                $mdl->update($data);
-                                return response(['message'=>'Acepted'],202);
-                            }else if($data['preceptor']=='rejected'){
-                                $mdl->update($data);
-                                return response(['message'=>'Rejected'],202);
-                            }else{
+                            if($weekendModel['preceptor']=='rejected'){
                                 return response([
-                                    'message'=>'The given data was invalid',
+                                    'message'=>'Not found',
                                     'errors' => [
-                                        'state' => 'the state is invalid'
+                                        'preceptor' => 'user has a rejected request'
                                     ]
-                                    ],400);
+                                    ],404);
+                            }else if($weekendModel['preceptor']=='approved'){
+                                return response([
+                                    'message'=>'Not found',
+                                    'errors' => [
+                                        'preceptor' => 'user has a approved request'
+                                    ]
+                                    ],404);
+
+                            }else if($weekendModel['preceptor']=='no-def'){
+
+                                if($data['preceptor']=='approved'){ //Evaluate if the state is correct typed
+                                    $mdl->update($data);
+                                    return response(['message'=>'Acepted'],202);
+                                }else if($data['preceptor']=='rejected'){
+                                    $mdl->update($data);
+                                    return response(['message'=>'Rejected'],202);
+                                }else{
+                                    return response([
+                                        'message'=>'The given data was invalid',
+                                        'errors' => [
+                                            'state' => 'the state is invalid'
+                                        ]
+                                        ],400);
+                                }
+
                             }
 
+                        }else{
+                            return response(['message'=>'invalid operation',
+                                                'errors' => ['user_code'=>'Wrong intership']],401);
                         }
+
+
 
 
                     }else{
