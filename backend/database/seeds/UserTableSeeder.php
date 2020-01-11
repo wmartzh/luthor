@@ -21,7 +21,8 @@ class UserTableSeeder extends Seeder
             'last_name' => 'Fernandez',
             'code'=>'160049',
             'email' => 'paquito@mail.com',
-            'password' => bcrypt('secret')
+            'password' => bcrypt('secret'),
+            'intership' => 'boys'
         ]);
         \App\User::create([
             'nickname' => 'juanito',
@@ -30,8 +31,30 @@ class UserTableSeeder extends Seeder
             'last_name' => 'Hernandez',
             'code'=>'160050',
             'email' => 'juanito@mail.com',
-            'password' => bcrypt('secret')
+            'password' => bcrypt('secret'),
+            'intership' => 'boys'
         ]);
+        \App\User::create([
+            'nickname' => 'paquita',
+            'rol_id' => '2',
+            'first_name' =>'Paquita',
+            'last_name' => 'Fernandez',
+            'code'=>'160048',
+            'email' => 'paquita@mail.com',
+            'password' => bcrypt('secret'),
+            'intership' => 'girls'
+        ]);
+        \App\User::create([
+            'nickname' => 'juanita',
+            'rol_id' => '2',
+            'first_name' =>'Juanita',
+            'last_name' => 'Hernandez',
+            'code'=>'160030',
+            'email' => 'juanita@mail.com',
+            'password' => bcrypt('secret'),
+            'intership' => 'girls'
+        ]);
+
         \App\User::create([
             'nickname' => 'pedrito',
             'rol_id' => '3',
@@ -39,7 +62,18 @@ class UserTableSeeder extends Seeder
             'last_name' => 'Fernandez',
             'code'=>'160060',
             'email' => 'pedrito@mail.com',
-            'password' => bcrypt('secret')
+            'password' => bcrypt('secret'),
+            'intership' => 'boys'
+        ]);
+        \App\User::create([
+            'nickname' => 'pedrita',
+            'rol_id' => '3',
+            'first_name' =>'Pedrita',
+            'last_name' => 'Fernandez',
+            'code'=>'160090',
+            'email' => 'pedrita@mail.com',
+            'password' => bcrypt('secret'),
+            'intership' => 'girls'
         ]);
         \App\User::create([
             'nickname' => 'jaimito',
