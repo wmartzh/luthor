@@ -6,5 +6,9 @@ export const API_ROUTES = {
   requestPermission: {
     method: 'POST',
     url: '/permissions'
+  },
+  requestWeekendsPermission: {
+    method: 'POST',
+    url: '/weekends'
   }
 }

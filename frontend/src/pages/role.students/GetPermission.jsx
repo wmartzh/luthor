@@ -31,7 +31,8 @@ export const GetPermission = ({ user, history, location }) => {
   const [error, setError] = useState(false)
   const [type, setType] = useState('')
   const [place, setPlace] = useState('')
-  const [entry, setEntry] = useState('')
+  const [entry, setEntry] = useState('') // 2020-01-10 21:57:19
+  const [out, setOut] = useState('') // 2020-01-10 21:57:19
   const [googleLocation, setGoogleLocation] = useState('test location')
 
   const inputLabel = useRef(null)
@@ -49,7 +50,10 @@ export const GetPermission = ({ user, history, location }) => {
       data: data
     })
     console.log(request.data.message)
-    if (request.data.message === 'User has already permission request') {
+    if (
+      request.data.message === 'User has already permission request' ||
+      request.data.message === 'User already has a request in process'
+    ) {
       setError('You already have a permission')
     } else {
       // const { from } = location.state || { from: { pathname: '/' } }
@@ -63,17 +67,17 @@ export const GetPermission = ({ user, history, location }) => {
         API_ROUTES.requestPermission.url,
         { place, date: moment().format('YYYY/MM/DD') }
       )
-    } else {
+    } else if (type === 'weekends') {
       axiosQuery(
-        API_ROUTES.requestPermission.method,
-        API_ROUTES.requestPermission.url,
-        { place, entry, googleLocation, date: moment().format('YYYY/MM/DD') }
+        API_ROUTES.requestWeekendsPermission.method,
+        API_ROUTES.requestWeekendsPermission.url,
+        {
+          in_date_time: entry.replace('T', ' '),
+          out_date_time: out.replace('T', ' '),
+          location: googleLocation
+        }
       )
     }
-  }
-
-  const handleDateChange = date => {
-    setEntry(date)
   }
 
   const button = (disable = false) => (
@@ -140,21 +144,29 @@ export const GetPermission = ({ user, history, location }) => {
           <>
             <TextField
               variant="outlined"
-              label="Entry Time"
               margin="normal"
-              type="time"
-              defaultValue="07:30 "
+              fullWidth
+              id="entry"
+              label="Return date"
+              type="datetime-local"
+              value={entry}
+              onChange={e => setEntry(e.target.value)}
               InputLabelProps={{
                 shrink: true
               }}
-              inputProps={{
-                step: 300 // 5 min
-              }}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
               fullWidth
-              id="entry"
-              onChange={e => setEntry(e.target.value)}
-              value={entry}
-              required
+              id="out"
+              label="Departure date"
+              type="datetime-local"
+              value={out}
+              onChange={e => setOut(e.target.value)}
+              InputLabelProps={{
+                shrink: true
+              }}
             />
             {/* <KeyboardTimePicker
               margin="normal"
@@ -193,7 +205,7 @@ export const GetPermission = ({ user, history, location }) => {
             ? button(true)
             : button(false)
           : type === 'weekends'
-          ? !place && !entry && !googleLocation
+          ? !entry && !out && !googleLocation
             ? button(true)
             : button(false)
           : null}
