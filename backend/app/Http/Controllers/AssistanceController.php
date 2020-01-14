@@ -23,11 +23,10 @@ class AssistanceController extends Controller
 
                 $assistances =\App\Assistance::with(
                   ['event'=>function($query){$query->select('id','title');}],
-
                 )->with(
-                    ['user'=> function($query){$query->select('code','first_name','last_name');}]
+                    ['monitor'=> function($query){$query->select('id','first_name');}]
                 )
-                ->where('user_code',$auth_user->code)->select('user_code','date','time','event_id')->get();
+                ->where('user_code',$auth_user->code)->select('date','time', 'status','event_id', 'monitor_id')->orderBy('id', 'DESC')->get();
 
                 return response(['data'=>$assistances],200);
 

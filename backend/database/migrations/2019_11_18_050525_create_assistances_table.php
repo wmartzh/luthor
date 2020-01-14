@@ -33,7 +33,7 @@ class CreateAssistancesTable extends Migration
                 ->references('code')
                 ->on('users')
                 ->onDelete('cascade');
-                $table->foreign('monitor_id')
+            $table->foreign('monitor_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');

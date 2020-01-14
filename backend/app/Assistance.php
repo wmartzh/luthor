@@ -14,7 +14,10 @@ class Assistance extends Model
 
     public function user(){
         return $this->hasOne('App\User','code','user_code');
-
+    }
+    public function monitor()
+    {
+        return $this->belongsTo('App\User');
     }
     public function event(){
         return $this->belongsTo('App\Event');
