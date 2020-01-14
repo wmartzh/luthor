@@ -10,5 +10,17 @@ export const API_ROUTES = {
   requestWeekendsPermission: {
     method: 'POST',
     url: '/weekends'
+  },
+  createEvent: {
+    method: 'POST',
+    url: '/events'
+  },
+  getStudents: {
+    method: 'GET',
+    url: '/students'
+  },
+  getPenalties: {
+    method: 'GET',
+    url: '/penalties'
   }
 }

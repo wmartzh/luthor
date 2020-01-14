@@ -1,9 +1,14 @@
-import { GetPermission } from '../pages/role.students/GetPermission'
-import { MyAssitance } from '../pages/role.students/MyAssistance'
 import { MyPermissions } from '../pages/role.students/MyPermissions'
 import { StudentsOut } from '../pages/role.preceptor/StudentsOut'
 import { AssistanceDay } from '../pages/role.preceptor/AssistanceDay'
 import { Penalties } from '../pages/role.preceptor/Penalties'
+import { CreateEvents } from '../pages/role.preceptor/CreateEvents'
+import { StudentList } from '../pages/role.preceptor/StundentList'
+
+// user_code: 160049
+// active: 0
+// created_at: "2020-01-11 21:43:42"
+// updated_at: "2020-01-11 21:43:46"
 
 export const preceptorRoutes = [
   {
@@ -20,11 +25,11 @@ export const preceptorRoutes = [
   },
   {
     path: '/create-events',
-    component: GetPermission
+    component: CreateEvents
   },
   {
     path: '/students-list',
-    component: MyAssitance
+    component: StudentList
   },
   {
     path: '/validate-permissions',

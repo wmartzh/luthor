@@ -59,7 +59,7 @@ php artisan serve
 ```
 
 # Changes by F34th3R
-## commit d9f10e8af2aa2f68ff4e6b396426506d22f78937
+## Commit d9f10e8af2aa2f68ff4e6b396426506d22f78937
 * CORS middleware
     - New composer package was installed, more info More info on [CORS Middleware for Laravel](https://github.com/fruitcake/laravel-cors#configuration)
      
@@ -80,7 +80,7 @@ php artisan serve
     PermissionsController.php Line 64
     ```
 
-## commit 
+## Commit last 8e18df6b0d04a67bdf16d74074d20aa90b6f49b8
 * Assistance table
     ```php
     $table->foreign('monitor_id')

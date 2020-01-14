@@ -2,27 +2,27 @@ import React, { useState, useEffect, useRef } from 'react'
 import moment from 'moment'
 
 import Select from '@material-ui/core/es/Select'
+import MenuItem from '@material-ui/core/es/MenuItem'
+import TextField from '@material-ui/core/es/TextField'
 import InputLabel from '@material-ui/core/es/InputLabel'
 import FormControl from '@material-ui/core/es/FormControl'
-import TextField from '@material-ui/core/es/TextField'
-import MenuItem from '@material-ui/core/es/MenuItem'
-// import { KeyboardTimePicker } from '@material-ui/pickers'
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
-import { userStatusColor } from '../../constants/statusColor'
-import { Navigation } from '../../layout/Navigation'
-import { ButtonComponent } from '../../components/ButtonComponent'
-import { LinkComponent } from '../../components/LinkComponent'
-
-import { StyledContainer } from '../../styles/StyledContainer'
-import { StyledSpacer } from '../../styles/StyledSpacer'
-import { StyledStatusBar } from '../../styles/StyledStatusBar'
-import { StyledCard } from '../../styles/StyledCard'
-import { StyledH1 } from '../../styles/StyledH1'
-import { StyledBackButton } from '../../styles/StyledBackButton'
 import { axios } from '../../plugins/axios'
 import { API_ROUTES } from '../../constants/apiRoutes'
+import { userStatusColor } from '../../constants/statusColor'
+
+import { Navigation } from '../../layout/Navigation'
+import { LinkComponent } from '../../components/LinkComponent'
+import { ButtonComponent } from '../../components/ButtonComponent'
+
+import { StyledH1 } from '../../styles/StyledH1'
+import { StyledCard } from '../../styles/StyledCard'
+import { StyledSpacer } from '../../styles/StyledSpacer'
+import { StyledContainer } from '../../styles/StyledContainer'
+import { StyledStatusBar } from '../../styles/StyledStatusBar'
+import { StyledBackButton } from '../../styles/StyledBackButton'
 import { StyledTypography } from '../../styles/StyledTypography'
 
 export const GetPermission = ({ user, history, location }) => {
@@ -60,7 +60,7 @@ export const GetPermission = ({ user, history, location }) => {
       // history.push(from)
     }
   }
-  const submitHandle = async () => {
+  const submitHandle = () => {
     if (type === 'normal') {
       axiosQuery(
         API_ROUTES.requestPermission.method,
