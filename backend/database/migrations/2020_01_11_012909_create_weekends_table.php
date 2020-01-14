@@ -15,7 +15,7 @@ class CreateWeekendsTable extends Migration
     {
         Schema::create('weekends', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_code');
+            $table->bigInteger('user_code');
             $table->enum('state',['in process', 'approved','rejected','deprecated'])->default('in process');
             $table->boolean('check_exit',[true,false])->default(false);
             $table->enum('preceptor',['approved','rejected','no-def',])->default('no-def');
@@ -42,6 +42,10 @@ class CreateWeekendsTable extends Migration
      */
     public function down()
     {
+        Schema::table('weekends', function(Blueprint  $table){
+            $table->dropForeign(['user_code']);
+            $table->dropColumn('user_code');
+        });
         Schema::dropIfExists('weekends');
     }
 }

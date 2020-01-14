@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePenaltiesTable extends Migration
+class CreateEventsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,12 @@ class CreatePenaltiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('penalties', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_code')->nullable();
-            $table->boolean('active',[true, false])->default(false);
+            $table->string('title');
+            $table->timeTz('start_time')->nullable();
+            $table->time('tolerance_time')->nullable();
             $table->timestamps();
-
-            $table->foreign('user_code')
-                ->references('code')
-                ->on('users')
-                ->onDelete('cascade');
         });
     }
 
@@ -33,6 +29,6 @@ class CreatePenaltiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('penalties');
+        Schema::dropIfExists('events');
     }
 }

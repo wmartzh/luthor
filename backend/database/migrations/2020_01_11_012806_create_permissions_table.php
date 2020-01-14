@@ -15,7 +15,7 @@ class CreatePermissionsTable extends Migration
     {
         Schema::create('permissions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('code_user');
+            $table->bigInteger('code_user');
             $table->boolean('check_exit')->default(false);
             $table->enum('status',['active','rejected','deprecated'])->default('active');
             $table->dateTimeTz('output_date_time')->nullable();
@@ -24,13 +24,10 @@ class CreatePermissionsTable extends Migration
             $table->string('place');
             $table->timestamps();
 
-            //Relations
-
             $table->foreign('code_user')
                   ->references('code')
                   ->on('users')
                   ->onDelete('cascade');
-
         });
     }
 
@@ -41,6 +38,13 @@ class CreatePermissionsTable extends Migration
      */
     public function down()
     {
+        Schema::table('permissions', function(Blueprint  $table){
+            $table->dropForeign(['code_user']);
+            $table->dropColumn('code_user');
+        });
         Schema::dropIfExists('permissions');
+
+
+
     }
 }

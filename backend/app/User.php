@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'rol_id','code','first_name','last_name','nickname', 'email', 'password','phone_number','status'
+        'rol_id','code','first_name','last_name','nickname', 'email', 'password','phone_number','status','intership'
     ];
 
     /**
@@ -39,9 +39,7 @@ class User extends Authenticatable
     ];
 
     public function role(){
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class,'id','rol_id');
     }
-    public function weekends(){
-        return $this->hasMany('App\Weekends');
-    }
+
 }

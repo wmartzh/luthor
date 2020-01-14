@@ -16,7 +16,8 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('rol_id');
-            $table->integer('code')->unique();
+            $table->bigInteger('code')->unique();
+            $table->string('prorfile_image')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('nickname');
@@ -25,11 +26,12 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('phone_number')->nullable();
             $table->enum('status',['out','in','penalized'])->default('in');
+            $table->enum('intership',['boys','girls','no-def'])->default('no-def');
             $table->timestamps();
 
             /// Relations
-            $table->foreign('rol_id')->references('id')->on('roles')->onDelete('cascade');
-
+            $table->foreign('rol_id')->references('id')->on('roles')
+            ->onDelete('cascade');
 
         });
     }
@@ -41,6 +43,10 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
+        Schema::table('users', function(Blueprint  $table){
+            $table->dropForeign(['rol_id']);
+            $table->dropColumn('rol_id');
+        });
         Schema::dropIfExists('users');
     }
 }
