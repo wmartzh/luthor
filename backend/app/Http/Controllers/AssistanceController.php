@@ -20,25 +20,42 @@ class AssistanceController extends Controller
 
             if($auth_user->rol_id == 2  || $auth_user->rol_id == 3 ){
 
-
-                $assistances =\App\Assistance::with(
-                  ['event'=>function($query){$query->select('id','title');}],
-
-                )->with(
-                    ['user'=> function($query){$query->select('code','first_name','last_name');}]
-                )
-                ->where('user_code',$auth_user->code)->select('user_code','date','time','event_id')->get();
-
-                return response(['data'=>$assistances],200);
-
-
-
-            }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6){
-                $assistances =\App\Assistance::with(['event' => function($query){
+                $data = \App\Assistance::select('monitor_id','event_id','status','date','time')
+                ->where('user_code',$auth_user->code)
+                ->with(['event'=> function($query){
                     $query->select('id','title');
-                }])->select('user_code','date','time','event_id')->get();
-                return response(['data'=>$assistances],200);
-            }else{
+                }])
+                ->with(['monitor' => function($query){
+                    $query->select('id','first_name','last_name');
+                }])
+                ->orderBy('date','desc')->get();
+
+                return response(['data'=>$data],200);
+            }else if($auth_user->rol_id == 4){
+
+                $data = \App\Assistance::select('user_code','monitor_id','event_id','status','date','time')
+                ->where('intership',$auth_user->intership)
+                ->with(['user'=>function($query){
+                    $query->select('code','first_name','last_name');
+                }])
+                ->with(['event'=> function($query){
+                    $query->select('id','title');
+                }])
+                ->with(['monitor' => function($query){
+                    $query->select('id','first_name','last_name');
+                }])
+                ->where('intership',$auth_user->intership)
+                ->orderBy('date','desc')->get();
+
+                return response(['data'=>$data],200);
+            }
+            else if($auth_user->rol_id == 6){
+
+                return response(['message'=> 'Invalid action', 'errors' => ['urlParameter'=> 'please select intership']],400);
+
+
+            }
+            else{
                 return response(['message'=>'user Unauthorized'],401);
             }
 
@@ -64,7 +81,8 @@ class AssistanceController extends Controller
             'monitor_id',
             'status',
             'date',
-            'time'
+            'time',
+            'intership'
         ]);
         try {
 
@@ -74,6 +92,7 @@ class AssistanceController extends Controller
 
 
                 $data['monitor_id']= $user->id; // get user that check the assistance
+
                 date_default_timezone_set("America/Costa_Rica");
                 $data['time'] = date('H:i:s');    //"06:17:00";
                 $event = \App\Event::select()->where('id',$data['event_id'])->get()->first();
@@ -84,9 +103,10 @@ class AssistanceController extends Controller
                 $time_check2 = strtotime($event['start_time'])+1000; //late 10 min
 
                 $data['date'] = date("Y-m-d");
+                $data['intership'] = $user->intership; //intership control
 
                 /// use when the user was checked
-                $same_assistance = \App\Assistance::select()->where([['user_code',$data['user_code']],['date',date('Y-m-d')]])->get()->first();
+                $same_assistance = \App\Assistance::select()->where([['user_code',$data['user_code']],['date',$data['date']],['event_id',$data['event_id']]])->exists();
 
                 /**
                  * Check if there are more than one try to take assistance
@@ -96,35 +116,44 @@ class AssistanceController extends Controller
                  *        V
                  */
 
-                // if($same_assistance == null){
-
-                // }else{
-
-                // }
-                if($intership['intership'] == $user->intership){ //intership  check
-                    if(strtotime($data['time']) <= $time_check){
-                        $data['status']='present';
-
-                        \App\Assistance::create($data);
-                        return response()->json(['message'=>'Assistance checked']);
+                if($intership['intership'] == $user->intership){ //intership control
 
 
-                    }else if(strtotime($data['time']) > $time_check && strtotime($data['time']) < $time_check2){
-                        $data['status']='late';
-                        \App\Assistance::create($data);
-                        return response()->json(['message'=>'Assistance checked']);
-                    }else {
-                        $data['status']='absent';
-                        \App\Assistance::create($data);
-                        return response()->json(['message'=>'Assistance checked']);
+                    if($same_assistance == false){ //assistance check
+                        if(strtotime($data['time']) <= $time_check){
+                            $data['status']='present';
+                            $data['intership'] = $user->intership; //intership control
+                            \App\Assistance::create($data);
+                            return response()->json(['message'=>'Assistance checked']);
 
+
+                        }else if(strtotime($data['time']) > $time_check && strtotime($data['time']) < $time_check2){
+                            $data['status']='late';
+                            $data['intership'] = $user->intership; //intership control
+                            \App\Assistance::create($data);
+                            return response()->json(['message'=>'Assistance checked']);
+                        }else {
+                            $data['status']='absent';
+                            $data['intership'] = $user->intership; //intership control
+                            \App\Assistance::create($data);
+                            return response()->json(['message'=>'Assistance checked']);
+
+                        }
+
+                    }else{
+
+                        return response(['message'=> 'Bad request',
+                                    'errors'=> ['user_code'=>'user is already checked']],400);
                     }
 
                 }else{
 
                     return response(['message' => 'Invalid operation',
                                     'errors' => ['user_code' => 'wrong intership']],401);
+
                 }
+
+
 
 
 
@@ -144,25 +173,32 @@ class AssistanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($intership)
     {
-        //
+        $auth_user = Auth::user();
+
+
+        if($auth_user->rol_id == 6){
+
+            $data = \App\Assistance::select('user_code','monitor_id','event_id','status','time','intership')
+            ->with(['user' => function($query){
+                $query->select('code','first_name','last_name');
+            }])
+            ->with(['monitor'=> function($query){
+                $query->select('id','first_name','last_name');
+            }])
+            ->with(['event'=> function($query){
+                $query->select('id','title','start_time');
+            }])
+            ->where('intership',$intership)
+            ->orderBy('user_code','asc')
+            ->get();
+
+            return response(['data'=>$data],200);
+
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $assistance = \App\Assistance::findOrFail($id);

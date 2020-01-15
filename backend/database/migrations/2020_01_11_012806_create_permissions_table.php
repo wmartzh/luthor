@@ -22,6 +22,7 @@ class CreatePermissionsTable extends Migration
             $table->dateTimeTz('entry_date_time')->nullable();
             $table->date('date');
             $table->string('place');
+            $table->enum('intership',['boys','girls','no-def'])->default('no-def');
             $table->timestamps();
 
             $table->foreign('code_user')

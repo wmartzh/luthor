@@ -64,13 +64,15 @@ class PermissionsController extends Controller
                 'output_date_time',
                 'date' => 'required',
                 'place' => 'required',
-                'status'
+                'status',
+                'intership'
 
             ]);
 
             $auth_user = Auth::user();
             $usermodel = \App\User::findOrFail($auth_user->id);
             $data['code_user'] = $usermodel['code'];
+            $data['intership'] = $auth_user->intership; //intership control
             if($auth_user->rol_id != 2 && $auth_user->rol_id!= 3){
                 return response()->json(['error'=> 'user can not request a permission']);
             }else{
@@ -145,6 +147,7 @@ class PermissionsController extends Controller
             'check_exit'=>'nullable',
             'entry_date_time',
             'status'
+
         ]);
 
         try{

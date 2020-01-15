@@ -24,6 +24,7 @@ class CreateWeekendsTable extends Migration
             $table->dateTimeTz('in_date_time');
             $table->string('location')->nullable();
             $table->string('message')->nullable();
+            $table->enum('intership',['boys','girls','no-def'])->default('no-def');
             $table->timestamps();
 
             //Relations
