@@ -17,7 +17,7 @@ class CreatePenaltiesTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('user_code') ;
             $table->boolean('active',[true, false])->default(false);
-            $table->string('subject')->nullable();
+            $table->string('reason');
             $table->enum('intership',['boys','girls','no-def'])->default('no-def');
             $table->timestamps();
 

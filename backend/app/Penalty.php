@@ -8,12 +8,12 @@ class Penalty extends Model
 {
     //
     protected $fillable = [
-        'user_code','active'
+        'user_code','active','reason','intership'
     ];
 
-    public function users(){
+    public function user(){
 
-        return $this->hasMany(User::class);
+        return $this->hasOne('App\User','code','user_code');
 
     }
 }

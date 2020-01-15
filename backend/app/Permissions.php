@@ -14,11 +14,12 @@ class Permissions extends Model
         'output_date_time',
         'entry_date_time',
         'date',
-        'place'
+        'place',
+        'permissions'
     ];
 
-    public function users(){
-        return $this->belongsToMany(User::class);
+    public function user(){
+        return $this->hasOne('App\User','code','code_user');
 
     }
 }

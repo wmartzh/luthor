@@ -61,7 +61,7 @@ class AssistanceController extends Controller
 
 
         } catch(Exception $e){
-            return response()->json(['message'=>'something was wrong'],$status=400);
+            return response(['message'=>'something was wrong'],500);
         }
     }
 
@@ -158,11 +158,11 @@ class AssistanceController extends Controller
 
 
             }else{
-                return response()->json(['error'=>'user unauthorized']);
+                return response(['errors'=>['user'=>'user unauthorized']],401);
             }
         } catch (Exception $e) {
 
-            return response()->json(['error'=>$e]);
+            return response(['message'=>'something was wrong'],500);
         }
 
     }
@@ -196,6 +196,9 @@ class AssistanceController extends Controller
 
             return response(['data'=>$data],200);
 
+        }else{
+            return response(['errors'=>['user'=>'user unauthorized']],401);
+
         }
     }
 
@@ -204,6 +207,6 @@ class AssistanceController extends Controller
         $assistance = \App\Assistance::findOrFail($id);
         $assistance->delete();
 
-        return response()->json(['message'=>'OK'],$status=402);
+        return response(['message'=>'OK'],200);
     }
 }

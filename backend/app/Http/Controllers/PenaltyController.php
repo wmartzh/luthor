@@ -24,9 +24,17 @@ class PenaltyController extends Controller
                 $data  = \App\Penalty::select('user_code','active','created_at','updated_at')->where('user_code',$auth_user->code)->get();
                 return response(['data'=>$data],200);
 
-            }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6){
-                $data  = \App\Penalty::select('user_code','active','created_at','updated_at')->get();
+            }else if($auth_user->rol_id == 4){
+                $data  = \App\Penalty::select('user_code','active','reason','created_at')
+                ->with(['user'=>function($query){
+                    $query->select('code','first_name','last_name');
+                }])
+                ->where('intership',$auth_user->intership)
+                ->orderBy('created_at', 'desc')
+                ->get();
                 return response(['data'=>$data],200);
+            }else if($auth_user->rol_id == 6){
+                return response(['message'=> 'Invalid action', 'errors' => ['urlParameter'=> 'please select intership']],400);
             }
 
 
@@ -49,7 +57,8 @@ class PenaltyController extends Controller
         $data = request()->validate([
             'user_code'=> 'required',
             'active',
-            'intership'
+            'reason' => 'required',
+            'intership' => 'nullable'
         ]);
 
 
@@ -61,8 +70,8 @@ class PenaltyController extends Controller
 
             //check rol id --- only rector and preceptor can access
             if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 || $auth_user->rol_id == 5){
-                return response(['message'=>'user can not access'],401);
-            }else if($auth_user->rol_id == 4){
+                return response(['message'=>'User unauthorized'],401);
+            }else if($auth_user->rol_id == 4 ){
 
                 $data['intership'] = $auth_user->intership; //intership control
 
@@ -88,6 +97,41 @@ class PenaltyController extends Controller
 
                 }
 
+            }else if( $auth_user->rol_id == 6){
+
+
+                $req = \App\User::select()->where('code',$data['user_code'])->get()->first();
+                $student = \App\User::findOrFail($req['id']);
+
+                //Check if user is already penalized
+                if($student['status'] == 'penalized'){
+                    return response(['message'=>'user is already penalized'],409);
+                }else{
+                    $check_state = array_key_exists('intership',$data);
+
+
+                    if($check_state){
+
+
+                        $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();
+
+                        if($data['intership'] == $intership['intership']){
+                            $data['active']= true;
+                            $student->update(['status'=>'penalized']);
+                            \App\Penalty::create($data);
+                            return response(['message'=>'user penalized'],201);
+                        }
+                        else{
+                            return response(['message'=> 'Data does not correspond',
+                                            'errors'=>['user_code'=>'Does not correspond','intership'=> 'Does not correspond']],401);
+                        }
+                    }
+                    else{
+                        return response(['message'=> 'The given data was invalid',
+                                        'errors'=>['intership'=>'The intership field is required']],401);
+                    }
+
+                }
             }
 
         }catch(Exception $e){
@@ -101,13 +145,27 @@ class PenaltyController extends Controller
      * @param  \App\Penalty  $penalty
      * @return \Illuminate\Http\Response
      */
-    public function show($code)
+    public function show($intership)
     {
         //
         try{
-            $penalties = \App\Penalty::select()->where('user_code',$code)->get();
-            $penaltiesActive = $penalties->toArray();
-            return response()->json(['data'=>$penaltiesActive]);
+            $auth_user = Auth::user();
+
+            if($auth_user->rol_id == 6){
+                $data  = \App\Penalty::select('user_code','active','reason','created_at')
+                ->with(['user'=>function($query){
+                    $query->select('code','first_name','last_name');
+                }])
+                ->where('intership',$intership)
+                ->orderBy('created_at', 'desc')
+                ->get();
+                return response(['data'=>$data],200);
+
+            }else{
+                return response(['message'=>'User unauthorized'],401);
+            }
+
+
 
         }catch(Exception $e){
          return response()->json(['message'=>'something was wrong'],$status=400);
@@ -126,7 +184,8 @@ class PenaltyController extends Controller
     {
         $data = $request->validate([
             'user_code'=> 'required',
-            'active'
+            'active',
+
         ]);
         try{
 
@@ -136,7 +195,7 @@ class PenaltyController extends Controller
             if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 || $auth_user->rol_id == 5){
 
                 return response(['message'=>'user cant access'],401);
-            }else{
+            }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6){
                 $penalty_active = \App\Penalty::select()->where([['user_code',$data['user_code']],['active',true]])->get()->first();
                 if($penalty_active==null){
                     return response(['message'=>'user has not active penalties'],404);
@@ -145,7 +204,7 @@ class PenaltyController extends Controller
                     $user = \App\User::select()->where('code',$data['user_code'])->get()->first();
                     $u_mdl = \App\User::findOrFail($user['id']);
                     //check if there are active penalties
-                    
+
                     $data['active'] = false;
                     $p_mdl->update($data);
                     $u_mdl->update(['status'=>'in']);

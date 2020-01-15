@@ -35,7 +35,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
     ///Permissions Routes
     Route::group(['prefix'  =>  '/permissions'], function () {
         Route::get('/','PermissionsController@index');
-        Route::get('/{code}','PermissionsController@show');
+        Route::get('/{intership}','PermissionsController@show');
         Route::post('/','PermissionsController@store');
         Route::put('/','PermissionsController@update');
         Route::delete('/{id}','PermissionsController@destroy');
@@ -53,7 +53,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
     ///Penalty Routes
     Route::group(['prefix'  =>  '/penalties'], function () {
         Route::get('/','PenaltyController@index');
-        Route::get('/{id}','PenaltyController@show');
+        Route::get('/{intership}','PenaltyController@show');
         Route::post('/','PenaltyController@store');
         Route::put('/','PenaltyController@update');
 
