@@ -15,18 +15,18 @@ class CreateAssistanceUserTable extends Migration
     {
         Schema::create('assistance_user', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->integer('user_code');
             $table->unsignedBigInteger('assistance_id');
             $table->timestamps();
 
             //Relations
-            $table->foreign('user_id')
-                    ->references('id')
+            $table->foreign('user_code')
+                    ->references('code')
                     ->on('users')
                     ->onDelete('cascade');
             $table->foreign('assistance_id')
                     ->references('id')
-                    ->on('assitances')
+                    ->on('assistances')
                     ->onDelete('cascade');
 
         });

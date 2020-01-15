@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Assitance;
 use Illuminate\Http\Request;
-
-class AssitanceController extends Controller
+use Illuminate\Support\Facades\Auth;
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,6 +14,16 @@ class AssitanceController extends Controller
     public function index()
     {
         //
+        $auth_user = Auth::user();
+
+            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){
+
+                return response(['message'=>'Unauthorized'],401);
+            }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6){
+                $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where('rol_id',2)->orWhere('rol_id',3)->get();
+                return response(['data'=>$data],200);
+            }
+
     }
 
     /**
@@ -41,10 +50,10 @@ class AssitanceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Assitance  $assitance
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Assitance $assitance)
+    public function show($id)
     {
         //
     }
@@ -52,10 +61,10 @@ class AssitanceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Assitance  $assitance
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Assitance $assitance)
+    public function edit($id)
     {
         //
     }
@@ -64,10 +73,10 @@ class AssitanceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Assitance  $assitance
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Assitance $assitance)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +84,10 @@ class AssitanceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Assitance  $assitance
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Assitance $assitance)
+    public function destroy($id)
     {
         //
     }

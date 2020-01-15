@@ -13,15 +13,15 @@ class CreateUsersWeekendsTable extends Migration
      */
     public function up()
     {
-        Schema::create('users_weekends', function (Blueprint $table) {
+        Schema::create('user_weekend', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->integer('user_code');
             $table->unsignedBigInteger('weekend_id');
             $table->timestamps();
 
             //Relations
-            $table->foreign('user_id')
-                    ->references('id')
+            $table->foreign('user_code')
+                    ->references('code')
                     ->on('users')
                     ->onDelete('cascade');
 

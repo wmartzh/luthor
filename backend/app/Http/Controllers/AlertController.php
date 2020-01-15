@@ -15,17 +15,15 @@ class AlertController extends Controller
     public function index()
     {
         //
+        try{
+            $dta = \App\Alert::all();
+
+            return response()->json(['data'=>$dta,'response'=>200]);
+        }catch(Exception $e){
+
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -36,6 +34,19 @@ class AlertController extends Controller
     public function store(Request $request)
     {
         //
+        $vD = request()->validate([
+            'user_id'=> 'required',
+            'destination_id' => 'required',
+            'msg' => 'required'
+        ]);
+        try{
+            \App\Alert::create($vD);
+
+            return response()->json(['response'=> 201]);
+
+        }catch(Exception $e){
+            return response()->json(['response'=> 400]);
+        }
     }
 
     /**
@@ -44,21 +55,18 @@ class AlertController extends Controller
      * @param  \App\Alert  $alert
      * @return \Illuminate\Http\Response
      */
-    public function show(Alert $alert)
+    public function show($id)
     {
         //
+        try{
+            $✅ = \App\Alert::findOrFail($id);
+            return response()->json(['data'=>$✅],$status = 200);
+
+        }catch(Exception $e){
+         return response()->json(['message'=>'something was wrong'],$status=400);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Alert  $alert
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Alert $alert)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -70,6 +78,21 @@ class AlertController extends Controller
     public function update(Request $request, Alert $alert)
     {
         //
+        $data = request()->validate([
+            'user_id'=> 'required',
+            'destination_id' => 'required',
+            'msg' => 'required'
+        ]);
+
+        try{
+            $alert->update($data);
+
+            return response()->json(['message'=> $alert],$status = 200);
+
+
+        }catch(Exception $e){
+            return response()->json(['message'=>'something was wrong'],$status=400);
+        }
     }
 
     /**
@@ -78,8 +101,12 @@ class AlertController extends Controller
      * @param  \App\Alert  $alert
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Alert $alert)
+    public function destroy($id)
     {
         //
+        $alert = \App\Alert::findOrFail($id);
+        $alert->delete();
+
+        return response()->json(['message'=>'OK'],$status=402);
     }
 }

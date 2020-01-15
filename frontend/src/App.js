@@ -1,20 +1,21 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Switch } from 'react-router-dom'
 import { ThemeProvider } from './context/themeColor'
-import { Dashboard } from './pages/Dashboard'
-import { Login } from './pages/Login'
+import { GlobalStyle } from './styles/GlobalStyle'
+import { UserProvider } from './context/UserContext'
+import { RouterHelper } from './helpers/RouterHelper'
 
 export const App = () => {
   return (
-    <ThemeProvider>
-      <Router>
-        <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/" component={Dashboard} />
-        </Switch>
-      </Router>
-    </ThemeProvider>
+    <UserProvider>
+      <ThemeProvider>
+        <Router>
+          <Switch>
+            <RouterHelper />
+          </Switch>
+        </Router>
+        <GlobalStyle />
+      </ThemeProvider>
+    </UserProvider>
   )
 }
-
-export default App

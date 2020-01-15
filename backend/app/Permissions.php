@@ -8,7 +8,13 @@ class Permissions extends Model
 {
     //
     protected $fillable =[
-        'user_id','destination_id','description'
+        'code_user',
+        'status',
+        'check_exit',
+        'output_date_time',
+        'entry_date_time',
+        'date',
+        'place'
     ];
 
     public function users(){

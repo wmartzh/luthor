@@ -15,13 +15,13 @@ class CreatePermissionsUserTable extends Migration
     {
         Schema::create('permissions_user', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->integer('user_code');
             $table->unsignedBigInteger('permissions_id');
             $table->timestamps();
 
             //Relations
-            $table->foreign('user_id')
-                    ->references('id')
+            $table->foreign('user_code')
+                    ->references('code')
                     ->on('users')
                     ->onDelete('cascade');
             $table->foreign('permissions_id')

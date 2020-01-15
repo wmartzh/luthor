@@ -15,16 +15,21 @@ class CreateWeekendsTable extends Migration
     {
         Schema::create('weekends', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->integer('user_code');
+            $table->enum('state',['in process', 'approved','rejected','deprecated'])->default('in process');
+            $table->boolean('check_exit',[true,false])->default(false);
+            $table->enum('preceptor',['approved','rejected','no-def',])->default('no-def');
+            $table->enum('vicerector',['approved','rejected','no-def'])->default('no-def');
             $table->dateTimeTz('out_date_time');
             $table->dateTimeTz('in_date_time');
-            $table->string('location');
+            $table->string('location')->nullable();
+            $table->string('message')->nullable();
             $table->timestamps();
 
             //Relations
 
-            $table->foreign('user_id')
-                ->references('id')
+            $table->foreign('user_code')
+                ->references('code')
                 ->on('users')
                 ->onDelete('cascade');
         });

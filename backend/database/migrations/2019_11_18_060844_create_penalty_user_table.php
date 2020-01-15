@@ -15,13 +15,13 @@ class CreatePenaltyUserTable extends Migration
     {
         Schema::create('penalty_user', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->integer('user_code');
             $table->unsignedBigInteger('penalty_id');
             $table->timestamps();
 
             //Relations
-            $table->foreign('user_id')
-                    ->references('id')
+            $table->foreign('user_code')
+                    ->references('code')
                     ->on('users')
                     ->onDelete('cascade');
             $table->foreign('penalty_id')

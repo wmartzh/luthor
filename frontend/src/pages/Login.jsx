@@ -1,112 +1,144 @@
-import React from 'react'
-import {
-  Grid,
-  Container,
-  CssBaseline,
-  Typography,
-  Box,
-  Avatar,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Button
-} from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
+
+import { axios } from '../plugins/axios'
+
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import { makeStyles } from '@material-ui/styles'
+import TextField from '@material-ui/core/es/TextField'
+
 import { Copyright } from '../components/Copyright'
-import { FthBtn } from '../components/FthBtn'
+import { StyledStatusBar } from '../styles/StyledStatusBar'
+import { StyledSpacer } from '../styles/StyledSpacer'
+import { userStatusColor } from '../constants/statusColor'
+import { ButtonComponent } from '../components/ButtonComponent'
+import { StyledTypography } from '../styles/StyledTypography'
+import { StyledAvatar } from '../styles/StyledAvatar'
+import { StyledCard } from '../styles/StyledCard'
+import { StyledContainer } from '../styles/StyledContainer'
+import { API_ROUTES } from '../constants/apiRoutes'
+import { useUserValues } from '../context/UserContext'
+import { getCurrentRole } from '../helpers/getCurrentLocalStorage'
 
-const useStyles = makeStyles(theme => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white
+export const Login = ({ history, location }) => {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+
+  const { setUser, setToken } = useUserValues()
+
+  const [email, setEmail] = useState('studentMale@mail.com')
+  const [password, setPassword] = useState('secret')
+
+  useEffect(() => {
+    localStorage.removeItem('user')
+    localStorage.removeItem('token')
+    setUser({})
+  }, [setUser])
+
+  const submitHandle = async () => {
+    if (!email && !password) {
+      setError('Some fields are empty 😢.')
+      return
     }
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  avatar: {
-    height: '100px',
-    width: '100px',
-    margin: theme.spacing(1),
-    background: 'linear-gradient(45deg, #92F1D5 30%, #08B1C5 90%)'
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
+    setError()
+    setLoading(true)
+    try {
+      const request = await axios({
+        method: 'POST',
+        url: API_ROUTES.login,
+        data: {
+          email,
+          password
+        }
+      })
+      console.log(request.status)
+      if (request.status === 401) {
+        setError(request.data.message)
+        return
+      }
+      const { username, status, code, token } = request.data
+      localStorage.setItem('token', JSON.stringify(token))
+      localStorage.setItem('user', JSON.stringify({ username, status, code }))
+      setUser({ username, status, code, role: token[0] })
+      setToken(token)
+    } catch (err) {
+      err.message === 'Request failed with status code 401'
+        ? setError('Invalid Credentials, please try again')
+        : setError('Error, please try again')
+    }
+    setLoading(false)
+    const { from } = location.state || { from: { pathname: '/' } }
+    history.push(from)
   }
-}))
-
-export const Login = () => {
-  const classes = useStyles()
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
+    <StyledContainer maxWidth="380px">
+      <StyledSpacer height="100px" />
+      <StyledCard flexDirection="column" roundedTop width="340px">
+        <StyledAvatar radius="50%" background="#08B1C5" fill="#fff">
           <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <FthBtn
-            type="submit"
-            content="Sign In"
-            myClass={classes.submit}
-            to="/"
-          />
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={8}>
+        </StyledAvatar>
+        <StyledTypography fontSize="20px">Sign In</StyledTypography>
+        {error && (
+          <>
+            <StyledSpacer height="20px" />
+            <StyledTypography fontSize="14px" color="red">
+              {error}
+            </StyledTypography>
+          </>
+        )}
+        {loading && (
+          <StyledTypography fontSize="14px" color="green">
+            {loading}
+          </StyledTypography>
+        )}
+        {!error && <StyledSpacer height="20px" />}
+        <TextField
+          variant="outlined"
+          margin="normal"
+          name="email"
+          label="Email Address"
+          id="email"
+          autoComplete="email"
+          onChange={e => setEmail(e.target.value)}
+          value={email}
+          autoFocus
+          fullWidth
+          required
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          type="password"
+          name="password"
+          label="Password"
+          id="password"
+          autoComplete="current-password"
+          onChange={e => setPassword(e.target.value)}
+          value={password}
+          fullWidth
+          required
+        />
+        {/* <FormControlLabel
+          control={<Checkbox value="remember" color="primary" />}
+          label="Remember me"
+        /> */}
+        <StyledSpacer height="40px" />
+        <ButtonComponent
+          click={submitHandle}
+          background="#08B1C5"
+          color="#fff"
+          width="300px"
+        >
+          Sign In
+        </ButtonComponent>
+        <StyledSpacer height="30px" />
         <Copyright />
-      </Box>
-    </Container>
+        <StyledSpacer height="10px" />
+      </StyledCard>
+      <StyledStatusBar
+        background={userStatusColor('in')}
+        width="340px"
+        margin="auto"
+      />
+    </StyledContainer>
   )
 }
