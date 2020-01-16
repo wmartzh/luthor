@@ -169,7 +169,7 @@ export const MyAssitance = () => {
             </StyledSpan>
           </StyledCard>
         )}
-        {assistance &&
+        {(assistance &&
           assistance.map(
             ({
               time: id,
@@ -189,7 +189,18 @@ export const MyAssitance = () => {
                 {tableExpand(date, monitor)}
               </StyledCard>
             )
-          )}
+          )) || (
+          <StyledCard width="100%" flexDirection="column" alignItems="center">
+            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
+              No data {assistance}
+            </StyledSpan>
+          </StyledCard>
+        )}
+        <StyledCard width="100%" flexDirection="column" alignItems="center">
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
+            No data {assistance === []}
+          </StyledSpan>
+        </StyledCard>
       </TableComponent>
     </StyledContainer>
   )
