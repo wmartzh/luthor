@@ -25,6 +25,25 @@ class UserController extends Controller
             }
 
     }
+    public function getStatus(){
+         try{
+
+            $auth_user = Auth::user();
+
+            if($auth_user->rol_id == 3 ||$auth_user->rol_id == 2){
+
+                return  response(['status'=>$auth_user->status],200);
+            }
+            else{
+                return response(['message'=> 'User unauthorized'],401);
+            }
+
+
+         }catch(Exception $e){
+
+
+         }
+    }
 
     /**
      * Show the form for creating a new resource.

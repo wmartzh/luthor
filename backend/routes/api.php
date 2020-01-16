@@ -25,6 +25,8 @@ Route::post('/logout','Api\AuthController@logout')->middleware('auth:api');
 
 Route::group(['middleware'  =>  ['auth:api']], function () {
 
+    Route::get('user-status','UserController@getStatus');
+    Route::get('/penalties-actives','PenaltyController@getActives');
     ///Students
     Route::group(['prefix'  =>  '/students'], function () {
         Route::get('/','UserController@index');
@@ -56,7 +58,6 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
         Route::get('/{intership}','PenaltyController@show');
         Route::post('/','PenaltyController@store');
         Route::put('/','PenaltyController@update');
-
 
     });
 

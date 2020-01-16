@@ -48,6 +48,7 @@ class AuthController extends Controller
                 'username' => Auth::user()->nickname,
                 'code' => Auth::user()->code,
                 'status' => Auth::user()->status,
+                'intership'=> Auth::user()->intership,
                 'token' => Auth::user()->rol_id.$tokenResult // the role will be embedded into the token for security
             ]);
         }

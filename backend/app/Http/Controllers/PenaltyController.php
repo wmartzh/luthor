@@ -44,6 +44,29 @@ class PenaltyController extends Controller
         }
     }
 
+    public function getActives(){
+
+        try{
+            $auth_user = Auth::user();
+
+            if($auth_user->rol_id == 4){
+
+                $data  = \App\Penalty::select('user_code','active','reason','created_at')
+                ->with(['user'=>function($query){
+                    $query->select('code','first_name','last_name');
+                }])
+                ->where([['intership',$auth_user->intership],['active',1]])
+                ->orderBy('created_at', 'desc')
+                ->get();
+                return response(['data'=>$data],200);
+            }
+
+        }catch(Exception $e){
+
+        }
+
+    }
+
 
     /**
      * Store a newly created resource in storage.
