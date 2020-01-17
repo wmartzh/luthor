@@ -5,6 +5,8 @@ import { GlobalStyle } from './styles/GlobalStyle'
 import { UserProvider } from './context/UserContext'
 import { RouterHelper } from './helpers/RouterHelper'
 
+//
+
 export const App = () => {
   return (
     <UserProvider>
