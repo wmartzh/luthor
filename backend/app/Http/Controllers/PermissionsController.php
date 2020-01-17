@@ -29,13 +29,33 @@ class PermissionsController extends Controller
                     'entry_date_time',
                     'date',
                     'place')->where('code_user',$user_auth->code)->orderBy('id', 'DESC')->get();
+                    ->orderBy('date','desc')
+                    ->get();
                     return response(['data'=>$p_data],200);
                 }else if($user_auth->rol_id == 5){
-                    $p_data = \App\Permissions::select('code_user','status')->where('status','active')->get();
+                    $p_data = \App\Permissions::select('code_user','status')
+                    ->where('status','active')
+                    ->get();
                     return response(['data'=>$p_data],200);
-                }else {
-                    $p_data = \App\Permissions::all();
-                    return response(['data'=>$p_data],200);
+                }else if($user_auth->rol_id == 4)
+                {
+                    $data = \App\Permissions::select(
+                        'code_user',
+                        'status',
+                        'output_date_time',
+                        'place',
+                    )
+                    ->with(['user'=> function($query){
+                        $query->select('code','first_name','last_name','status');
+                    }])
+                    ->where('intership',$user_auth->intership)
+                    ->orderBy('code_user','asc')
+                    ->get()
+                    ;
+                    return response(['data'=>$data],200);
+
+                }else if($user_auth->rol_id == 6){
+                    return response(['message'=> 'Invalid action', 'errors' => ['urlParameter'=> 'please select intership']],400);
 
                 }
             }else{
@@ -65,13 +85,15 @@ class PermissionsController extends Controller
                 'output_date_time',
                 'date' => 'required',
                 'place' => 'required',
-                'status'
+                'status',
+                'intership'
 
             ]);
 
             $auth_user = Auth::user();
             $usermodel = \App\User::findOrFail($auth_user->id);
             $data['code_user'] = $usermodel['code'];
+            $data['intership'] = $auth_user->intership; //intership control
             if($auth_user->rol_id != 2 && $auth_user->rol_id!= 3){
                 return response()->json(['error'=> 'user can not request a permission']);
             }else{
@@ -83,7 +105,7 @@ class PermissionsController extends Controller
                         //create reg
                         $data['status'] = 'rejected';
                         \App\Permissions::create($data);
-                        return response()->json(['response'=>'Unauthorized']);
+                        return response(['response'=>'Unauthorized']);
 
 
                     }else if($usermodel['status']=='in'){//check status
@@ -92,14 +114,14 @@ class PermissionsController extends Controller
 
                         $data['status'] = 'active';
                         \App\Permissions::create($data);
-                        return response()->json(['response'=> 'Authorized']);
+                        return response(['response'=> 'Authorized']);
                     }
                     else{
-                        return response()->json(['response'=> 'user has already a request']);
+                        return response(['response'=> 'user has already a request']);
                     }
 
                 }else{
-                    return response(['message'=>'User has already permission request']);
+                    return response(['message'=>'User has already permission request'],400);
                 }
             }
 
@@ -116,13 +138,34 @@ class PermissionsController extends Controller
      * @param  \App\Permissions  $permissions
      * @return \Illuminate\Http\Response
      */
-    public function show($code)
+    public function show($intership)
     {
 
          //
          try{
-            $✅ = \App\Permissions::select()->where('code_user',$code)->get();
-            return response()->json(['data'=>$✅],$status = 200);
+
+            $auth_user = Auth::user();
+
+            if($auth_user->rol_id == 6){
+                $data = \App\Permissions::select(
+                    'code_user',
+                    'status',
+                    'output_date_time',
+                    'entry_date_time',
+                    'date',
+                    'place'
+                )
+                ->with(['user'=> function($query){
+                    $query->select('code','first_name','last_name','status');
+                }])
+                ->where('intership',$intership)
+                ->orderBy('date', 'desc')
+                ->get()
+
+                ;
+                return response(['data'=> $data],200);
+            }
+
 
         }catch(Exception $e){
          return response()->json(['message'=>'something was wrong'],$status=400);
@@ -146,6 +189,7 @@ class PermissionsController extends Controller
             'check_exit'=>'nullable',
             'entry_date_time',
             'status'
+
         ]);
 
         try{
@@ -172,13 +216,13 @@ class PermissionsController extends Controller
                             //Update user and permissions status
                             $usermodel->update(['status'=>'in']);
                             $permissionModel->update($data);
-                            return response()->json(['message'=> 'accepted']);
+                            return response(['message'=> 'accepted'],200);
 
                         }else{//check exit
                             //Update user and permissions status
                             $usermodel->update(['status'=>'out']);
                             $permissionModel->update($data);
-                            return response()->json(['message'=> 'accepted']);
+                            return response(['message'=> 'accepted'],200);
                         }
 
                     }else{
@@ -190,14 +234,14 @@ class PermissionsController extends Controller
                     }
 
                 }else{
-                    return response()->json(['message'=> 'user has not active permissions']);
+                    return response(['message'=> 'user has not active permissions'],204);
                 }
 
 
 
 
             }else{
-                return response()->json(['error'=> 'user unauthorized']);
+                return response(['error'=> 'user unauthorized'],401);
             }
 
 
@@ -205,7 +249,7 @@ class PermissionsController extends Controller
 
 
         }catch(Exception $e){
-            return response()->json(['message'=>'something was wrong'],$status=400);
+            return response(['message'=>'something was wrong'],500);
         }
     }
 
@@ -221,6 +265,6 @@ class PermissionsController extends Controller
         $permissions = \App\Permissions::findOrFail($id);
         $permissions->delete();
 
-        return response()->json(['message'=>'OK'],$status=402);
+        return response(['message'=>'OK'],200);
     }
 }

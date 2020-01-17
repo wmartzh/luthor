@@ -8,7 +8,7 @@ class Assistance extends Model
 {
 
     protected $fillable = [
-        'user_code','monitor_id', 'event_id','status','date','time'
+        'user_code','monitor_id', 'event_id','status','date','time','intership'
     ];
 
 
@@ -18,6 +18,9 @@ class Assistance extends Model
     public function monitor()
     {
         return $this->belongsTo('App\User');
+    }
+    public function monitor(){
+        return $this->HasOne('App\User','id','monitor_id');
     }
     public function event(){
         return $this->belongsTo('App\Event');

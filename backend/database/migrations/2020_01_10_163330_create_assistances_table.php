@@ -21,6 +21,7 @@ class CreateAssistancesTable extends Migration
             $table->enum('status',['present','absent','late'])->default('absent');
             $table->date('date');
             $table->timeTz('time');
+            $table->enum('intership',['boys','girls','no-def'])->default('no-def');
             $table->timestamps();
 
             //Relations

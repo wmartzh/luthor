@@ -26,7 +26,7 @@ class WeekendController extends Controller
 
                 $data = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
                 ->with(['user' => function($query){
-                    $query->select('code','first_name','last_name')
+                    $query->select('code','first_name','last_name');
                 }])
                 ->get();
 

@@ -25,17 +25,19 @@ Route::post('/logout','Api\AuthController@logout')->middleware('auth:api');
 
 Route::group(['middleware'  =>  ['auth:api']], function () {
 
+    Route::get('user-status','UserController@getStatus');
+    Route::get('/penalties-actives','PenaltyController@getActives');
     ///Students
     Route::group(['prefix'  =>  '/students'], function () {
         Route::get('/','UserController@index');
-        Route::get('/{code}','UsersController@show');
-        Route::put('/','UsersController@update');
-        Route::delete('/{id}','UsersController@destroy');
+        Route::get('/{code}','UserController@show');
+        Route::put('/','UserController@update');
+        Route::delete('/{id}','UserController@destroy');
     });
     ///Permissions Routes
     Route::group(['prefix'  =>  '/permissions'], function () {
         Route::get('/','PermissionsController@index');
-        Route::get('/{code}','PermissionsController@show');
+        Route::get('/{intership}','PermissionsController@show');
         Route::post('/','PermissionsController@store');
         Route::put('/','PermissionsController@update');
         Route::delete('/{id}','PermissionsController@destroy');
@@ -53,10 +55,9 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
     ///Penalty Routes
     Route::group(['prefix'  =>  '/penalties'], function () {
         Route::get('/','PenaltyController@index');
-        Route::get('/{code}','PenaltyController@show');
+        Route::get('/{intership}','PenaltyController@show');
         Route::post('/','PenaltyController@store');
         Route::put('/','PenaltyController@update');
-        Route::delete('/{id}','PenaltyController@destroy');
 
     });
 
@@ -64,6 +65,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
     Route::group(['prefix'  =>  '/assistance'], function () {
         Route::post('/','AssistanceController@store');
         Route::get('/','AssistanceController@index');
+        Route::get('/{intership}','AssistanceController@show');
 
     });
     ///Event Routes
