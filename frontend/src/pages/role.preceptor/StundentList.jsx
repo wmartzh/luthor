@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import moment from 'moment'
 import { axios } from '../../plugins/axios'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
@@ -19,22 +18,20 @@ import { Navigation } from '../../layout/Navigation'
 import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledContainer } from '../../styles/StyledContainer'
 
-export const MyPermissions = () => {
+export const StudentList = () => {
   const [expanded, setExpanded] = useState(false)
-  const [permission, setPermission] = useState([])
+  const [students, setStudents] = useState([])
   const [loading, setLoading] = useState(false)
-
-  // TODO: create a loading component
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       const request = await axios({
-        method: 'GET',
-        url: API_ROUTES.getPermission
+        method: API_ROUTES.getStudents.method,
+        url: API_ROUTES.getStudents.url
       })
       if (request.status === 200) {
-        setPermission(request.data.data)
+        setStudents(request.data.data)
       }
       setLoading(false)
     }
@@ -44,39 +41,42 @@ export const MyPermissions = () => {
   const tableheader = [
     {
       size: '100px',
-      title: 'Type',
+      title: 'Code',
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#ff9e7a'
+      color: '#00A7CA'
     },
     {
-      size: '300px',
-      title: 'Place',
+      size: '240px',
+      title: 'First Name',
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#ff9e7a'
+      color: '#00A7CA'
     },
     {
-      size: '180px',
-      title: 'Date',
+      size: '260px',
+      title: 'Last Name',
       display: true,
       displayMd: true,
       displaySm: false,
-      color: '#ff9e7a'
+      color: '#00A7CA'
     },
     {
-      size: '180px',
-      title: 'Out / Entry',
+      size: '160px',
+      title: 'Phone',
       display: true,
       displayMd: false,
       displaySm: false,
-      color: '#ff9e7a'
+      color: '#00A7CA'
     }
   ]
 
-  const tableContent = (status, place, date, out, entry) => (
+  const statusColor = status =>
+    status === 'in' ? '#00A7CA' : status === 'out' ? '#A1C010' : '#FF004C'
+
+  const tableContent = (code, firstName, lastName, phone, status) => (
     <StyledTableBody>
       <StyledTableItem
         width={tableheader[0].size}
@@ -84,8 +84,12 @@ export const MyPermissions = () => {
         displayMd={tableheader[0].displayMd ? 'block' : 'none'}
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
-          {status}
+        <StyledSpan
+          fontFamily="Segoe UI"
+          fontWeigth="600"
+          color={statusColor(status)}
+        >
+          {code}
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -94,8 +98,8 @@ export const MyPermissions = () => {
         displayMd={tableheader[1].displayMd ? 'block' : 'none'}
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#FB7140">
-          {place}
+        <StyledH2 fontWeigth="600" color="#007991">
+          {firstName}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -104,8 +108,8 @@ export const MyPermissions = () => {
         displayMd={tableheader[2].displayMd ? 'block' : 'none'}
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#FB7140">
-          {moment(date).format('DD-MMM-YYYY')}
+        <StyledH2 fontWeigth="600" color="#007991">
+          {lastName}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -114,10 +118,8 @@ export const MyPermissions = () => {
         displayMd={tableheader[3].displayMd ? 'block' : 'none'}
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-          {`${out ? moment(out).format('DD-MMM-YYYY') : '--'} / ${
-            entry ? moment(entry).format('DD-MMM-YYYY') : '--'
-          }`}
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
+          {phone}
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -135,7 +137,7 @@ export const MyPermissions = () => {
     </StyledTableBody>
   )
 
-  const tableExpand = (date, out, entry) =>
+  const tableExpand = (lastName, phone) =>
     expanded && (
       <StyledTableItemExpand paddingLerft={tableheader[0].size}>
         <StyledTableItem
@@ -143,22 +145,20 @@ export const MyPermissions = () => {
           displayMd="none"
           displaySm="flex"
         >
-          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#00A7CA">
             {tableheader[2].title}
           </StyledSpan>
-          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-            {moment(date).format('DD-MMM-YYYY')}
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
+            {lastName}
           </StyledSpan>
           <StyledSpacer height="28px" />
         </StyledTableItem>
 
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#00A7CA">
           {tableheader[3].title}
         </StyledSpan>
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-          {`${out ? moment(out).format('DD-MMM-YYYY') : '--'} / ${
-            entry ? moment(entry).format('DD-MMM-YYYY') : '--'
-          }`}
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
+          {phone}
         </StyledSpan>
       </StyledTableItemExpand>
     )
@@ -167,47 +167,40 @@ export const MyPermissions = () => {
     <StyledContainer>
       <Navigation />
       <TableComponent
-        title="My Permissions"
-        titleColor="#FB7140"
+        title="Studnets"
+        titleColor="#007991"
         tableheader={tableheader}
       >
         {loading && (
           <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
               Loading...
             </StyledSpan>
           </StyledCard>
         )}
-        {(permission &&
-          permission.map(
+        {(students &&
+          students.map(
             ({
-              id,
-              place,
-              date,
+              code,
               status,
-              output_date_time,
-              entry_date_time
+              first_name: firstName,
+              last_name: lastName,
+              phone_number: phone
             }) => (
               <StyledCard
                 width="100%"
                 flexDirection="column"
                 alignItems="start"
                 margin="0 0 16px 0"
-                key={id}
+                key={code}
               >
-                {tableContent(
-                  status,
-                  place,
-                  date,
-                  output_date_time,
-                  entry_date_time
-                )}
-                {tableExpand(date, output_date_time, entry_date_time)}
+                {tableContent(code, firstName, lastName, phone, status)}
+                {tableExpand(lastName, phone)}
               </StyledCard>
             )
           )) || (
           <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
               No data
             </StyledSpan>
           </StyledCard>

@@ -2,26 +2,27 @@ import React, { useState, useEffect, useRef } from 'react'
 import moment from 'moment'
 
 import Select from '@material-ui/core/es/Select'
+import MenuItem from '@material-ui/core/es/MenuItem'
+import TextField from '@material-ui/core/es/TextField'
 import InputLabel from '@material-ui/core/es/InputLabel'
 import FormControl from '@material-ui/core/es/FormControl'
-import TextField from '@material-ui/core/es/TextField'
-import MenuItem from '@material-ui/core/es/MenuItem'
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
-import { userStatusColor } from '../../constants/statusColor'
-import { Navigation } from '../../layout/Navigation'
-import { ButtonComponent } from '../../components/ButtonComponent'
-import { LinkComponent } from '../../components/LinkComponent'
-
-import { StyledContainer } from '../../styles/StyledContainer'
-import { StyledSpacer } from '../../styles/StyledSpacer'
-import { StyledStatusBar } from '../../styles/StyledStatusBar'
-import { StyledCard } from '../../styles/StyledCard'
-import { StyledH1 } from '../../styles/StyledH1'
-import { StyledBackButton } from '../../styles/StyledBackButton'
 import { axios } from '../../plugins/axios'
 import { API_ROUTES } from '../../constants/apiRoutes'
+import { userStatusColor } from '../../constants/statusColor'
+
+import { Navigation } from '../../layout/Navigation'
+import { LinkComponent } from '../../components/LinkComponent'
+import { ButtonComponent } from '../../components/ButtonComponent'
+
+import { StyledH1 } from '../../styles/StyledH1'
+import { StyledCard } from '../../styles/StyledCard'
+import { StyledSpacer } from '../../styles/StyledSpacer'
+import { StyledContainer } from '../../styles/StyledContainer'
+import { StyledStatusBar } from '../../styles/StyledStatusBar'
+import { StyledBackButton } from '../../styles/StyledBackButton'
 import { StyledTypography } from '../../styles/StyledTypography'
 
 export const GetPermission = ({ user, history, location }) => {
@@ -30,7 +31,8 @@ export const GetPermission = ({ user, history, location }) => {
   const [error, setError] = useState(false)
   const [type, setType] = useState('')
   const [place, setPlace] = useState('')
-  const [entry, setEntry] = useState('')
+  const [entry, setEntry] = useState('') // 2020-01-10 21:57:19
+  const [out, setOut] = useState('') // 2020-01-10 21:57:19
   const [googleLocation, setGoogleLocation] = useState('test location')
 
   const inputLabel = useRef(null)
@@ -48,30 +50,37 @@ export const GetPermission = ({ user, history, location }) => {
       data: data
     })
     console.log(request.data.message)
-    if (request.data.message === 'User has already permission request') {
+    if (
+      request.data.message === 'User has already permission request' ||
+      request.data.message === 'User already has a request in process'
+    ) {
       setError('You already have a permission')
     } else {
       // const { from } = location.state || { from: { pathname: '/' } }
       // history.push(from)
     }
   }
-  const submitHandle = async () => {
+  const submitHandle = () => {
     if (type === 'normal') {
       axiosQuery(
         API_ROUTES.requestPermission.method,
         API_ROUTES.requestPermission.url,
         { place, date: moment().format('YYYY/MM/DD') }
       )
-    } else {
+    } else if (type === 'weekends') {
       axiosQuery(
-        API_ROUTES.requestPermission.method,
-        API_ROUTES.requestPermission.url,
-        { place, entry, googleLocation, date: moment().format('YYYY/MM/DD') }
+        API_ROUTES.requestWeekendsPermission.method,
+        API_ROUTES.requestWeekendsPermission.url,
+        {
+          in_date_time: entry.replace('T', ' '),
+          out_date_time: out.replace('T', ' '),
+          location: googleLocation
+        }
       )
     }
   }
 
-  const button = disable => (
+  const button = (disable = false) => (
     <ButtonComponent
       click={submitHandle}
       background="#12B6C6"
@@ -135,14 +144,40 @@ export const GetPermission = ({ user, history, location }) => {
           <>
             <TextField
               variant="outlined"
-              label="Entry Time"
               margin="normal"
               fullWidth
               id="entry"
-              onChange={e => setEntry(e.target.value)}
+              label="Return date"
+              type="datetime-local"
               value={entry}
-              required
+              onChange={e => setEntry(e.target.value)}
+              InputLabelProps={{
+                shrink: true
+              }}
             />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="out"
+              label="Departure date"
+              type="datetime-local"
+              value={out}
+              onChange={e => setOut(e.target.value)}
+              InputLabelProps={{
+                shrink: true
+              }}
+            />
+            {/* <KeyboardTimePicker
+              margin="normal"
+              id="time-picker"
+              label="Time picker"
+              value={entry}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change time'
+              }}
+            /> */}
             <TextField
               variant="outlined"
               label="Location"
@@ -165,15 +200,15 @@ export const GetPermission = ({ user, history, location }) => {
             </StyledTypography>
           </>
         )}
-        {type === ' normal' ? (
-          place ? (
-            button(true)
-          ) : (
-            button(false)
-          )
-        ) : (
-          <div>hola</div>
-        )}
+        {type === 'normal'
+          ? !place
+            ? button(true)
+            : button(false)
+          : type === 'weekends'
+          ? !entry && !out && !googleLocation
+            ? button(true)
+            : button(false)
+          : null}
         <StyledSpacer height="10px" />
       </StyledCard>
       <StyledStatusBar

@@ -51,6 +51,13 @@ class AssistanceController extends Controller
             }
             else if($auth_user->rol_id == 6){
 
+                $assistances =\App\Assistance::with(
+                  ['event'=>function($query){$query->select('id','title');}],
+                )->with(
+                    ['monitor'=> function($query){$query->select('id','first_name');}]
+                )
+                ->where('user_code',$auth_user->code)->select('date','time', 'status','event_id', 'monitor_id')->orderBy('id', 'DESC')->get();
+
                 return response(['message'=> 'Invalid action', 'errors' => ['urlParameter'=> 'please select intership']],400);
 
 

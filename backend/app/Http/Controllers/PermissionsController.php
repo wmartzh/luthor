@@ -23,11 +23,12 @@ class PermissionsController extends Controller
                 $user_auth = Auth::user();
 
                 if($user_auth->rol_id == 2 || $user_auth->rol_id == 3 ){ //student access
-                    $p_data = \App\Permissions::select('status',
+                    $p_data = \App\Permissions::select('id',
+                    'status',
                     'output_date_time',
                     'entry_date_time',
                     'date',
-                    'place')->where('code_user',$user_auth->code)
+                    'place')->where('code_user',$user_auth->code)->orderBy('id', 'DESC')->get();
                     ->orderBy('date','desc')
                     ->get();
                     return response(['data'=>$p_data],200);

@@ -1,19 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+
+import moment from 'moment'
 
 import { Navigation } from '../../layout/Navigation'
 import { StyledContainer } from '../../styles/StyledContainer'
 import {
   StyledTableItem,
   TableComponent,
-  StyledTableItemExpand
+  StyledTableItemExpand,
+  StyledTableBody
 } from '../../components/TableComponent'
 import { StyledH2 } from '../../styles/StyledH2'
 import { ButtonComponent } from '../../components/ButtonComponent'
 import { StyledTypography } from '../../styles/StyledTypography'
+import { API_ROUTES } from '../../constants/apiRoutes'
+import { axios } from '../../plugins/axios'
+import { StyledCard } from '../../styles/StyledCard'
+import { StyledSpan } from '../../styles/StyledSpan'
 
 export const Penalties = () => {
+  const [loading, setLoading] = useState(false)
   const [expanded, setExpanded] = useState(false)
+  const [penalties, setPenalties] = useState([])
   const [weekends, setWeekends] = useState(false)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      const request = await axios({
+        method: API_ROUTES.getPenalties.method,
+        url: API_ROUTES.getPenalties.url
+      })
+      if (request.status === 200) {
+        setPenalties(request.data.data)
+      }
+      setLoading(false)
+    }
+    fetchData()
+  }, [])
 
   const tableheader = [
     {
@@ -50,8 +74,8 @@ export const Penalties = () => {
     }
   ]
 
-  const tableContent = (
-    <>
+  const tableContent = (code, firstName, created) => (
+    <StyledTableBody>
       <StyledTableItem
         width={tableheader[0].size}
         display={tableheader[0].display ? 'block' : 'none'}
@@ -59,7 +83,7 @@ export const Penalties = () => {
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color={!weekends ? '#FF004C' : '#A1C010'}>
-          #001122
+          {code}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -69,7 +93,7 @@ export const Penalties = () => {
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color={!weekends ? '#FF004C' : '#A1C010'}>
-          Jafet Lopez Ch.
+          {firstName}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -79,7 +103,7 @@ export const Penalties = () => {
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color={!weekends ? '#FF004C' : '#A1C010'}>
-          3 days left
+          {moment(created).format('DD/MMM/YYYY')}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -99,7 +123,7 @@ export const Penalties = () => {
           More
         </ButtonComponent>
       </StyledTableItem>
-    </>
+    </StyledTableBody>
   )
 
   const tableExpand = expanded && (
@@ -137,9 +161,35 @@ export const Penalties = () => {
         subtitle="Total: 11"
         titleColor="#FF004C"
         tableheader={tableheader}
-        tableContent={tableContent}
-        tableExpand={tableExpand}
-      />
+      >
+        {loading && (
+          <StyledCard width="100%" flexDirection="column" alignItems="center">
+            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FF004C">
+              Loading...
+            </StyledSpan>
+          </StyledCard>
+        )}
+        {(penalties &&
+          penalties.map(({ user_code: code, active, created_at: created }) => (
+            <StyledCard
+              width="100%"
+              flexDirection="column"
+              alignItems="start"
+              margin="0 0 16px 0"
+              key={code}
+            >
+              {/* TODO: get the username */}
+              {tableContent(code, active, created)}
+              {/* {tableExpand(date, output_date_time, entry_date_time)} */}
+            </StyledCard>
+          ))) || (
+          <StyledCard width="100%" flexDirection="column" alignItems="center">
+            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+              No data
+            </StyledSpan>
+          </StyledCard>
+        )}
+      </TableComponent>
     </StyledContainer>
   )
 }
