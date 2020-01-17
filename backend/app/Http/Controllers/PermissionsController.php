@@ -66,7 +66,27 @@ class PermissionsController extends Controller
             return response($e,500);
         }
     }
+    
+    public function getPermissionsNumber(){
+        try{
+            $auth_user = Auth::user();
 
+            if($auth_user->rol_id == 4 ){
+
+                $data = \App\Permissions::select()->where([['intership',$auth_user->intership],['status' ,'active']])->get();
+
+                return response(['total'=> count($data)],200);
+
+            }else if($auth_user->rol_id == 6){
+                $data = \App\Permissions::select()->where('status','active')->get();
+
+                return response(['total'=> count($data)],200);
+            }
+
+        }catch(Exception $e){
+
+        }
+    }
 
     /**
      * Store a newly created resource in storage.
