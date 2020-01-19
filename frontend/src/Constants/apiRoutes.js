@@ -1,8 +1,12 @@
 export const API_ROUTES = {
-  base: ' http://127.0.0.1:8000/api',
+  base: ' http://127.0.0.1:6060/api', // no hacer commit a esto
   login: '/login',
   getPermission: '/permissions',
   getAssistance: '/assistance',
+  getStatus: {
+    method: 'GET',
+    url: '/user-status'
+  },
   requestPermission: {
     method: 'POST',
     url: '/permissions'
