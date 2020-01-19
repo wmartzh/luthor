@@ -46,8 +46,9 @@ export const CreateEvents = () => {
     if (request.status === 200) {
       setTime('')
       setTitle('')
+      setCreate(false)
+      setToast('Event was created successfully!')
     }
-    console.log(request)
   }
 
   const isEmpty = !(title !== '' && time !== '')
