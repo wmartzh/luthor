@@ -30,7 +30,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
     ///Students
     Route::group(['prefix'  =>  '/students'], function () { //penalties-actives
         Route::get('/','UserController@index');
-        Route::get('/{code}','UserController@show');
+        Route::get('/{intership}','UserController@show');
         Route::put('/','UserController@update');
         Route::delete('/{id}','UserController@destroy');
     });

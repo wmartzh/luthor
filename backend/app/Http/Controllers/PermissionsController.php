@@ -29,8 +29,7 @@ class PermissionsController extends Controller
                     'entry_date_time',
                     'date',
                     'place')->where('code_user',$user_auth->code)->orderBy('id', 'DESC')->get();
-                    ->orderBy('date','desc')
-                    ->get();
+                   
                     return response(['data'=>$p_data],200);
                 }else if($user_auth->rol_id == 5){
                     $p_data = \App\Permissions::select('code_user','status')
@@ -67,7 +66,7 @@ class PermissionsController extends Controller
             return response($e,500);
         }
     }
-    
+
     public function getPermissionsNumber(){
         try{
             $auth_user = Auth::user();
