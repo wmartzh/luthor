@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 import userPhoto from '../assets/img/person_image.jpg'
 import { ButtonComponent } from '../components/ButtonComponent'
@@ -12,8 +12,11 @@ import { StyledStatusBar } from '../styles/StyledStatusBar'
 // import { Navigation } from '../layout/Navigation'
 import { StyledContainer } from '../styles/StyledContainer'
 import { DashboardButtonsComponent } from '../components/DashboardButtonsComponent'
+import { useUserValues } from '../context/UserContext'
+import { statusService } from '../services/statusService'
 
-export const Dashboard = ({ user }) => {
+export const Dashboard = () => {
+  const { user, setUser } = useUserValues()
   const { username, role, status, code } = user
 
   return (
@@ -43,6 +46,7 @@ export const Dashboard = ({ user }) => {
         background={userStatusColor(status)}
         width="340px"
         margin="auto"
+        onClick={() => statusService(setUser)}
       />
     </StyledContainer>
   )

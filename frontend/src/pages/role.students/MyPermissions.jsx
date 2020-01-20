@@ -172,13 +172,19 @@ export const MyPermissions = () => {
         tableheader={tableheader}
       >
         {loading && (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
+          <StyledCard
+            width="100%"
+            flexDirection="column"
+            alignItems="center"
+            margin="0 0 16px 0"
+          >
             <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
               Loading...
             </StyledSpan>
           </StyledCard>
         )}
-        {(permission &&
+        {/* TODO: fix no data! */}
+        {(permission.length !== 0 &&
           permission.map(
             ({
               id,

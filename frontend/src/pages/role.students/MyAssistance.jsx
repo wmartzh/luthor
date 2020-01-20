@@ -163,13 +163,19 @@ export const MyAssitance = () => {
         tableheader={tableheader}
       >
         {loading && (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
+          <StyledCard
+            width="100%"
+            flexDirection="column"
+            alignItems="center"
+            margin="0 0 16px 0"
+          >
             <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
               Loading...
             </StyledSpan>
           </StyledCard>
         )}
-        {(assistance &&
+        {/* TODO: fix no data! */}
+        {(assistance.length !== 0 &&
           assistance.map(
             ({
               time: id,
@@ -192,15 +198,10 @@ export const MyAssitance = () => {
           )) || (
           <StyledCard width="100%" flexDirection="column" alignItems="center">
             <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
-              No data {assistance}
+              No data
             </StyledSpan>
           </StyledCard>
         )}
-        <StyledCard width="100%" flexDirection="column" alignItems="center">
-          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
-            No data {assistance === []}
-          </StyledSpan>
-        </StyledCard>
       </TableComponent>
     </StyledContainer>
   )
