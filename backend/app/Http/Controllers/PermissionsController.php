@@ -30,12 +30,7 @@ class PermissionsController extends Controller
                     'date',
                     'place')->where('code_user',$user_auth->code)->orderBy('id', 'DESC')->get();
                     return response(['data'=>$p_data],200);
-                }else if($user_auth->rol_id == 5){
-                    $p_data = \App\Permissions::select('code_user','status')
-                    ->where('status','active')
-                    ->get();
-                    return response(['data'=>$p_data],200);
-                }else if($user_auth->rol_id == 4)
+                }else if($user_auth->rol_id == 4) /// Preceptor acces
                 {
                     $data = \App\Permissions::select(
                         'code_user',
@@ -52,8 +47,31 @@ class PermissionsController extends Controller
                     ;
                     return response(['data'=>$data],200);
 
-                }else if($user_auth->rol_id == 6){
+                }else if($user_auth->rol_id == 6){ // vicerector accesss
                     return response(['message'=> 'Invalid action', 'errors' => ['urlParameter'=> 'please select intership']],400);
+
+                }
+                else if($user_auth->rol_id == 5){
+
+                    $normal = \App\Permissions::select(
+                        'code_user',
+                        'status',
+                    )
+                    ->with(['user'=> function($query){
+                        $query->select('code','first_name','last_name',);
+                    }])
+                    ->orderBy('code_user','asc')
+                    ->get();
+
+                    $weekend= \App\Weekend::select('user_code','state','check_exit')
+                    ->with(['user' => function($query){
+                        $query->select('code','first_name','last_name',);
+
+                    }])
+                    ->get();
+
+                    return response(['data'=> ['normal'=> $normal,'weekend'=> $weekend]]);
+
 
                 }
             }else{
