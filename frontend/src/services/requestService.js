@@ -1,11 +1,18 @@
 import { API_ROUTES } from '../constants/apiRoutes'
 import { axios } from '../plugins/axios'
 
-export const myEventsService = async (setData, setLoading) => {
+export const requestService = async (
+  method,
+  url,
+  data = null,
+  setData,
+  setLoading
+) => {
   setLoading(true)
   const request = await axios({
-    method: API_ROUTES.getEvents.method,
-    url: API_ROUTES.getEvents.url
+    method: method,
+    url: url,
+    data: data
   })
   if (request.status === 200) {
     setData(request.data.data)

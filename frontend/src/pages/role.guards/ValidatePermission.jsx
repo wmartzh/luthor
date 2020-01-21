@@ -14,6 +14,10 @@ import { StyledContainer } from '../../styles/StyledContainer'
 import { ButtonComponent } from '../../components/ButtonComponent'
 
 export const ValidatePermission = () => {
+  const [expanded, setExpanded] = useState(false)
+  const [permission, setPermission] = useState([])
+  const [loading, setLoading] = useState(false)
+
   const tableheader = [
     {
       size: '160px',
@@ -41,7 +45,7 @@ export const ValidatePermission = () => {
     }
   ]
 
-  const tableContent = (
+  const tableContent = (code, type) => (
     <>
       <StyledTableItem
         width={tableheader[0].size}
@@ -50,7 +54,7 @@ export const ValidatePermission = () => {
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#1D7AA2">
-          #001122
+          {code}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -60,7 +64,7 @@ export const ValidatePermission = () => {
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#77B0C8">
-          Normal
+          {type}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -90,8 +94,9 @@ export const ValidatePermission = () => {
         title="Validate Permissions"
         titleColor="#1D7AA2"
         tableheader={tableheader}
-        tableContent={tableContent}
-      />
+      >
+        {}
+      </TableComponent>
     </StyledContainer>
   )
 }

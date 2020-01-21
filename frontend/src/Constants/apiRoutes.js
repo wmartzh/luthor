@@ -21,7 +21,11 @@ export const API_ROUTES = {
   },
   getStudents: {
     method: 'GET',
-    url: '/students'
+    url: {
+      base: '/students',
+      male: '/students/male',
+      female: '/students/female'
+    }
   },
   getPenalties: {
     method: 'GET',

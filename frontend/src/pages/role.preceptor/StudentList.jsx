@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { axios } from '../../plugins/axios'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import {
@@ -17,6 +16,7 @@ import { StyledSpan } from '../../styles/StyledSpan'
 import { Navigation } from '../../layout/Navigation'
 import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledContainer } from '../../styles/StyledContainer'
+import { requestService } from '../../services/requestService'
 
 export const StudentList = () => {
   const [expanded, setExpanded] = useState(false)
@@ -24,18 +24,13 @@ export const StudentList = () => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      const request = await axios({
-        method: API_ROUTES.getStudents.method,
-        url: API_ROUTES.getStudents.url
-      })
-      if (request.status === 200) {
-        setStudents(request.data.data)
-      }
-      setLoading(false)
-    }
-    fetchData()
+    requestService(
+      API_ROUTES.getStudents.method,
+      API_ROUTES.getStudents.url.base,
+      null,
+      setStudents,
+      setLoading
+    )
   }, [])
 
   const tableheader = [

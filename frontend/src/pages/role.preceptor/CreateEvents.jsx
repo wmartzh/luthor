@@ -25,6 +25,8 @@ import {
   StyledTableItem,
   StyledTableItemExpand
 } from '../../components/TableComponent'
+import { myEventsService } from '../../services/myEventsService'
+import { requestService } from '../../services/requestService'
 
 export const CreateEvents = () => {
   const [error, setError] = useState(false)
@@ -48,6 +50,13 @@ export const CreateEvents = () => {
       setTitle('')
       setCreate(false)
       setToast('Event was created successfully!')
+      requestService(
+        API_ROUTES.getEvents.method,
+        API_ROUTES.getEvents.url,
+        null,
+        setEvents,
+        setLoading
+      )
     }
   }
 
@@ -72,7 +81,7 @@ export const CreateEvents = () => {
     },
     {
       size: '170px',
-      title: 'Craeted',
+      title: 'Tolerance',
       display: true,
       displayMd: false,
       displaySm: false,
@@ -81,21 +90,17 @@ export const CreateEvents = () => {
   ]
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      const request = await axios({
-        method: API_ROUTES.getEvents.method,
-        url: API_ROUTES.getEvents.url
-      })
-      if (request.status === 200) {
-        setEvents(request.data.data)
-      }
-      setLoading(false)
-    }
-    fetchData()
+    // myEventsService(setEvents, setLoading)
+    requestService(
+      API_ROUTES.getEvents.method,
+      API_ROUTES.getEvents.url,
+      null,
+      setEvents,
+      setLoading
+    )
   }, [])
 
-  const tableContent = (title, time, created) => (
+  const tableContent = (title, time, tolerance) => (
     <StyledTableBody>
       <StyledTableItem
         width={tableheader[0].size}
@@ -139,7 +144,7 @@ export const CreateEvents = () => {
           fontWeigth="600"
           color="#FBB13C"
         >
-          {moment(created).format('DD/MMM/YYYY')}
+          {tolerance}
         </StyledTypography>
       </StyledTableItem>
       <StyledTableItem
@@ -157,7 +162,7 @@ export const CreateEvents = () => {
     </StyledTableBody>
   )
 
-  const tableExpand = (date, monitor) =>
+  const tableExpand = (time, tolerance) =>
     expanded && (
       <StyledTableItemExpand paddingLerft={tableheader[0].size}>
         <StyledTableItem displayMd="none" displaySm="flex">
@@ -166,14 +171,14 @@ export const CreateEvents = () => {
             fontWeigth="600"
             color="#FBB84D"
           >
-            {tableheader[3].title}
+            {tableheader[1].title}
           </StyledTypography>
           <StyledTypography
             fontFamily="Segoe UI"
             fontWeigth="600"
             color="#FBB13C"
           >
-            {moment(date).format('DD-MMM-YYYY')}
+            {time}
           </StyledTypography>
 
           <StyledSpacer height="28px" />
@@ -186,7 +191,7 @@ export const CreateEvents = () => {
           {tableheader[2].title}
         </StyledTypography>
         <StyledTypography fontWeigth="600" color="#FBB13C">
-          {monitor}
+          {tolerance}
         </StyledTypography>
       </StyledTableItemExpand>
     )
@@ -229,7 +234,7 @@ export const CreateEvents = () => {
           )}
           {events &&
             events.map(
-              ({ id, title, start_time: time, created_at: created }) => (
+              ({ id, title, start_time: time, tolerance_time: tolerance }) => (
                 <StyledCard
                   width="100%"
                   flexDirection="column"
@@ -237,8 +242,8 @@ export const CreateEvents = () => {
                   margin="0 0 16px 0"
                   key={id}
                 >
-                  {tableContent(title, time, created)}
-                  {/* {tableExpand(date, monitor)} */}
+                  {tableContent(title, time, tolerance)}
+                  {tableExpand(time, tolerance)}
                 </StyledCard>
               )
             )}
