@@ -27,13 +27,17 @@ import {
 } from '../../components/TableComponent'
 import { myEventsService } from '../../services/myEventsService'
 import { requestService } from '../../services/requestService'
+import { defaultColors } from '../../constants/statusColor'
 
 export const CreateEvents = () => {
   const [error, setError] = useState(false)
   const [toast, setToast] = useState(false)
+  const [id, setId] = useState('')
   const [title, setTitle] = useState('')
   const [time, setTime] = useState('')
+  const [toleranceTime, setToleranceTime] = useState('')
   const [create, setCreate] = useState(false)
+  const [edit, setEdit] = useState(false)
 
   const [expanded, setExpanded] = useState(false)
   const [events, setEvents] = useState([])
@@ -45,6 +49,7 @@ export const CreateEvents = () => {
       url: API_ROUTES.createEvent.url,
       data: { title, start_time: time }
     })
+    // TODO: update method!
     if (request.status === 200) {
       setTime('')
       setTitle('')
@@ -99,6 +104,107 @@ export const CreateEvents = () => {
       setLoading
     )
   }, [])
+
+  const editHandler = (id, title, time, tolerance) => {
+    setTitle(title)
+    setTime(time)
+    setToleranceTime(tolerance)
+    setId(id)
+    setCreate(true)
+    setEdit(true)
+  }
+
+  const cancel = () => {
+    setTitle('')
+    setTime('')
+    setToleranceTime('')
+    setCreate(false)
+    setEdit(false)
+  }
+
+  const createForm = (
+    <StyledCard flexDirection="column" roundedTop width="400px">
+      <StyledBackButton>
+        <ArrowBackIosIcon
+          onClick={() => cancel()}
+          fontSize="small"
+          style={{ marginTop: '5px' }}
+        />
+      </StyledBackButton>
+      <StyledH1
+        fontWeigth="600"
+        color="#FBB13C"
+        style={{ margin: '0 0 8px 0' }}
+      >
+        Create a new Event
+      </StyledH1>
+
+      <StyledSpacer height="20px" />
+      <TextField
+        variant="outlined"
+        label="Event Title"
+        margin="normal"
+        fullWidth
+        id="title"
+        onChange={e => setTitle(e.target.value)}
+        value={title}
+        required
+      />
+      <TextField
+        variant="outlined"
+        margin="normal"
+        fullWidth
+        id="time"
+        label="Event time"
+        type="time"
+        onChange={e => setTime(e.target.value)}
+        value={time}
+        InputLabelProps={{
+          shrink: true
+        }}
+      />
+      <TextField
+        variant="outlined"
+        margin="normal"
+        fullWidth
+        id="time"
+        label="Tolerance time"
+        type="time"
+        onChange={e => setToleranceTime(e.target.value)}
+        value={toleranceTime}
+        InputLabelProps={{
+          shrink: true
+        }}
+      />
+      {!error && <StyledSpacer height="40px" />}
+      {error && (
+        <>
+          <StyledSpacer height="21px" />
+          <StyledTypography color="red" fontSize="16px">
+            {error}
+          </StyledTypography>
+        </>
+      )}
+      {edit && (
+        <ButtonComponent
+          click={submitHandle}
+          background={defaultColors.red}
+          width="360px"
+          disable={isEmpty}
+        >
+          Delete
+        </ButtonComponent>
+      )}
+      <ButtonComponent
+        click={submitHandle}
+        background={edit ? defaultColors.green : '#FBB13C'}
+        width="360px"
+        disable={isEmpty}
+      >
+        {(edit && 'Update') || 'Create'}
+      </ButtonComponent>
+    </StyledCard>
+  )
 
   const tableContent = (title, time, tolerance) => (
     <StyledTableBody>
@@ -241,6 +347,8 @@ export const CreateEvents = () => {
                   alignItems="start"
                   margin="0 0 16px 0"
                   key={id}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => editHandler(id, title, time, tolerance)}
                 >
                   {tableContent(title, time, tolerance)}
                   {tableExpand(time, tolerance)}
@@ -249,66 +357,7 @@ export const CreateEvents = () => {
             )}
         </TableComponent>
       )}
-      {create && (
-        <StyledCard flexDirection="column" roundedTop width="400px">
-          <StyledBackButton>
-            <ArrowBackIosIcon
-              onClick={() => setCreate(prev => !prev)}
-              fontSize="small"
-              style={{ marginTop: '5px' }}
-            />
-          </StyledBackButton>
-          <StyledH1
-            fontWeigth="600"
-            color="#FBB13C"
-            style={{ margin: '0 0 8px 0' }}
-          >
-            Create a new Event
-          </StyledH1>
-
-          <StyledSpacer height="20px" />
-          <TextField
-            variant="outlined"
-            label="Event Title"
-            margin="normal"
-            fullWidth
-            id="title"
-            onChange={e => setTitle(e.target.value)}
-            value={title}
-            required
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            id="time"
-            label="Event time"
-            type="time"
-            onChange={e => setTime(e.target.value)}
-            value={time}
-            InputLabelProps={{
-              shrink: true
-            }}
-          />
-          {!error && <StyledSpacer height="40px" />}
-          {error && (
-            <>
-              <StyledSpacer height="21px" />
-              <StyledTypography color="red" fontSize="16px">
-                {error}
-              </StyledTypography>
-            </>
-          )}
-          <ButtonComponent
-            click={submitHandle}
-            background="#FBB13C"
-            width="360px"
-            disable={isEmpty}
-          >
-            Create
-          </ButtonComponent>
-        </StyledCard>
-      )}
+      {create && createForm}
     </StyledContainer>
   )
 }
