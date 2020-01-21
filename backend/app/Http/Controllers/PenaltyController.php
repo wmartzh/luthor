@@ -67,6 +67,27 @@ class PenaltyController extends Controller
 
     }
 
+    public function getActivesNumber(){
+        try{
+            $auth_user = Auth::user();
+
+            if($auth_user->rol_id == 4 ){
+
+                $data = \App\Penalty::select()->where([['active' ,1],['intership',$auth_user->intership]])->get();
+
+                return response(['total'=> count($data)],200);
+
+            }else if($auth_user->rol_id == 6){
+                $data = \App\Penalty::select()->where('active' ,1)->get();
+
+                return response(['total'=> count($data)],200);
+            }
+
+        }catch(Exception $e){
+
+        }
+    }
+
 
     /**
      * Store a newly created resource in storage.

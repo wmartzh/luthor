@@ -26,11 +26,11 @@ Route::post('/logout','Api\AuthController@logout')->middleware('auth:api');
 Route::group(['middleware'  =>  ['auth:api']], function () {
 
     Route::get('user-status','UserController@getStatus');
-    Route::get('/penalties-actives','PenaltyController@getActives');
+
     ///Students
-    Route::group(['prefix'  =>  '/students'], function () {
+    Route::group(['prefix'  =>  '/students'], function () { //penalties-actives
         Route::get('/','UserController@index');
-        Route::get('/{code}','UserController@show');
+        Route::get('/{intership}','UserController@show');
         Route::put('/','UserController@update');
         Route::delete('/{id}','UserController@destroy');
     });
@@ -42,6 +42,8 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
         Route::put('/','PermissionsController@update');
         Route::delete('/{id}','PermissionsController@destroy');
     });
+
+    Route::get('permissions-number','PermissionsController@getPermissionsNumber');
 
       ///Weekend Routes
       Route::group(['prefix'  =>  '/weekends'], function () {
@@ -68,6 +70,10 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
         Route::get('/{intership}','AssistanceController@show');
 
     });
+    Route::get('/active-penalties','PenaltyController@getActives');
+    Route::get('/penalties-number','PenaltyController@getActivesNumber');
+
+
     ///Event Routes
     Route::group(['prefix'  =>  '/events'], function () {
         Route::get('/','EventController@index');
