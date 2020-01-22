@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { axios } from '../../plugins/axios'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import {
@@ -17,25 +16,23 @@ import { StyledSpan } from '../../styles/StyledSpan'
 import { Navigation } from '../../layout/Navigation'
 import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledContainer } from '../../styles/StyledContainer'
+import { requestService } from '../../services/requestService'
+import { defaultColors } from '../../constants/statusColor'
 
 export const StudentList = () => {
   const [expanded, setExpanded] = useState(false)
   const [students, setStudents] = useState([])
+  const [selected, setSelected] = useState('')
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      const request = await axios({
-        method: API_ROUTES.getStudents.method,
-        url: API_ROUTES.getStudents.url
-      })
-      if (request.status === 200) {
-        setStudents(request.data.data)
-      }
-      setLoading(false)
-    }
-    fetchData()
+    requestService(
+      API_ROUTES.getStudents.method,
+      API_ROUTES.getStudents.url.base,
+      null,
+      setStudents,
+      setLoading
+    )
   }, [])
 
   const tableheader = [
@@ -74,7 +71,21 @@ export const StudentList = () => {
   ]
 
   const statusColor = status =>
-    status === 'in' ? '#00A7CA' : status === 'out' ? '#A1C010' : '#FF004C'
+    status === 'in'
+      ? defaultColors.primary
+      : status === 'out'
+      ? defaultColors.green
+      : defaultColors.red
+
+  const studentInfo = (
+    <>
+      <StyledSpacer height="90px" />
+      <StyledCard style={{ cursor: 'pointer' }} onClick={() => setSelected('')}>
+        User Details
+        {selected.code}
+      </StyledCard>
+    </>
+  )
 
   const tableContent = (code, firstName, lastName, phone, status) => (
     <StyledTableBody>
@@ -119,7 +130,7 @@ export const StudentList = () => {
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
-          {phone}
+          {phone || 'none'}
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -158,7 +169,7 @@ export const StudentList = () => {
           {tableheader[3].title}
         </StyledSpan>
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
-          {phone}
+          {phone || 'none'}
         </StyledSpan>
       </StyledTableItemExpand>
     )
@@ -166,46 +177,61 @@ export const StudentList = () => {
   return (
     <StyledContainer>
       <Navigation />
-      <TableComponent
-        title="Studnets"
-        titleColor="#007991"
-        tableheader={tableheader}
-      >
-        {loading && (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
-              Loading...
-            </StyledSpan>
-          </StyledCard>
-        )}
-        {(students &&
-          students.map(
-            ({
-              code,
-              status,
-              first_name: firstName,
-              last_name: lastName,
-              phone_number: phone
-            }) => (
-              <StyledCard
-                width="100%"
-                flexDirection="column"
-                alignItems="start"
-                margin="0 0 16px 0"
-                key={code}
+      {selected === '' && (
+        <TableComponent
+          title="Studnets"
+          titleColor="#007991"
+          tableheader={tableheader}
+        >
+          {loading && (
+            <StyledCard width="100%" flexDirection="column" alignItems="center">
+              <StyledSpan
+                fontFamily="Segoe UI"
+                fontWeigth="600"
+                color="#007991"
               >
-                {tableContent(code, firstName, lastName, phone, status)}
-                {tableExpand(lastName, phone)}
-              </StyledCard>
-            )
-          )) || (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
-              No data
-            </StyledSpan>
-          </StyledCard>
-        )}
-      </TableComponent>
+                Loading...
+              </StyledSpan>
+            </StyledCard>
+          )}
+          {(students &&
+            students.map(
+              ({
+                code,
+                status,
+                first_name: firstName,
+                last_name: lastName,
+                phone_number: phone
+              }) => (
+                <StyledCard
+                  width="100%"
+                  flexDirection="column"
+                  alignItems="start"
+                  margin="0 0 16px 0"
+                  key={code}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() =>
+                    setSelected({ code, firstName, lastName, phone, status })
+                  }
+                >
+                  {tableContent(code, firstName, lastName, phone, status)}
+                  {tableExpand(lastName, phone)}
+                </StyledCard>
+              )
+            )) || (
+            <StyledCard width="100%" flexDirection="column" alignItems="center">
+              <StyledSpan
+                fontFamily="Segoe UI"
+                fontWeigth="600"
+                color="#007991"
+              >
+                No data
+              </StyledSpan>
+            </StyledCard>
+          )}
+        </TableComponent>
+      )}
+      {selected && studentInfo}
     </StyledContainer>
   )
 }

@@ -56,6 +56,7 @@ class PermissionsController extends Controller
                     $normal = \App\Permissions::select(
                         'code_user',
                         'status',
+                        'check_exit'
                     )
                     ->with(['user'=> function($query){
                         $query->select('code','first_name','last_name',);

@@ -1,7 +1,10 @@
 export const API_ROUTES = {
   base: ' http://127.0.0.1:6060/api', // no hacer commit a esto
   login: '/login',
-  getPermission: '/permissions',
+  getPermission: {
+    method: 'GET',
+    url: '/permissions'
+  },
   getAssistance: '/assistance',
   getStatus: {
     method: 'GET',
@@ -11,8 +14,16 @@ export const API_ROUTES = {
     method: 'POST',
     url: '/permissions'
   },
+  updatePermission: {
+    method: 'PUT',
+    url: '/permissions'
+  },
   requestWeekendsPermission: {
     method: 'POST',
+    url: '/weekends'
+  },
+  updateWeekendsPermission: {
+    method: 'PUT',
     url: '/weekends'
   },
   createEvent: {
@@ -21,7 +32,11 @@ export const API_ROUTES = {
   },
   getStudents: {
     method: 'GET',
-    url: '/students'
+    url: {
+      base: '/students',
+      male: '/students/male',
+      female: '/students/female'
+    }
   },
   getPenalties: {
     method: 'GET',
