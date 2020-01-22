@@ -6,5 +6,8 @@ export const submitService = async (method, url, data, id) => {
     url: url,
     data: data
   })
+  if (request.status === 200) {
+    return request.data
+  }
   console.log(request)
 }

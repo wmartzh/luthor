@@ -30,8 +30,8 @@ export const MyPermissions = () => {
     const fetchData = async () => {
       setLoading(true)
       const request = await axios({
-        method: 'GET',
-        url: API_ROUTES.getPermission
+        method: API_ROUTES.getPermission.method,
+        url: API_ROUTES.getPermission.url
       })
       if (request.status === 200) {
         setPermission(request.data.data)
