@@ -48,7 +48,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
       ///Weekend Routes
       Route::group(['prefix'  =>  '/weekends'], function () {
         Route::get('/','WeekendController@index');
-        Route::get('/{id}','WeekendController@show');
+        Route::get('/{intership}','WeekendController@show');
         Route::post('/','WeekendController@store');
         Route::put('/','WeekendController@update');
         Route::put('/recycle/','WeekendController@recycle');

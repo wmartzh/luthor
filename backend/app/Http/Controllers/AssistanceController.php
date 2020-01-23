@@ -51,14 +51,36 @@ class AssistanceController extends Controller
             }
             else if($auth_user->rol_id == 6){
 
-                $assistances =\App\Assistance::with(
-                  ['event'=>function($query){$query->select('id','title');}],
-                )->with(
-                    ['monitor'=> function($query){$query->select('id','first_name');}]
-                )
-                ->where('user_code',$auth_user->code)->select('date','time', 'status','event_id', 'monitor_id')->orderBy('id', 'DESC')->get();
+                $boys = \App\Assistance::select('user_code','monitor_id','event_id','status','time','intership')
+                    ->with(['user' => function($query){
+                        $query->select('code','first_name','last_name');
+                    }])
+                    ->with(['monitor'=> function($query){
+                        $query->select('id','first_name','last_name');
+                    }])
+                    ->with(['event'=> function($query){
+                        $query->select('id','title','start_time');
+                    }])
+                    ->where('intership','boys')
+                    ->orderBy('user_code','asc')
+                    ->get();
 
-                return response(['message'=> 'Invalid action', 'errors' => ['urlParameter'=> 'please select intership']],400);
+                $girls = \App\Assistance::select('user_code','monitor_id','event_id','status','time','intership')
+                    ->with(['user' => function($query){
+                        $query->select('code','first_name','last_name');
+                    }])
+                    ->with(['monitor'=> function($query){
+                        $query->select('id','first_name','last_name');
+                    }])
+                    ->with(['event'=> function($query){
+                        $query->select('id','title','start_time');
+                    }])
+                    ->where('intership','girls')
+                    ->orderBy('user_code','asc')
+                    ->get();
+
+
+                return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
 
 
             }

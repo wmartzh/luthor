@@ -34,7 +34,24 @@ class PenaltyController extends Controller
                 ->get();
                 return response(['data'=>$data],200);
             }else if($auth_user->rol_id == 6){
-                return response(['message'=> 'Invalid action', 'errors' => ['urlParameter'=> 'please select intership']],400);
+
+                $boys  = \App\Penalty::select('user_code','active','reason','created_at')
+                ->with(['user'=>function($query){
+                    $query->select('code','first_name','last_name');
+                }])
+                ->where('intership','boys')
+                ->orderBy('created_at', 'desc')
+                ->get();
+                $girls  = \App\Penalty::select('user_code','active','reason','created_at')
+                ->with(['user'=>function($query){
+                    $query->select('code','first_name','last_name');
+                }])
+                ->where('intership','girls')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+
+                return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
             }
 
 

@@ -48,7 +48,37 @@ class PermissionsController extends Controller
                     return response(['data'=>$data],200);
 
                 }else if($user_auth->rol_id == 6){ // vicerector accesss
-                    return response(['message'=> 'Invalid action', 'errors' => ['urlParameter'=> 'please select intership']],400);
+
+                    $boys = \App\Permissions::select(
+                        'code_user',
+                        'status',
+                        'output_date_time',
+                        'entry_date_time',
+                        'date',
+                        'place'
+                    )
+                    ->with(['user'=> function($query){
+                        $query->select('code','first_name','last_name','status');
+                    }])
+                    ->where('intership','boys')
+                    ->orderBy('date', 'desc')
+                    ->get();
+                    $girls = \App\Permissions::select(
+                        'code_user',
+                        'status',
+                        'output_date_time',
+                        'entry_date_time',
+                        'date',
+                        'place'
+                    )
+                    ->with(['user'=> function($query){
+                        $query->select('code','first_name','last_name','status');
+                    }])
+                    ->where('intership','boys')
+                    ->orderBy('date', 'desc')
+                    ->get();
+                    return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
+
 
                 }
                 else if($user_auth->rol_id == 5){

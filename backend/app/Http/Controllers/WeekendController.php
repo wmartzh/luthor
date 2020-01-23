@@ -28,18 +28,27 @@ class WeekendController extends Controller
                 ->with(['user' => function($query){
                     $query->select('code','first_name','last_name');
                 }])
+                ->where('intership',$auth_user->intership)
                 ->get();
 
                 return response(['data'=> $data],200);
             }else if($auth_user->rol_id == 6){
-                $data = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
+                $boys = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
                 ->with(['user' => function($query){
                     $query->select('code','first_name','last_name','intership');
 
                 }])
+                ->where('intership','boys')
+                ->get();
+                $girls = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
+                ->with(['user' => function($query){
+                    $query->select('code','first_name','last_name','intership');
+
+                }])
+                ->where('intership','boys')
                 ->get();
 
-                return response(['data'=> $data],200);
+                return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
             }
 
 
@@ -123,11 +132,21 @@ class WeekendController extends Controller
      * @param  \App\Weekend  $weekend
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($intership)
     {
         try{
-            $✅ = \App\Weekend::findOrFail($id);
-            return response()->json(['data'=>$✅],$status = 200);
+            $user_auth = Auth::user();
+
+            if($user_auth->rol_id ==6){
+                $data = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
+                ->with(['user' => function($query){
+                    $query->select('code','first_name','last_name');
+                }])
+                ->where('intership',$intership)
+                ->get();
+
+                return response(['data'=> $data],200);
+            }
 
         }catch(Exception $e){
          return response()->json(['message'=>'something was wrong'],$status=400);

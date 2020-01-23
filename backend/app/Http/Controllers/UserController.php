@@ -30,8 +30,15 @@ class UserController extends Controller
         }
         else if($auth_user->rol_id == 6 ){
 
-                return response(['message'=> 'Invalid action', 'errors' => ['urlParameter'=> 'please select intership']],400);
-
+            $boys  = \App\User::select('code','status','first_name','last_name','phone_number')
+            ->where([['intership','boys'],['rol_id',2]])
+            ->orWhere([['intership','boys'],['rol_id',3]])
+            ->get();
+            $girls  = \App\User::select('code','status','first_name','last_name','phone_number')
+            ->where([['intership','boys'],['rol_id',2]])
+            ->orWhere([['intership','boys'],['rol_id',3]])
+            ->get();
+            return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
         }
 
     }
