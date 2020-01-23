@@ -101,13 +101,20 @@ class AssistanceController extends Controller
                 $data['monitor_id']= $user->id; // get user that check the assistance
 
                 date_default_timezone_set("America/Costa_Rica");
-                $data['time'] = date('H:i:s');    //"06:17:00";
-                $event = \App\Event::select()->where('id',$data['event_id'])->get()->first();
+                $data['time'] =   "06:25:00"; //date('H:i:s');
+                 $event = \App\Event::select()->where('id',$data['event_id'])->get()->first();
 
                 $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();
 
-                $time_check = strtotime($event['start_time'])+600; //present  5 min
-                $time_check2 = strtotime($event['start_time'])+1000; //late 10 min
+                $present_time = strtotime($event['tolerance_present']); //Get Tolerance time
+                $present = date("i",$present_time) * 60; // get raw value from extra time
+
+                $late_time = strtotime($event['tolerance_late']);
+                $late = date("i",$late_time) * 60;
+
+                $time_check = strtotime($event['start_time'])+$present;
+                $time_check2 = strtotime($event['start_time'])+ $late;
+
 
                 $data['date'] = date("Y-m-d");
                 $data['intership'] = $user->intership; //intership control

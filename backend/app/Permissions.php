@@ -15,7 +15,7 @@ class Permissions extends Model
         'entry_date_time',
         'date',
         'place',
-        'permissions'
+        
     ];
 
     public function user(){

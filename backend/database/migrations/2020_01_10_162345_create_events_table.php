@@ -17,7 +17,8 @@ class CreateEventsTable extends Migration
             $table->bigIncrements('id');
             $table->string('title');
             $table->timeTz('start_time')->nullable();
-            $table->time('tolerance_time')->nullable();
+            $table->time('tolerance_present')->nullable();
+            $table->time('tolerance_late')->nullable();
             $table->timestamps();
         });
     }

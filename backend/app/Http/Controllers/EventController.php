@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Event;
 use Illuminate\Http\Request;
 use League\Flysystem\Exception;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -37,12 +38,30 @@ class EventController extends Controller
     {
         $data = request()->validate([
             'title'=> 'required',
-            'start_time'=> 'required'
+            'start_time'=> 'required',
+            'tolerance_present' => 'required',
+            'tolerance_late' => 'required',
+
         ]);
         try{
-            \App\Event::create($data);
 
-            return response()->json(['response'=> 201]);
+            $user_auth = Auth::user();
+
+            if($user_auth->rol_id != 4 || $user_auth->rol_id == 6){
+                return response(['messge'=> 'User Unauthorized'],401);
+            }else{
+
+                $check_regs = \App\Event::select()->where('title',$data['title'])->exists();
+
+                if(!$check_regs){ // Check if exists
+                    \App\Event::create($data);
+                    return response(['message'=>'Event created suscessfully'],201);
+                }else{
+                    return response(['message'=> $data['title'].' is already register'],400);
+                }
+
+            }
+
 
         }catch(Exception $e){
             return response()->json(['response'=> 400]);
