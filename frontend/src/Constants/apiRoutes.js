@@ -1,5 +1,5 @@
 export const API_ROUTES = {
-  base: ' http://127.0.0.1:6060/api', // no hacer commit a esto
+  base: ' http://127.0.0.1:8000/api', // no hacer commit a esto 6060
   login: '/login',
   getPermission: {
     method: 'GET',

@@ -135,8 +135,7 @@ class PermissionsController extends Controller
                 return response()->json(['error'=> 'user can not request a permission']);
             }else{
 
-                $a_permission = \App\Permissions::select()->where([['code_user',$data['code_user'],['status','active']]])->get()->first();
-
+                $a_permission = \App\Permissions::select()->where([['code_user',$data['code_user']],['status','active']])->get()->first();
                 if($a_permission == null ){
                     if($usermodel['status'] =='penalized'){//check status
                         //create reg
