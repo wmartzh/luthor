@@ -1,22 +1,63 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import {
   TableComponent,
   StyledTableItem,
-  StyledTableItemExpand
+  StyledTableBody
 } from '../../components/TableComponent'
 
 import { Navigation } from '../../layout/Navigation'
 import { StyledH2 } from '../../styles/StyledH2'
 import { StyledContainer } from '../../styles/StyledContainer'
 import { ButtonComponent } from '../../components/ButtonComponent'
+import { API_ROUTES } from '../../constants/apiRoutes'
+import { requestService } from '../../services/requestService'
+import { submitService } from '../../services/submitService'
+import { StyledCard } from '../../styles/StyledCard'
+import { StyledTypography } from '../../styles/StyledTypography'
+import { LoadingComponent } from '../../components/LoadingComponent'
 
 export const ValidateEntry = () => {
+  const [permission, setPermission] = useState([])
+  const [tempData, setTempData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [expanded, setExpanded] = useState(false)
+
+  const requestData = () => {
+    requestService(
+      API_ROUTES.getPermission.method,
+      API_ROUTES.getPermission.url,
+      null,
+      setTempData,
+      setLoading
+    )
+  }
+
+  useEffect(() => {
+    requestData()
+  }, [])
+
+  useEffect(() => {
+    if (tempData.normal && tempData.weekend) {
+      const normal = tempData.normal.map(data => ({
+        ...data,
+        type: 'normal'
+      }))
+      const weekend = tempData.weekend.map(data => ({
+        ...data,
+        type: 'weekend'
+      }))
+      const newArray = [].concat(normal, weekend)
+      setPermission(newArray)
+      console.log(newArray)
+    }
+  }, [tempData.normal, tempData.weekend])
+
   const tableheader = [
     {
-      size: '160px',
+      size: '110px',
       title: 'Code',
       display: true,
       displayMd: true,
@@ -25,7 +66,7 @@ export const ValidateEntry = () => {
     },
     {
       size: '440px',
-      title: 'Type',
+      title: 'Name',
       display: true,
       displayMd: true,
       displaySm: true,
@@ -41,8 +82,22 @@ export const ValidateEntry = () => {
     }
   ]
 
-  const tableContent = (
-    <>
+  const openDialog = (type, code) => {
+    // setExpanded(true)
+    submitService(
+      type === 'normal'
+        ? API_ROUTES.updatePermission.method
+        : API_ROUTES.updateWeekendsPermission.method,
+      type === 'normal'
+        ? API_ROUTES.updatePermission.url
+        : API_ROUTES.updateWeekendsPermission.url,
+      { check_exit: 0, user_code: code }
+    )
+    requestData()
+  }
+
+  const tableContent = (code, fristName, lastName, type) => (
+    <StyledTableBody>
       <StyledTableItem
         width={tableheader[0].size}
         display={tableheader[0].display ? 'block' : 'none'}
@@ -50,7 +105,7 @@ export const ValidateEntry = () => {
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#4F3C75">
-          #001122
+          {code}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -60,7 +115,7 @@ export const ValidateEntry = () => {
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#B0A3CC">
-          Normal
+          {fristName} {lastName}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -71,16 +126,16 @@ export const ValidateEntry = () => {
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
         <ButtonComponent
-          to="/my-assistance"
           background="#4F3C75"
           width="100px"
           height="40px"
           margin="0"
+          click={() => openDialog(type, code)}
         >
           Validate
         </ButtonComponent>
       </StyledTableItem>
-    </>
+    </StyledTableBody>
   )
 
   return (
@@ -90,8 +145,45 @@ export const ValidateEntry = () => {
         title="Validate Entry"
         titleColor="#4F3C75"
         tableheader={tableheader}
-        tableContent={tableContent}
-      />
+      >
+        {loading && <LoadingComponent color="#4F3C75" />}
+        {(permission.length === 0 &&
+          permission.map(
+            ({
+              type,
+              status,
+              check_exit: check,
+              user: { code, first_name: firstName, last_name: lastName }
+            }) => {
+              return check.toString() === '1' &&
+                status !== 'deprecated' &&
+                status !== 'rejected' ? (
+                <StyledCard
+                  width="100%"
+                  flexDirection="column"
+                  alignItems="start"
+                  margin="0 0 16px 0"
+                  key={code}
+                >
+                  {tableContent(code, firstName, lastName, type)}
+                </StyledCard>
+              ) : null
+            }
+          )) || (
+          <StyledCard width="100%" flexDirection="column" alignItems="center">
+            <StyledTypography
+              fontSize="14px"
+              fontFamily="Segoe UI"
+              fontWeigth="600"
+              color="#4F3C75"
+            >
+              No data
+            </StyledTypography>
+          </StyledCard>
+        )}
+      </TableComponent>
+      {/* TODO: get user photo */}
+      {expanded && <StyledCard>TODO Dialog</StyledCard>}
     </StyledContainer>
   )
 }
