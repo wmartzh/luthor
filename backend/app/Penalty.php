@@ -8,7 +8,7 @@ class Penalty extends Model
 {
     //
     protected $fillable = [
-        'user_code','active','reason','intership'
+        'user_code','active','reason','intership','conclusion'
     ];
 
     public function user(){

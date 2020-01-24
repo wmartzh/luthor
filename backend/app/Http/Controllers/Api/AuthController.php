@@ -15,19 +15,43 @@ class AuthController extends Controller
 {
     public function register(Request $request){
 
-        $validateData= $request->validate([
+        $data= $request->validate([
 
-            'nickname'=> 'required|max:55',
-            'rol_id'=>'required',
+            'code'=> 'required|required|unique:users',
+            'rol_id',
+            'username'=>'required',
+            'first_name'=>'required',
+            'last_name'=>'required',
+            'gender' => 'required',
+            'intership',
             'email' => 'email|required|unique:users',
             'password' => 'required|confirmed'
         ]);
-        $validateData['password'] = bcrypt($request->password);
-        $user =  User::create($validateData);
+
+        if($data['gender'] == 'F' || $data['gender'] == 'f'){
+
+            $data['intership'] = 'girls';
+            $data['password'] = bcrypt($request->password);
+            $data['rol_id'] = 2;
+            $user =  User::create($data);
+            return response(['message' => 'created'],201);
 
 
+        }else if ($data['gender']=='M'|| $data['gender']=='m'){
 
-        return response(['user'=>$user]);
+            $data['intership'] = 'boys';
+            $data['password'] = bcrypt($request->password);
+            $data['rol_id'] = 2;
+            $user =  User::create($data);
+            return response(['message' => 'created'],201);
+
+
+        }else{
+            return response(['message' => 'Invalid data',
+                                    'errors' => ['gender' => 'incorrect selection']],401);
+        }
+
+
     }
 
    public function login(Request $request){
@@ -45,7 +69,7 @@ class AuthController extends Controller
             $tokenResult = $user->createToken('Personal Access')-> accessToken;
 
             return response()->json([
-                'username' => Auth::user()->nickname,
+                'username' => Auth::user()->username,
                 'code' => Auth::user()->code,
                 'status' => Auth::user()->status,
                 'intership'=> Auth::user()->intership,

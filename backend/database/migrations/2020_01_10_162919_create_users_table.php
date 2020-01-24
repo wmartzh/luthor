@@ -20,11 +20,13 @@ class CreateUsersTable extends Migration
             $table->string('prorfile_image')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('nickname');
+            $table->string('username')->nullable();
+            $table->enum('gender',['F','M','no-def'])->default('no-def');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('phone_number')->nullable();
+            $table->boolean('is_active')->default(false);
             $table->enum('status',['out','in','penalized'])->default('in');
             $table->enum('intership',['boys','girls','no-def'])->default('no-def');
             $table->timestamps();

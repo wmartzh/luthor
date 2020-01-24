@@ -20,17 +20,24 @@ class AssistanceController extends Controller
 
             if($auth_user->rol_id == 2  || $auth_user->rol_id == 3 ){
 
-                $data = \App\Assistance::select('id', 'monitor_id','event_id','status','date','time')
-                ->where('user_code',$auth_user->code)
-                ->with(['event'=> function($query){
-                    $query->select('id','title');
-                }])
-                ->with(['monitor' => function($query){
-                    $query->select('id','first_name','last_name');
-                }])
-                ->orderBy('id','desc')->get();
+                if($auth_user->is_active){
 
-                return response(['data'=>$data],200);
+                    $data = \App\Assistance::select('id','monitor_id','event_id','status','date','time')
+                    ->where('user_code',$auth_user->code)
+                    ->with(['event'=> function($query){
+                        $query->select('id','title');
+                    }])
+                    ->with(['monitor' => function($query){
+                        $query->select('id','first_name','last_name');
+                    }])
+                    ->orderBy('id','desc')->get();
+
+                    return response(['data'=>$data],200);
+
+                }else{
+                    return response(['message'=>'user is not active'],401);
+                }
+
             }else if($auth_user->rol_id == 4){
 
                 $data = \App\Assistance::select('user_code','monitor_id','event_id','status','date','time')

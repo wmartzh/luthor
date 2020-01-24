@@ -22,8 +22,8 @@ class UserController extends Controller
 
         }else if($auth_user->rol_id == 4){
 
-             $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2]])
-            ->orWhere([['intership',$auth_user->intership],['rol_id',3]])
+             $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
+            ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true]])
             ->get();
 
             return response(['data'=>$data],200);
@@ -31,14 +31,50 @@ class UserController extends Controller
         else if($auth_user->rol_id == 6 ){
 
             $boys  = \App\User::select('code','status','first_name','last_name','phone_number')
-            ->where([['intership','boys'],['rol_id',2]])
+            ->where([['intership','boys'],['rol_id',2],['is_active',true]])
             ->orWhere([['intership','boys'],['rol_id',3]])
             ->get();
             $girls  = \App\User::select('code','status','first_name','last_name','phone_number')
-            ->where([['intership','boys'],['rol_id',2]])
+            ->where([['intership','boys'],['rol_id',2],['is_active',true]])
             ->orWhere([['intership','boys'],['rol_id',3]])
             ->get();
             return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
+        }
+
+    }
+    public function filterStudents($filterBy){
+
+        $auth_user = Auth::user();
+
+        if($auth_user->rol_id == 4){
+
+            switch($filterBy){
+
+                case 'actives':{
+                    $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
+                    ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true]])
+                    ->get();
+                    return response(['data'=>$data],200);
+                }
+                case 'inactives':{
+                    $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',false]])
+                    ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',false]])
+                    ->get();
+                    return response(['data'=>$data],200);
+                }
+                case 'penalized':{
+                    $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['status','penalized']])
+                    ->orWhere([['intership',$auth_user->intership],['rol_id',3],['status','penalized']])
+                    ->get();
+                    return response(['data'=>$data],200);
+                }
+                default:{
+                    return response(['message'=>'Parameter not established'],200);
+                }
+
+            }
+
+
         }
 
     }

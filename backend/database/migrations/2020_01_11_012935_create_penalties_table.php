@@ -19,6 +19,7 @@ class CreatePenaltiesTable extends Migration
             $table->boolean('active',[true, false])->default(false);
             $table->string('reason');
             $table->enum('intership',['boys','girls','no-def'])->default('no-def');
+            $table->date('conclusion');
             $table->timestamps();
 
             $table->foreign('user_code')
