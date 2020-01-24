@@ -39,7 +39,7 @@ export const Navigation = () => {
 
   const StyledMore = styled.div`
     z-index: 3;
-    display: ${props => (props.display ? 'flex' : 'none')};
+    display: ${props => props.display};
     flex-direction: column;
     position: absolute;
     right: 0;
@@ -82,7 +82,7 @@ export const Navigation = () => {
           <MoreVertIcon />
         </div>
       </StyeledHeader>
-      <StyledMore display={selectMenu}>
+      <StyledMore display={selectMenu ? 'flex' : 'none'}>
         <LinkComponent to="/login">
           <span>LogOut</span>
         </LinkComponent>

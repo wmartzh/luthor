@@ -197,7 +197,7 @@ export const MyAssitance = () => {
             )
           )) || (
           <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
+            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
               No data
             </StyledSpan>
           </StyledCard>

@@ -17,6 +17,7 @@ import { requestService } from '../../services/requestService'
 import { submitService } from '../../services/submitService'
 import { StyledCard } from '../../styles/StyledCard'
 import { StyledTypography } from '../../styles/StyledTypography'
+import { LoadingComponent } from '../../components/LoadingComponent'
 
 export const ValidateEntry = () => {
   const [permission, setPermission] = useState([])
@@ -50,6 +51,7 @@ export const ValidateEntry = () => {
       }))
       const newArray = [].concat(normal, weekend)
       setPermission(newArray)
+      console.log(newArray)
     }
   }, [tempData.normal, tempData.weekend])
 
@@ -144,19 +146,8 @@ export const ValidateEntry = () => {
         titleColor="#4F3C75"
         tableheader={tableheader}
       >
-        {loading && (
-          <StyledCard width="100%" flexDirection="column" alingItems="center">
-            <StyledTypography
-              fontSize="14px"
-              fontFamily="Segoe UI"
-              fontWeigth="600"
-              color="#4F3C75"
-            >
-              Loading...
-            </StyledTypography>
-          </StyledCard>
-        )}
-        {(permission &&
+        {loading && <LoadingComponent color="#4F3C75" />}
+        {(permission.length === 0 &&
           permission.map(
             ({
               type,
@@ -184,7 +175,7 @@ export const ValidateEntry = () => {
               fontSize="14px"
               fontFamily="Segoe UI"
               fontWeigth="600"
-              color="#1D7AA2"
+              color="#4F3C75"
             >
               No data
             </StyledTypography>

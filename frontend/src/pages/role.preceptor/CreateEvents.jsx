@@ -29,6 +29,8 @@ import { myEventsService } from '../../services/myEventsService'
 import { requestService } from '../../services/requestService'
 import { defaultColors } from '../../constants/statusColor'
 
+// TODO: presente, tarde, ausente
+
 export const CreateEvents = () => {
   const [error, setError] = useState(false)
   const [toast, setToast] = useState(false)

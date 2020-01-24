@@ -1,7 +1,12 @@
 # Project Luthor
 
 # Futures changes 
-*  add new color tu the estatus user
+* add new color tu the estatus user
+
+# TODO
+* validate user register
+* register login
+
 
 ## Screenshots
 

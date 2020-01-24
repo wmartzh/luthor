@@ -5,7 +5,6 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import {
   TableComponent,
   StyledTableItem,
-  StyledTableItemExpand,
   StyledTableBody
 } from '../../components/TableComponent'
 
@@ -16,9 +15,9 @@ import { ButtonComponent } from '../../components/ButtonComponent'
 import { requestService } from '../../services/requestService'
 import { API_ROUTES } from '../../constants/apiRoutes'
 import { StyledCard } from '../../styles/StyledCard'
-import { StyledSpan } from '../../styles/StyledSpan'
 import { submitService } from '../../services/submitService'
 import { StyledTypography } from '../../styles/StyledTypography'
+import { LoadingComponent } from '../../components/LoadingComponent'
 
 export const ValidatePermission = () => {
   const [permission, setPermission] = useState([])
@@ -146,19 +145,8 @@ export const ValidatePermission = () => {
         titleColor="#1D7AA2"
         tableheader={tableheader}
       >
-        {loading && (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledTypography
-              fontSize="14px"
-              fontFamily="Segoe UI"
-              fontWeigth="600"
-              color="#1D7AA2"
-            >
-              Loading...
-            </StyledTypography>
-          </StyledCard>
-        )}
-        {(permission &&
+        {loading && <LoadingComponent color="#1D7AA2" />}
+        {(permission.length &&
           permission.map(
             ({
               type,
