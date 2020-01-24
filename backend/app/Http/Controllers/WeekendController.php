@@ -20,8 +20,12 @@ class WeekendController extends Controller
             $auth_user = Auth::user();
 
             if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 ){
-                $data = \App\Weekend::select('state','vicerector','preceptor','in_date_time','out_date_time','location')->where('user_code',$auth_user->code)->get();
-                return response(['data'=> $data],200);
+                if($auth_user->is_active){
+                    $data = \App\Weekend::select('state','vicerector','preceptor','in_date_time','out_date_time','location')->where('user_code',$auth_user->code)->get();
+                    return response(['data'=> $data],200);
+                }else{
+                    return response(['message'=>'user is not active'],401);
+                }
             }else if($auth_user->rol_id == 4 ){
 
                 $data = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
@@ -84,41 +88,32 @@ class WeekendController extends Controller
                 if($usermodel['rol_id'] != 2 && $usermodel['rol_id']!=3){
                     return response()->json(['error'=>'user can not make a request']);
                 }else{
-                    if($usermodel['status'] == 'penalized'){
-                        return response()->json(['message'=> 'Can not process, the user is penalized']);
+                    if($user_auth->is_active){
+                        if($usermodel['status'] == 'penalized'){
+                            return response()->json(['message'=> 'Can not process, the user is penalized']);
+                        }else{
+                            $vD['user_code']=$usermodel['code'];
+                            $search = \App\Weekend::where([['user_code',$usermodel['code']],['state','in process']])->exists();
+
+                            if(!$search){
+
+                                \App\Weekend::create($vD);
+                                return response()->json(['message'=>'Permission requested']);
+                            }
+                            else{
+                                return response()->json(['message'=>'User already has a request in process']);
+                            }
+                        }
+
                     }else{
-                        $vD['user_code']=$usermodel['code'];
-                        $search = \App\Weekend::where([['user_code',$usermodel['code']],['state','in process']])->exists();
-
-                        if(!$search){
-
-                            \App\Weekend::create($vD);
-                            return response()->json(['message'=>'Permission requested']);
-                        }
-                        else{
-                            return response()->json(['message'=>'User already has a request in process']);
-                        }
+                        return response(['message'=>'user is not active'],401);
                     }
+
 
 
                 }
 
             }
-
-
-            //Search user
-
-
-
-            if($user[0]['status']=='penalized'){
-                return response()->json(['message'=> 'Can not process, the user is penalized']);
-            }else{
-
-
-            }
-
-
-
 
         }
         catch(Exception $e){
@@ -178,6 +173,7 @@ class WeekendController extends Controller
             //chek request
 
 
+
             if(array_key_exists('user_code',$data)){
                 $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code'],['state','in process']]])->get()->first();
 
@@ -185,44 +181,54 @@ class WeekendController extends Controller
                     return response(['message'=>'no data exist',
                         'errors' =>['user has not requests']]);
                 }
-            }else{
-                $weekendModel = \App\Weekend::select()->where([['user_code',$auth_user->code,['state','in process']]])->get()->first();
             }
-
-            $mdl = \App\Weekend::findOrFail($weekendModel['id']);
 
                 //Check if the auth user is a student
                 if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){//Student access
 
-                    if($weekendModel['state'] == 'approved'){
-                        return response(['message'=>'The last request was approved'],202);
-                    }else if($weekendModel['state'] == 'rejected'){
-                        return response(['message'=>'The last request was rejected'],202);
-                    }else if($weekendModel['state'] == 'in process'){
-                        if($weekendModel['vicerector']=='approved' && $weekendModel['preceptor']=='approved'){ //Check requirements
-                            $data['state'] = 'approved';
-                            $mdl->update($data);
-                            return response(['message'=>'updated'],202);
-                        }
-                        else if($weekendModel['vicerector']=='approved' && $weekendModel['preceptor']=='no-def' || $weekendModel['vicerector']=='no-def' && $weekendModel['preceptor']=='approved' || $weekendModel['vicerector']=='no-def' && $weekendModel['preceptor']=='no-def'){
-                            return response(['message'=>'Request in process'],202);
+                    if($auth_user->is_active){ // check if user is active
+
+                        $weekendModel = \App\Weekend::select()->where([['user_code',$auth_user->code,['state','in process']]])->get()->first();
+                        if($weekendModel != null){
+                            $mdl = \App\Weekend::findOrFail($weekendModel['id']);
+                        }else{
+                            return response(['message'=>'no data exist',
+                                             'errors' =>['user has not requests']]);
+
                         }
 
-                        else if( $weekendModel['vicerector']=='rejected' && $weekendModel['preceptor']='rejected' ){
-                            $data['state'] = 'rejected';
-                            $mdl->update($data);
-                            return response(['message'=>'updated'],202);
+                        if($weekendModel['state'] == 'approved'){
+                            return response(['message'=>'The last request was approved'],202);
+                        }else if($weekendModel['state'] == 'rejected'){
+                            return response(['message'=>'The last request was rejected'],202);
+                        }else if($weekendModel['state'] == 'in process'){
+                            if($weekendModel['vicerector']=='approved' && $weekendModel['preceptor']=='approved'){ //Check requirements
+                                $data['state'] = 'approved';
+                                $mdl->update($data);
+                                return response(['message'=>'updated'],202);
+                            }
+                            else if($weekendModel['vicerector']=='approved' && $weekendModel['preceptor']=='no-def' || $weekendModel['vicerector']=='no-def' && $weekendModel['preceptor']=='approved' || $weekendModel['vicerector']=='no-def' && $weekendModel['preceptor']=='no-def'){
+                                return response(['message'=>'Request in process'],202);
+                            }
+
+                            else if( $weekendModel['vicerector']=='rejected' && $weekendModel['preceptor']='rejected' ){
+                                $data['state'] = 'rejected';
+                                $mdl->update($data);
+                                return response(['message'=>'updated'],202);
+                            }
+                        }else{
+                            return response([
+                                'message'=>'The given data was invalid',
+                                'errors' => [
+                                    'state' => 'the state is invalid'
+                                ]
+                                ],400);
                         }
                     }else{
-                        return response([
-                            'message'=>'The given data was invalid',
-                            'errors' => [
-                                'state' => 'the state is invalid'
-                            ]
-                            ],400);
+                        return response(['message'=>'user is not active'],401);
                     }
                 }else if($auth_user->rol_id == 4){//preceptor access
-
+                    $mdl = \App\Weekend::findOrFail($weekendModel['id']);
                     //Preceptor
                     $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();
 
@@ -286,6 +292,7 @@ class WeekendController extends Controller
                 } else if($auth_user->rol_id == 6){ //vicerrector access
 
                     ///Vicerector
+                    $mdl = \App\Weekend::findOrFail($weekendModel['id']);
 
                     $check_state = array_key_exists('vicerector',$data);
 

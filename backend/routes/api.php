@@ -32,6 +32,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
         Route::get('/','UserController@index');
         Route::get('/{intership}','UserController@show');
         Route::put('/','UserController@update');
+        Route::get('/filter/{param}','UserController@filterStudents');
         Route::delete('/{id}','UserController@destroy');
     });
     ///Permissions Routes

@@ -22,7 +22,8 @@ class UserTableSeeder extends Seeder
             'code'=>'160049',
             'email' => 'paquito@mail.com',
             'password' => bcrypt('secret'),
-            'intership' => 'boys'
+            'intership' => 'boys',
+            'is_active' => true
         ]);
         \App\User::create([
             'username' => 'juanito',
@@ -32,7 +33,8 @@ class UserTableSeeder extends Seeder
             'code'=>'160050',
             'email' => 'juanito@mail.com',
             'password' => bcrypt('secret'),
-            'intership' => 'boys'
+            'intership' => 'boys',
+            'is_active' => true
         ]);
         \App\User::create([
             'username' => 'paquita',
@@ -42,7 +44,8 @@ class UserTableSeeder extends Seeder
             'code'=>'160048',
             'email' => 'paquita@mail.com',
             'password' => bcrypt('secret'),
-            'intership' => 'girls'
+            'intership' => 'girls',
+            'is_active' => true
         ]);
         \App\User::create([
             'username' => 'juanita',
@@ -52,7 +55,8 @@ class UserTableSeeder extends Seeder
             'code'=>'160030',
             'email' => 'juanita@mail.com',
             'password' => bcrypt('secret'),
-            'intership' => 'girls'
+            'intership' => 'girls',
+            'is_active' => true
         ]);
 
         \App\User::create([
@@ -63,7 +67,8 @@ class UserTableSeeder extends Seeder
             'code'=>'160060',
             'email' => 'pedrito@mail.com',
             'password' => bcrypt('secret'),
-            'intership' => 'boys'
+            'intership' => 'boys',
+            'is_active' => true
         ]);
         \App\User::create([
             'username' => 'pedrita',
@@ -73,7 +78,8 @@ class UserTableSeeder extends Seeder
             'code'=>'160090',
             'email' => 'pedrita@mail.com',
             'password' => bcrypt('secret'),
-            'intership' => 'girls'
+            'intership' => 'girls',
+            'is_active' => true
         ]);
         \App\User::create([
             'username' => 'jaimito',
