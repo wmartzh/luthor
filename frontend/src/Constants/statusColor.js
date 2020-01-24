@@ -10,9 +10,9 @@ const statusColor = {
 
   // fth Assitances
   assistance: {
-    present: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-    absent: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    late: 'linear-gradient(45deg, #82E9E4 30%, #F3D62F 90%)'
+    present: '#1a936f', // #A1C010
+    absent: '#ea5455', // #FF004C
+    late: '#F3D62F'
   }
 }
 
@@ -21,8 +21,6 @@ export const defaultColors = {
   red: '#FF004C',
   green: '#A1C010'
 }
-
-// linear-gradient(45deg,#82E9E4,#F3D62F)
 
 export const userStatusColor = status => {
   return status === 'in'
