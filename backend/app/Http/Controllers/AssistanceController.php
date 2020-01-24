@@ -20,7 +20,7 @@ class AssistanceController extends Controller
 
             if($auth_user->rol_id == 2  || $auth_user->rol_id == 3 ){
 
-                $data = \App\Assistance::select('monitor_id','event_id','status','date','time')
+                $data = \App\Assistance::select('id', 'monitor_id','event_id','status','date','time')
                 ->where('user_code',$auth_user->code)
                 ->with(['event'=> function($query){
                     $query->select('id','title');
@@ -28,7 +28,7 @@ class AssistanceController extends Controller
                 ->with(['monitor' => function($query){
                     $query->select('id','first_name','last_name');
                 }])
-                ->orderBy('date','desc')->get();
+                ->orderBy('id','desc')->get();
 
                 return response(['data'=>$data],200);
             }else if($auth_user->rol_id == 4){

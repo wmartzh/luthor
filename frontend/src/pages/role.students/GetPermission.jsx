@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useHistory } from 'react-router-dom'
 import moment from 'moment'
 
 import Select from '@material-ui/core/es/Select'
@@ -24,8 +25,12 @@ import { StyledContainer } from '../../styles/StyledContainer'
 import { StyledStatusBar } from '../../styles/StyledStatusBar'
 import { StyledBackButton } from '../../styles/StyledBackButton'
 import { StyledTypography } from '../../styles/StyledTypography'
+import { statusService } from '../../services/statusService'
+import { useUserValues } from '../../context/UserContext'
 
-export const GetPermission = ({ user, history, location }) => {
+export const GetPermission = () => {
+  const history = useHistory()
+  const { user, setUser } = useUserValues()
   const { status } = user
 
   const [error, setError] = useState(false)
@@ -34,32 +39,50 @@ export const GetPermission = ({ user, history, location }) => {
   const [entry, setEntry] = useState('') // 2020-01-10 21:57:19
   const [out, setOut] = useState('') // 2020-01-10 21:57:19
   const [googleLocation, setGoogleLocation] = useState('test location')
+  const [dislableAll, setDislableAll] = useState(false)
 
   const inputLabel = useRef(null)
   const [labelWidth, setLabelWidth] = React.useState(0)
 
   useEffect(() => {
     setLabelWidth(inputLabel.current.offsetWidth)
-    // TODO: get the update user's status
   }, [])
 
   const axiosQuery = async (method, url, data) => {
-    const request = await axios({
-      method: method,
-      url: url,
-      data: data
-    })
-    console.log(request.data.message)
-    if (
-      request.data.message === 'User has already permission request' ||
-      request.data.message === 'User already has a request in process'
-    ) {
-      setError('You already have a permission')
-    } else {
-      // const { from } = location.state || { from: { pathname: '/' } }
-      // history.push(from)
+    try {
+      const request = await axios({
+        method: method,
+        url: url,
+        data: data
+      })
+      // console.log(request.status)
+      if (
+        request.data.message === 'User has already permission request' ||
+        request.data.message === 'User already has a request in process'
+      ) {
+        setError('You already have a permission')
+      } else {
+      }
+      history.push('/my-permissions')
+    } catch (error) {
+      const {
+        data: { message },
+        status
+      } = error.response
+      if (status === 400) {
+        if (
+          message === 'User has already permission request' ||
+          message === 'User already has a request in process'
+        ) {
+          setError('You already have a permission')
+          setDislableAll(true)
+        } else {
+          setError('Another Error')
+        }
+      }
     }
   }
+
   const submitHandle = () => {
     if (type === 'normal') {
       axiosQuery(
@@ -120,6 +143,7 @@ export const GetPermission = ({ user, history, location }) => {
             labelWidth={labelWidth}
             onChange={e => setType(e.target.value)}
             value={type}
+            disabled={dislableAll}
           >
             <MenuItem value={'normal'}>Normal</MenuItem>
             <MenuItem value={'weekends'}>Weekends</MenuItem>
@@ -135,6 +159,7 @@ export const GetPermission = ({ user, history, location }) => {
             id="place"
             onChange={e => setPlace(e.target.value)}
             value={place}
+            disabled={dislableAll}
             required
           />
         )}
@@ -150,6 +175,7 @@ export const GetPermission = ({ user, history, location }) => {
               label="Return date"
               type="datetime-local"
               value={entry}
+              disabled={dislableAll}
               onChange={e => setEntry(e.target.value)}
               InputLabelProps={{
                 shrink: true
@@ -163,6 +189,7 @@ export const GetPermission = ({ user, history, location }) => {
               label="Departure date"
               type="datetime-local"
               value={out}
+              disabled={dislableAll}
               onChange={e => setOut(e.target.value)}
               InputLabelProps={{
                 shrink: true
@@ -186,6 +213,7 @@ export const GetPermission = ({ user, history, location }) => {
               id="location"
               onChange={e => setGoogleLocation(e.target.value)}
               value={googleLocation}
+              disabled={dislableAll}
               required
             />
           </>
@@ -202,12 +230,12 @@ export const GetPermission = ({ user, history, location }) => {
         )}
         {type === 'normal'
           ? !place
-            ? button(true)
-            : button(false)
+            ? button(dislableAll || true)
+            : button(dislableAll || false)
           : type === 'weekends'
           ? !entry && !out && !googleLocation
-            ? button(true)
-            : button(false)
+            ? button(dislableAll || true)
+            : button(dislableAll || false)
           : null}
         <StyledSpacer height="10px" />
       </StyledCard>
@@ -215,6 +243,7 @@ export const GetPermission = ({ user, history, location }) => {
         background={userStatusColor(status)}
         width="340px"
         margin="auto"
+        onClick={() => statusService(setUser)}
       />
     </StyledContainer>
   )
