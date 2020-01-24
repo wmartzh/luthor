@@ -16,14 +16,86 @@ class UserController extends Controller
         //
         $auth_user = Auth::user();
 
-            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){
+        if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){
 
-                return response(['message'=>'Unauthorized'],401);
-            }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6){
-                $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where('rol_id',2)->orWhere('rol_id',3)->get();
-                return response(['data'=>$data],200);
+             return response(['message'=>'User unauthorized'],401);
+
+        }else if($auth_user->rol_id == 4){
+
+             $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
+            ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true]])
+            ->get();
+
+            return response(['data'=>$data],200);
+        }
+        else if($auth_user->rol_id == 6 ){
+
+            $boys  = \App\User::select('code','status','first_name','last_name','phone_number')
+            ->where([['intership','boys'],['rol_id',2],['is_active',true]])
+            ->orWhere([['intership','boys'],['rol_id',3]])
+            ->get();
+            $girls  = \App\User::select('code','status','first_name','last_name','phone_number')
+            ->where([['intership','boys'],['rol_id',2],['is_active',true]])
+            ->orWhere([['intership','boys'],['rol_id',3]])
+            ->get();
+            return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
+        }
+
+    }
+    public function filterStudents($filterBy){
+
+        $auth_user = Auth::user();
+
+        if($auth_user->rol_id == 4){
+
+            switch($filterBy){
+
+                case 'actives':{
+                    $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
+                    ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true]])
+                    ->get();
+                    return response(['data'=>$data],200);
+                }
+                case 'inactives':{
+                    $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',false]])
+                    ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',false]])
+                    ->get();
+                    return response(['data'=>$data],200);
+                }
+                case 'penalized':{
+                    $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['status','penalized']])
+                    ->orWhere([['intership',$auth_user->intership],['rol_id',3],['status','penalized']])
+                    ->get();
+                    return response(['data'=>$data],200);
+                }
+                default:{
+                    return response(['message'=>'Parameter not established'],200);
+                }
+
             }
 
+
+        }
+
+    }
+    public function getStatus(){
+         try{
+
+            $auth_user = Auth::user();
+
+            if($auth_user->rol_id == 3 ||$auth_user->rol_id == 2){
+
+                return  response(['status'=>$auth_user->status],200);
+            }
+            else{
+                return response(['message'=> 'User unauthorized'],401);
+            }
+
+
+         }catch(Exception $e){
+
+
+         }
     }
 
     /**
@@ -53,9 +125,20 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($intership)
     {
         //
+        $auth_user = Auth::user();
+        if($auth_user->rol_id == 6 ){
+
+            $data  = \App\User::select('code','status','first_name','last_name','phone_number')
+            ->where([['intership',$intership],['rol_id',2]])
+            ->orWhere([['intership',$intership],['rol_id',3]])
+            ->get();
+
+            return response(['data'=>$data],200);
+
+        }
     }
 
     /**

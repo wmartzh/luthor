@@ -3,12 +3,7 @@ import { StudentsOut } from '../pages/role.preceptor/StudentsOut'
 import { AssistanceDay } from '../pages/role.preceptor/AssistanceDay'
 import { Penalties } from '../pages/role.preceptor/Penalties'
 import { CreateEvents } from '../pages/role.preceptor/CreateEvents'
-import { StudentList } from '../pages/role.preceptor/StundentList'
-
-// user_code: 160049
-// active: 0
-// created_at: "2020-01-11 21:43:42"
-// updated_at: "2020-01-11 21:43:46"
+import { StudentList } from '../pages/role.preceptor/StudentList'
 
 export const preceptorRoutes = [
   {

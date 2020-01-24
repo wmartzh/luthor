@@ -15,11 +15,16 @@ class EventTableSeeder extends Seeder
 
         \App\Event::create([
             'title' => 'culto matutino',
-            'start_time' => '06:00:00'
+            'start_time' => '06:00:00',
+            'tolerance_present' =>'00:05:00',
+            'tolerance_late' =>'00:10:00'
+
         ]);
         \App\Event::create([
             'title' => 'CEU',
-            'start_time' => '17:00:00'
+            'start_time' => '17:00:00',
+            'tolerance_present' =>'00:05:00',
+            'tolerance_late' =>'00:10:00'
         ]);
 
     }

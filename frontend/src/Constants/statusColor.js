@@ -16,6 +16,12 @@ const statusColor = {
   }
 }
 
+export const defaultColors = {
+  primary: '#00A7CA',
+  red: '#FF004C',
+  green: '#A1C010'
+}
+
 // linear-gradient(45deg,#82E9E4,#F3D62F)
 
 export const userStatusColor = status => {

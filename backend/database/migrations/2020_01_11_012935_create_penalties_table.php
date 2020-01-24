@@ -15,14 +15,18 @@ class CreatePenaltiesTable extends Migration
     {
         Schema::create('penalties', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_code')->nullable();
+            $table->bigInteger('user_code') ;
             $table->boolean('active',[true, false])->default(false);
+            $table->string('reason');
+            $table->enum('intership',['boys','girls','no-def'])->default('no-def');
+            $table->date('conclusion');
             $table->timestamps();
 
             $table->foreign('user_code')
                 ->references('code')
                 ->on('users')
                 ->onDelete('cascade');
+
         });
     }
 
@@ -33,6 +37,10 @@ class CreatePenaltiesTable extends Migration
      */
     public function down()
     {
+        Schema::table('penalties', function(Blueprint  $table){
+            $table->dropForeign(['user_code']);
+            $table->dropColumn('user_code');
+        });
         Schema::dropIfExists('penalties');
     }
 }

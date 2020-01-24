@@ -31,7 +31,8 @@ export const Login = ({ history, location }) => {
     localStorage.removeItem('user')
     localStorage.removeItem('token')
     setUser({})
-  }, [setUser])
+    setToken('')
+  }, [setToken, setUser])
 
   const submitHandle = async () => {
     if (!email && !password) {
