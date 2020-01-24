@@ -165,30 +165,36 @@ class PermissionsController extends Controller
                 return response()->json(['error'=> 'user can not request a permission']);
             }else{
 
-                $a_permission = \App\Permissions::select()->where([['code_user',$data['code_user']],['status','active']])->get()->first();
-                if($a_permission == null ){
-                    if($usermodel['status'] =='penalized'){//check status
-                        //create reg
-                        $data['status'] = 'rejected';
-                        \App\Permissions::create($data);
-                        return response(['response'=>'Unauthorized']);
+                if($auth_user->is_active){
+                    $a_permission = \App\Permissions::select()->where([['code_user',$data['code_user']],['status','active']])->get()->first();
+                    if($a_permission == null ){
+                        if($usermodel['status'] =='penalized'){//check status
+                            //create reg
+                            $data['status'] = 'rejected';
+                            \App\Permissions::create($data);
+                            return response(['response'=>'Unauthorized']);
 
 
-                    }else if($usermodel['status']=='in'){//check status
+                        }else if($usermodel['status']=='in'){//check status
 
-                        //create reg
+                            //create reg
 
-                        $data['status'] = 'active';
-                        \App\Permissions::create($data);
-                        return response(['response'=> 'Authorized']);
-                    }
-                    else{
-                        return response(['response'=> 'user has already a request']);
+                            $data['status'] = 'active';
+                            \App\Permissions::create($data);
+                            return response(['response'=> 'Authorized']);
+                        }
+                        else{
+                            return response(['response'=> 'user has already a request']);
+                        }
+
+                    }else{
+                        return response(['message'=>'User has already permission request'],400);
                     }
 
                 }else{
-                    return response(['message'=>'User has already permission request'],400);
+                    return response(['message'=>'user is not active'],401);
                 }
+
             }
 
 

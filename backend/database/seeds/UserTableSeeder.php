@@ -15,7 +15,7 @@ class UserTableSeeder extends Seeder
         //User
 
         \App\User::create([
-            'nickname' => 'paquito',
+            'username' => 'paquito',
             'rol_id' => '2',
             'first_name' =>'Paquito',
             'last_name' => 'Fernandez',
@@ -25,7 +25,7 @@ class UserTableSeeder extends Seeder
             'intership' => 'boys'
         ]);
         \App\User::create([
-            'nickname' => 'juanito',
+            'username' => 'juanito',
             'rol_id' => '2',
             'first_name' =>'Juanito',
             'last_name' => 'Hernandez',
@@ -35,7 +35,7 @@ class UserTableSeeder extends Seeder
             'intership' => 'boys'
         ]);
         \App\User::create([
-            'nickname' => 'paquita',
+            'username' => 'paquita',
             'rol_id' => '2',
             'first_name' =>'Paquita',
             'last_name' => 'Fernandez',
@@ -45,7 +45,7 @@ class UserTableSeeder extends Seeder
             'intership' => 'girls'
         ]);
         \App\User::create([
-            'nickname' => 'juanita',
+            'username' => 'juanita',
             'rol_id' => '2',
             'first_name' =>'Juanita',
             'last_name' => 'Hernandez',
@@ -56,7 +56,7 @@ class UserTableSeeder extends Seeder
         ]);
 
         \App\User::create([
-            'nickname' => 'pedrito',
+            'username' => 'pedrito',
             'rol_id' => '3',
             'first_name' =>'Pedrito',
             'last_name' => 'Fernandez',
@@ -66,7 +66,7 @@ class UserTableSeeder extends Seeder
             'intership' => 'boys'
         ]);
         \App\User::create([
-            'nickname' => 'pedrita',
+            'username' => 'pedrita',
             'rol_id' => '3',
             'first_name' =>'Pedrita',
             'last_name' => 'Fernandez',
@@ -76,14 +76,14 @@ class UserTableSeeder extends Seeder
             'intership' => 'girls'
         ]);
         \App\User::create([
-            'nickname' => 'jaimito',
+            'username' => 'jaimito',
             'code'=>'00001',
             'rol_id' => '5',
             'email' => 'jaimito@mail.com',
             'password' => bcrypt('secret')
         ]);
         \App\User::create([
-            'nickname' => 'Cristian',
+            'username' => 'Cristian',
             'rol_id' => '4',
             'code'=>'00002',
             'email' => 'cristian@mail.com',
@@ -91,7 +91,7 @@ class UserTableSeeder extends Seeder
             'intership' => 'boys'
         ]);
         \App\User::create([
-            'nickname' => 'Cristina',
+            'username' => 'Cristina',
             'rol_id' => '4',
             'code'=>'00022',
             'email' => 'cristina@mail.com',
@@ -99,7 +99,7 @@ class UserTableSeeder extends Seeder
             'intership' => 'boys'
         ]);
         \App\User::create([
-            'nickname' => 'Scot',
+            'username' => 'Scot',
             'rol_id' => '6',
             'code'=>'000003',
             'email' => 'scot@mail.com',
