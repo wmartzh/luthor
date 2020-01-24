@@ -5,7 +5,6 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import {
   TableComponent,
   StyledTableItem,
-  StyledTableItemExpand,
   StyledTableBody
 } from '../../components/TableComponent'
 
@@ -16,8 +15,9 @@ import { ButtonComponent } from '../../components/ButtonComponent'
 import { requestService } from '../../services/requestService'
 import { API_ROUTES } from '../../constants/apiRoutes'
 import { StyledCard } from '../../styles/StyledCard'
-import { StyledSpan } from '../../styles/StyledSpan'
 import { submitService } from '../../services/submitService'
+import { StyledTypography } from '../../styles/StyledTypography'
+import { LoadingComponent } from '../../components/LoadingComponent'
 
 export const ValidatePermission = () => {
   const [permission, setPermission] = useState([])
@@ -25,7 +25,7 @@ export const ValidatePermission = () => {
   const [loading, setLoading] = useState(false)
   const [expanded, setExpanded] = useState(false)
 
-  useEffect(() => {
+  const requestData = () => {
     requestService(
       API_ROUTES.getPermission.method,
       API_ROUTES.getPermission.url,
@@ -33,6 +33,10 @@ export const ValidatePermission = () => {
       setTempData,
       setLoading
     )
+  }
+
+  useEffect(() => {
+    requestData()
   }, [])
 
   useEffect(() => {
@@ -52,7 +56,7 @@ export const ValidatePermission = () => {
 
   const tableheader = [
     {
-      size: '160px',
+      size: '110px',
       title: 'Code',
       display: true,
       displayMd: true,
@@ -78,7 +82,7 @@ export const ValidatePermission = () => {
   ]
 
   const openDialog = (type, code) => {
-    console.log(type, code)
+    // setExpanded(true)
     submitService(
       type === 'normal'
         ? API_ROUTES.updatePermission.method
@@ -88,13 +92,7 @@ export const ValidatePermission = () => {
         : API_ROUTES.updateWeekendsPermission.url,
       { check_exit: 1, user_code: code }
     )
-    requestService(
-      API_ROUTES.getPermission.method,
-      API_ROUTES.getPermission.url,
-      null,
-      setTempData,
-      setLoading
-    )
+    requestData()
   }
 
   const tableContent = (code, fristName, lastName, type) => (
@@ -147,21 +145,18 @@ export const ValidatePermission = () => {
         titleColor="#1D7AA2"
         tableheader={tableheader}
       >
-        {loading && (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
-              Loading...
-            </StyledSpan>
-          </StyledCard>
-        )}
-        {(permission &&
+        {loading && <LoadingComponent color="#1D7AA2" />}
+        {(permission.length &&
           permission.map(
             ({
               type,
+              status,
               check_exit: check,
               user: { code, first_name: firstName, last_name: lastName }
             }) => {
-              return check.toString() === '0' ? (
+              return check.toString() === '0' &&
+                status !== 'deprecated' &&
+                status !== 'rejected' ? (
                 <StyledCard
                   width="100%"
                   flexDirection="column"
@@ -175,14 +170,19 @@ export const ValidatePermission = () => {
             }
           )) || (
           <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
+            <StyledTypography
+              fontSize="14px"
+              fontFamily="Segoe UI"
+              fontWeigth="600"
+              color="#1D7AA2"
+            >
               No data
-            </StyledSpan>
+            </StyledTypography>
           </StyledCard>
         )}
       </TableComponent>
       {/* TODO: get user photo */}
-      {expanded && <StyledCard></StyledCard>}
+      {expanded && <StyledCard>TODO Dialog</StyledCard>}
     </StyledContainer>
   )
 }
