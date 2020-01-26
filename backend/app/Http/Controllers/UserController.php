@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use \Illuminate\Http\Response;
 class UserController extends Controller
 {
     /**
@@ -18,13 +20,20 @@ class UserController extends Controller
 
         if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){
 
-             return response(['message'=>'User unauthorized'],401);
+
+            return response(['message'=>'User unauthorized'],401);
 
         }else if($auth_user->rol_id == 4){
 
-             $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
+             $data  = \App\User::select('code',
+             'status',
+             'first_name',
+             'profile_image',
+             'last_name',
+             'phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
             ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true]])
             ->get();
+
 
             return response(['data'=>$data],200);
         }
@@ -159,9 +168,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        //Users update information
+
+
     }
 
     /**

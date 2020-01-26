@@ -102,7 +102,7 @@ class UserTableSeeder extends Seeder
             'code'=>'00022',
             'email' => 'cristina@mail.com',
             'password' => bcrypt('secret'),
-            'intership' => 'boys'
+            'intership' => 'girls'
         ]);
         \App\User::create([
             'username' => 'Scot',
