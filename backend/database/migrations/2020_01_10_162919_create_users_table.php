@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('rol_id');
             $table->bigInteger('code')->unique();
-            $table->string('prorfile_image')->nullable();
+            $table->string('profile_image')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('username')->nullable();
@@ -48,6 +48,7 @@ class CreateUsersTable extends Migration
         Schema::table('users', function(Blueprint  $table){
             $table->dropForeign(['rol_id']);
             $table->dropColumn('rol_id');
+          
         });
         Schema::dropIfExists('users');
     }

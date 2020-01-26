@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use League\Flysystem\Exception;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\HasApiTokens;
-
+use Illuminate\Support\Facades\Storage;
 
 
 class AuthController extends Controller
@@ -19,6 +19,7 @@ class AuthController extends Controller
 
             'code'=> 'required|required|unique:users',
             'rol_id',
+            'profile_image' => 'required',
             'username'=>'required',
             'first_name'=>'required',
             'last_name'=>'required',
@@ -30,6 +31,9 @@ class AuthController extends Controller
 
         if($data['gender'] == 'F' || $data['gender'] == 'f'){
 
+            $path = $request->file('profile_image')->store('avatars',['disk'=>'public']);
+
+            $data['profile_image'] = '/storage/'.$path;
             $data['intership'] = 'girls';
             $data['password'] = bcrypt($request->password);
             $data['rol_id'] = 2;
@@ -38,7 +42,9 @@ class AuthController extends Controller
 
 
         }else if ($data['gender']=='M'|| $data['gender']=='m'){
+            $path = $request->file('profile_image')->store('avatars',['disk'=>'public']);
 
+            $data['profile_image'] = '/storage/'.$path;
             $data['intership'] = 'boys';
             $data['password'] = bcrypt($request->password);
             $data['rol_id'] = 2;
@@ -70,6 +76,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'username' => Auth::user()->username,
+                'profile_image' => Auth::user()->profile_image,
                 'code' => Auth::user()->code,
                 'status' => Auth::user()->status,
                 'intership'=> Auth::user()->intership,

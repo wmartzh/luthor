@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use \Illuminate\Http\Response;
 class UserController extends Controller
 {
     /**
@@ -18,13 +20,20 @@ class UserController extends Controller
 
         if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){
 
-             return response(['message'=>'User unauthorized'],401);
+
+            return response(['message'=>'User unauthorized'],401);
 
         }else if($auth_user->rol_id == 4){
 
-             $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
+             $data  = \App\User::select('code',
+             'status',
+             'first_name',
+             'profile_image',
+             'last_name',
+             'phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
             ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true]])
             ->get();
+
 
             return response(['data'=>$data],200);
         }
@@ -68,6 +77,7 @@ class UserController extends Controller
                     ->get();
                     return response(['data'=>$data],200);
                 }
+
                 default:{
                     return response(['message'=>'Parameter not established'],200);
                 }
@@ -159,9 +169,45 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        //Users update information
+
+        $auth_user = Auth::user();
+
+        if($auth_user->rol_id == 3 || $auth_user->rol_id == 2){
+
+            $data = $request->validate([
+
+                'profile_image'=>'nullable',
+                'username'=>'nullable',
+                'first_name'=>'nullable',
+                'last_name'=>'nullable',
+                'phone_number'=>'nullable'
+
+            ]);
+           
+            $m_user = \App\User::findOrFail($auth_user->id);
+
+            if(array_key_exists('profile_image',$data)){
+
+                if(!$auth_user->profile_image == null){
+                    $filename = explode('/',$m_user->profile_image);
+                    Storage::disk('public')->delete('avatars/'.$filename);
+                }
+                $path = $request->file('profile_image')->store('avatars',['disk'=>'public']);
+                $data['profile_image'] = '/storage/'.$path;
+
+            }
+
+            $m_user->update($data);
+            $m_user->save();
+            return response(['data'=>$m_user],200);
+
+
+        }
+
+
     }
 
     /**

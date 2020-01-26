@@ -31,7 +31,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
     Route::group(['prefix'  =>  '/students'], function () { //penalties-actives
         Route::get('/','UserController@index');
         Route::get('/{intership}','UserController@show');
-        Route::put('/','UserController@update');
+        Route::post('/','UserController@update');
         Route::get('/filter/{param}','UserController@filterStudents');
         Route::delete('/{id}','UserController@destroy');
     });

@@ -16,7 +16,6 @@ import { StyledCard } from '../styles/StyledCard'
 import { StyledContainer } from '../styles/StyledContainer'
 import { API_ROUTES } from '../constants/apiRoutes'
 import { useUserValues } from '../context/UserContext'
-import { getCurrentRole } from '../helpers/getCurrentLocalStorage'
 
 export const Login = ({ history, location }) => {
   const [loading, setLoading] = useState(false)

@@ -259,7 +259,8 @@ class PermissionsController extends Controller
         $data = $request->validate([
             'user_code'=> 'required',
             'check_exit'=>'nullable',
-            'entry_date_time',
+            'entry_date_time' => 'nullable',
+            'output_date_time' => 'nullable',
             'status'
 
         ]);
@@ -293,6 +294,7 @@ class PermissionsController extends Controller
                         }else{//check exit
                             //Update user and permissions status
                             $usermodel->update(['status'=>'out']);
+                            $data['output_date_time'] = date("Y-m-d H:i:s");
                             $permissionModel->update($data);
                             return response(['message'=> 'accepted'],200);
                         }

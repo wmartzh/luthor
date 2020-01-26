@@ -18,6 +18,8 @@ import { StyledSpan } from '../../styles/StyledSpan'
 import { Navigation } from '../../layout/Navigation'
 import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledContainer } from '../../styles/StyledContainer'
+import { LoadingComponent } from '../../components/LoadingComponent'
+import { NoDataComponent } from '../../components/NoDataComponent'
 
 export const MyPermissions = () => {
   const [expanded, setExpanded] = useState(false)
@@ -85,7 +87,7 @@ export const MyPermissions = () => {
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
-          {status}
+          {status.charAt(0).toUpperCase() + status.slice(1)}
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -171,18 +173,7 @@ export const MyPermissions = () => {
         titleColor="#FB7140"
         tableheader={tableheader}
       >
-        {loading && (
-          <StyledCard
-            width="100%"
-            flexDirection="column"
-            alignItems="center"
-            margin="0 0 16px 0"
-          >
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-              Loading...
-            </StyledSpan>
-          </StyledCard>
-        )}
+        {loading && <LoadingComponent color="#FB7140" />}
         {/* TODO: fix no data! */}
         {(permission.length !== 0 &&
           permission.map(
@@ -211,13 +202,8 @@ export const MyPermissions = () => {
                 {tableExpand(date, output_date_time, entry_date_time)}
               </StyledCard>
             )
-          )) || (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-              No data
-            </StyledSpan>
-          </StyledCard>
-        )}
+          )) ||
+          (!loading && <NoDataComponent color="#FB7140" />)}
       </TableComponent>
     </StyledContainer>
   )

@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { LogoLarge } from '../components/LogoLarge'
 import { LinkComponent } from '../components/LinkComponent'
+import { axios } from '../plugins/axios'
+import { API_ROUTES } from '../constants/apiRoutes'
 
 export const Navigation = () => {
+  const history = useHistory()
   const [selectMenu, setSelectMenu] = useState(false)
 
   const StyeledHeader = styled.header`
@@ -42,7 +46,7 @@ export const Navigation = () => {
     display: ${props => props.display};
     flex-direction: column;
     position: absolute;
-    right: 0;
+    right: 18px;
     top: 56px;
     min-width: 145px;
     background: #f0f2f0;
@@ -72,6 +76,19 @@ export const Navigation = () => {
     }
   `
 
+  const logout = async () => {
+    try {
+      await axios({
+        method: API_ROUTES.logout.method,
+        url: API_ROUTES.logout.url
+      })
+      history.push('/login')
+    } catch (error) {
+      console.log(error)
+      // history.push('/login')
+    }
+  }
+
   return (
     <>
       <StyeledHeader>
@@ -83,9 +100,11 @@ export const Navigation = () => {
         </div>
       </StyeledHeader>
       <StyledMore display={selectMenu ? 'flex' : 'none'}>
-        <LinkComponent to="/login">
+        {/* <LinkComponent to="/login"> */}
+        {/* </LinkComponent> */}
+        <div onClick={() => logout()}>
           <span>LogOut</span>
-        </LinkComponent>
+        </div>
       </StyledMore>
     </>
   )
