@@ -49,7 +49,6 @@ export const Login = ({ history, location }) => {
           password
         }
       })
-      console.log(request.status)
       if (request.status === 401) {
         setError(request.data.message)
         return
@@ -57,8 +56,12 @@ export const Login = ({ history, location }) => {
       const { username, status, code, token } = request.data
       localStorage.setItem('token', JSON.stringify(token))
       localStorage.setItem('user', JSON.stringify({ username, status, code }))
+
       setUser({ username, status, code, role: token[0] })
       setToken(token)
+      axios.defaults.headers.common = {
+        Authorization: `Bearer ${token.substr(1)}`
+      }
     } catch (err) {
       err.message === 'Request failed with status code 401'
         ? setError('Invalid Credentials, please try again')

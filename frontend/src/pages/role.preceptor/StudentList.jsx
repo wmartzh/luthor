@@ -29,7 +29,6 @@ export const StudentList = () => {
     requestService(
       API_ROUTES.getStudents.method,
       API_ROUTES.getStudents.url.base,
-      null,
       setStudents,
       setLoading
     )

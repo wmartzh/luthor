@@ -60,7 +60,6 @@ export const CreateEvents = () => {
       requestService(
         API_ROUTES.getEvents.method,
         API_ROUTES.getEvents.url,
-        null,
         setEvents,
         setLoading
       )
@@ -101,7 +100,6 @@ export const CreateEvents = () => {
     requestService(
       API_ROUTES.getEvents.method,
       API_ROUTES.getEvents.url,
-      null,
       setEvents,
       setLoading
     )
