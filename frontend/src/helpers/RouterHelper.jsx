@@ -14,7 +14,6 @@ import { useUserValues } from '../context/UserContext'
 
 export const RouterHelper = () => {
   const { user } = useUserValues()
-
   return (
     <>
       <Route exact path="/login" component={Login} />

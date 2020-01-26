@@ -21,6 +21,8 @@ import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledContainer } from '../../styles/StyledContainer'
 import { StyledStatusCube } from '../../styles/StyledStatusCube'
 import { assistanceStatusColor } from '../../constants/statusColor'
+import { LoadingComponent } from '../../components/LoadingComponent'
+import { NoDataComponent } from '../../components/NoDataComponent'
 
 export const MyAssitance = () => {
   const [expanded, setExpanded] = useState(false)
@@ -162,23 +164,13 @@ export const MyAssitance = () => {
         titleColor="#4F3C75"
         tableheader={tableheader}
       >
-        {loading && (
-          <StyledCard
-            width="100%"
-            flexDirection="column"
-            alignItems="center"
-            margin="0 0 16px 0"
-          >
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
-              Loading...
-            </StyledSpan>
-          </StyledCard>
-        )}
+        {loading && <LoadingComponent color="#4F3C75" />}
         {/* TODO: fix no data! */}
         {(assistance.length !== 0 &&
           assistance.map(
             ({
-              time: id,
+              id,
+              time,
               date,
               status,
               event: { title },
@@ -195,13 +187,8 @@ export const MyAssitance = () => {
                 {tableExpand(date, monitor)}
               </StyledCard>
             )
-          )) || (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
-              No data
-            </StyledSpan>
-          </StyledCard>
-        )}
+          )) ||
+          (!loading && <NoDataComponent color="#4F3C75" />)}
       </TableComponent>
     </StyledContainer>
   )
