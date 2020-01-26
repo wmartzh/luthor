@@ -33,7 +33,6 @@ class AuthController extends Controller
 
             $path = $request->file('profile_image')->store('avatars',['disk'=>'public']);
 
-
             $data['profile_image'] = '/storage/'.$path;
             $data['intership'] = 'girls';
             $data['password'] = bcrypt($request->password);
@@ -43,7 +42,9 @@ class AuthController extends Controller
 
 
         }else if ($data['gender']=='M'|| $data['gender']=='m'){
+            $path = $request->file('profile_image')->store('avatars',['disk'=>'public']);
 
+            $data['profile_image'] = '/storage/'.$path;
             $data['intership'] = 'boys';
             $data['password'] = bcrypt($request->password);
             $data['rol_id'] = 2;
