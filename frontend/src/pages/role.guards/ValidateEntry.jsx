@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
@@ -22,9 +22,9 @@ import { NoDataComponent } from '../../components/NoDataComponent'
 export const ValidateEntry = () => {
   const [permission, setPermission] = useState([])
   const [tempData, setTempData] = useState([])
+  const [expanded, setExpanded] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [expanded, setExpanded] = useState(false)
 
   const fetchData = () => {
     requestService(

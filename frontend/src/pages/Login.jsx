@@ -70,6 +70,8 @@ export const Login = ({ history, location }) => {
     setLoading(false)
     const { from } = location.state || { from: { pathname: '/' } }
     history.push(from)
+    // Fix error with reload window 🙌🏼
+    window.location.reload(false)
   }
 
   return (

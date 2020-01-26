@@ -24,12 +24,14 @@ import { NoDataComponent } from '../../components/NoDataComponent'
 import { getCurrentToken } from '../../helpers/getCurrentLocalStorage'
 
 export const MyPermissions = () => {
-  const [expanded, setExpanded] = useState(false)
   const [permission, setPermission] = useState([])
+  const [expanded, setExpanded] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [error, setError] = useState('')
 
-  const requestData = () => {
+  // TODO: memory leak when the page is reloaded
+
+  const fetchData = () => {
     requestService(
       API_ROUTES.getPermission.method,
       API_ROUTES.getPermission.url,
@@ -40,7 +42,7 @@ export const MyPermissions = () => {
   }
 
   useEffect(() => {
-    requestData()
+    fetchData()
   }, [])
 
   const tableheader = [
