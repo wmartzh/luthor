@@ -34,6 +34,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
         Route::post('/','UserController@update');
         Route::get('/filter/{param}','UserController@filterStudents');
         Route::delete('/{id}','UserController@destroy');
+        Route::put('/block-all','PenaltyController@blockAll');
     });
     ///Permissions Routes
     Route::group(['prefix'  =>  '/permissions'], function () {

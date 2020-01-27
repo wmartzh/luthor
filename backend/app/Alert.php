@@ -9,10 +9,11 @@ class Alert extends Model
     //
 
     protected $fillable = [
-        'user_id','destination_id','msg'
+        'user_id','destination','dest','code','content','intership','created_at','updated_at'
     ];
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->HasOne('App\User','id','user_id');
     }
 }
+
