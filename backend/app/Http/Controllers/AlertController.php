@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Alert;
 use Illuminate\Http\Request;
+use \Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class AlertController extends Controller
 {
@@ -16,91 +18,116 @@ class AlertController extends Controller
     {
         //
         try{
-            $dta = \App\Alert::all();
 
-            return response()->json(['data'=>$dta,'response'=>200]);
+            $auth_user = Auth::user();
+
+            if($auth_user->rol_id ==2){
+                $data = \App\Alert::select('user_id','content','created_at')
+                ->with(['user'=> function($query){
+                    $query->select('id','username');
+                }])
+                ->where([['destination','students'],['intership',$auth_user->intership]])
+                ->orderBy('created_at','desc')
+                ->get()
+                ;
+
+                return response(['data'=> $data]);
+
+            }else if($auth_user->rol_id ==3){
+
+                $data = \App\Alert::select('user_id','content','created_at')
+                ->with(['user'=> function($query){
+                    $query->select('id','username');
+                }])
+                ->where('dest',$auth_user->id)
+                ->orWhere([['destination','students'],['intership',$auth_user->intership]])
+                ->orderBy('created_at','desc')
+                ->get()
+                ;
+
+                return response(['data'=> $data]);
+
+            }else if($auth_user->rol_id==4){
+
+                $data = \App\Alert::select('user_id','content','created_at')
+                ->with(['user'=> function($query){
+                    $query->select('id','username');
+                }])
+                ->where([['destination','preceptor'],['intership', $auth_user->intership]])
+                ->orderBy('created_at','desc')->get()
+                ;
+                return response(['data'=> $data]);
+
+            }
+
+
+
         }catch(Exception $e){
 
         }
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
-        $vD = request()->validate([
-            'user_id'=> 'required',
-            'destination_id' => 'required',
-            'msg' => 'required'
+        $data = $request->validate([
+            'user_id',
+            'dest'=>'nullable',
+            'intership'=>'nullable',
+            'destination' => 'nullable',
+            'code' => 'nullable',
+            'content' => 'required'
         ]);
+        $auth_user = Auth::user();
         try{
-            \App\Alert::create($vD);
+            $data['intership'] = $auth_user->intership;
+            $data['user_id'] = $auth_user->id;
 
-            return response()->json(['response'=> 201]);
+            if($auth_user->rol_id == 3){
 
-        }catch(Exception $e){
-            return response()->json(['response'=> 400]);
-        }
-    }
+                $data['destination'] = 'preceptor';
+                \App\Alert::create($data);
+                return response(['message'=>'Alert sent'],201);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Alert  $alert
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-        try{
-            $✅ = \App\Alert::findOrFail($id);
-            return response()->json(['data'=>$✅],$status = 200);
+            }else if($auth_user->rol_id == 4){
 
-        }catch(Exception $e){
-         return response()->json(['message'=>'something was wrong'],$status=400);
-        }
-    }
+                $check = array_key_exists('code',$data);
+
+                if($check){ //For someone
+
+                    $check_student = \App\User::select('intership','id')->where('code',$data['code'])->get()->first();
+
+                    if($check_student['intership'] == $auth_user->intership){
+                        $data['dest'] = $check_student['id'];
+                        $data['destination'] = 'monitor';
+                        \App\Alert::create($data);
+                        return response(['message'=>'Alert sent'],201);
+                    }else{
+                        return response(['message'=> 'Bad request',
+                        'errors'=> ['code'=>'wrong intership']],400);
+                    }
+
+                }else{ // for all
+
+                    $data['user_id'] = $auth_user->id;
+                    $data['destination'] = 'students';
+                    \App\Alert::create($data);
+                    return response(['message'=>'Alert sent'],201);
+                }
+            }
 
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Alert  $alert
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Alert $alert)
-    {
-        //
-        $data = request()->validate([
-            'user_id'=> 'required',
-            'destination_id' => 'required',
-            'msg' => 'required'
-        ]);
 
-        try{
-            $alert->update($data);
-
-            return response()->json(['message'=> $alert],$status = 200);
 
 
         }catch(Exception $e){
-            return response()->json(['message'=>'something was wrong'],$status=400);
+            return response([''],500);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Alert  $alert
-     * @return \Illuminate\Http\Response
-     */
+
+
+
     public function destroy($id)
     {
         //
