@@ -2,7 +2,7 @@ import { MyPermissions } from '../pages/role.students/MyPermissions'
 import { StudentsOut } from '../pages/role.preceptor/StudentsOut'
 import { AssistanceDay } from '../pages/role.preceptor/AssistanceDay'
 import { Penalties } from '../pages/role.preceptor/Penalties'
-import { CreateEvents } from '../pages/role.preceptor/CreateEvents'
+import { MyEvents } from '../pages/role.preceptor/MyEvents'
 import { StudentList } from '../pages/role.preceptor/StudentList'
 
 export const preceptorRoutes = [
@@ -20,7 +20,7 @@ export const preceptorRoutes = [
   },
   {
     path: '/create-events',
-    component: CreateEvents
+    component: MyEvents
   },
   {
     path: '/students-list',

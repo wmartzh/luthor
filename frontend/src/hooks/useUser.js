@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getCurrentUser } from '../helpers/getCurrentLocalStorage'
 import { statusService } from '../services/statusService'
+import { axios } from '../plugins/axios'
 
 export const useUser = () => {
   const initialUser = () => getCurrentUser
@@ -11,10 +12,16 @@ export const useUser = () => {
   const [token, setToken] = useState('f34th3r.io')
 
   useEffect(() => {
+    if (auth) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(
+        localToken
+      ).substr(1)}`
+    }
+  }, [auth, localToken])
+
+  useEffect(() => {
     if (localToken !== null) {
-      const temToken = localToken ? JSON.parse(localToken).substr(1) : ''
-      setToken(temToken)
-      // axios.defaults.headers.common = { Authorization: `Bearer ${temToken}` } // TODO!!! future update
+      setToken(localToken ? JSON.parse(localToken).substr(1) : '')
     }
   }, [localToken])
 
