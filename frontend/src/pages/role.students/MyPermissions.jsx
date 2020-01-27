@@ -22,6 +22,7 @@ import { StyledContainer } from '../../styles/StyledContainer'
 import { LoadingComponent } from '../../components/LoadingComponent'
 import { NoDataComponent } from '../../components/NoDataComponent'
 import { getCurrentToken } from '../../helpers/getCurrentLocalStorage'
+import { StyledTypography } from '../../styles/StyledTypography'
 
 export const MyPermissions = () => {
   const [permission, setPermission] = useState([])
@@ -63,7 +64,7 @@ export const MyPermissions = () => {
       color: '#ff9e7a'
     },
     {
-      size: '180px',
+      size: '140px',
       title: 'Date',
       display: true,
       displayMd: true,
@@ -71,7 +72,7 @@ export const MyPermissions = () => {
       color: '#ff9e7a'
     },
     {
-      size: '180px',
+      size: '220px',
       title: 'Out / Entry',
       display: true,
       displayMd: false,
@@ -108,9 +109,14 @@ export const MyPermissions = () => {
         displayMd={tableheader[2].displayMd ? 'block' : 'none'}
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#FB7140">
+        <StyledTypography
+          fontSize="14px"
+          fontFamily="Segoe UI"
+          fontWeigth="600"
+          color="#FB7140"
+        >
           {moment(date).format('DD-MMM-YYYY')}
-        </StyledH2>
+        </StyledTypography>
       </StyledTableItem>
       <StyledTableItem
         width={tableheader[3].size}
@@ -118,11 +124,16 @@ export const MyPermissions = () => {
         displayMd={tableheader[3].displayMd ? 'block' : 'none'}
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+        <StyledTypography
+          fontSize="14px"
+          fontFamily="Segoe UI"
+          fontWeigth="600"
+          color="#FB7140"
+        >
           {`${out ? moment(out).format('DD-MMM-YYYY') : '--'} / ${
             entry ? moment(entry).format('DD-MMM-YYYY') : '--'
           }`}
-        </StyledSpan>
+        </StyledTypography>
       </StyledTableItem>
       <StyledTableItem
         className="last-item"
@@ -153,16 +164,22 @@ export const MyPermissions = () => {
           <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
             {moment(date).format('DD-MMM-YYYY')}
           </StyledSpan>
-          <StyledSpacer height="28px" />
         </StyledTableItem>
 
+        <StyledSpacer height="28px" />
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
-          {tableheader[3].title}
+          Out
         </StyledSpan>
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-          {`${out ? moment(out).format('DD-MMM-YYYY') : '--'} / ${
-            entry ? moment(entry).format('DD-MMM-YYYY') : '--'
-          }`}
+          {out ? moment(out).format('DD-MMM-YYYY, h:mm:ss a') : '--'}
+        </StyledSpan>
+
+        <StyledSpacer height="28px" />
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+          Entry
+        </StyledSpan>
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+          {entry ? moment(entry).format('DD-MMM-YYYY, h:mm:ss a') : '--'}
         </StyledSpan>
       </StyledTableItemExpand>
     )

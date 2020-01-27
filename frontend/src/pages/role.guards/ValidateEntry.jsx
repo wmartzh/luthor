@@ -22,9 +22,9 @@ import { NoDataComponent } from '../../components/NoDataComponent'
 export const ValidateEntry = () => {
   const [permission, setPermission] = useState([])
   const [tempData, setTempData] = useState([])
-  const [expanded, setExpanded] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [expanded, setExpanded] = useState(false)
 
   const fetchData = () => {
     requestService(
@@ -147,7 +147,7 @@ export const ValidateEntry = () => {
         tableheader={tableheader}
       >
         {loading && <LoadingComponent color="#4F3C75" />}
-        {(permission.length === 0 &&
+        {(permission.length &&
           permission.map(
             ({
               type,
