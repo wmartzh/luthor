@@ -9,7 +9,9 @@ export const useUser = () => {
 
   const [auth, setAuth] = useState(false)
   const [user, setUser] = useState(initialUser)
-  const [token, setToken] = useState('f34th3r.io')
+  const [token, setToken] = useState(
+    localToken ? JSON.parse(localToken).substr(1) : 'f34th3r.io'
+  )
 
   useEffect(() => {
     if (auth) {

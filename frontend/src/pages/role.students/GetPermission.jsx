@@ -54,10 +54,7 @@ export const GetPermission = () => {
       const request = await axios({
         method: method,
         url: url,
-        data: data,
-        headers: {
-          Authorization: `Bearer ${getCurrentToken}`
-        }
+        data: data
       })
       // console.log(request.status)
       if (
