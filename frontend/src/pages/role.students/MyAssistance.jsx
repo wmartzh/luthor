@@ -23,24 +23,28 @@ import { StyledStatusCube } from '../../styles/StyledStatusCube'
 import { assistanceStatusColor } from '../../constants/statusColor'
 import { LoadingComponent } from '../../components/LoadingComponent'
 import { NoDataComponent } from '../../components/NoDataComponent'
+import { requestService } from '../../services/requestService'
+import { getCurrentToken } from '../../helpers/getCurrentLocalStorage'
 
 export const MyAssitance = () => {
   const [expanded, setExpanded] = useState(false)
   const [assistance, setAssistance] = useState([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  // TODO: memory leak when the page is reloaded
+
+  const fetchData = () => {
+    requestService(
+      API_ROUTES.getAssistance.method,
+      API_ROUTES.getAssistance.url,
+      setAssistance,
+      setLoading,
+      setError
+    )
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      const request = await axios({
-        method: 'GET',
-        url: API_ROUTES.getAssistance
-      })
-      if (request.status === 200) {
-        setAssistance(request.data.data)
-      }
-      setLoading(false)
-    }
     fetchData()
   }, [])
 

@@ -9,7 +9,10 @@ export const API_ROUTES = {
     method: 'GET',
     url: '/permissions'
   },
-  getAssistance: '/assistance',
+  getAssistance: {
+    method: 'GET',
+    url: '/assistance'
+  },
   getStatus: {
     method: 'GET',
     url: '/user-status'

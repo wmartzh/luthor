@@ -7,9 +7,11 @@ import { LogoLarge } from '../components/LogoLarge'
 import { LinkComponent } from '../components/LinkComponent'
 import { axios } from '../plugins/axios'
 import { API_ROUTES } from '../constants/apiRoutes'
+import { logoutService } from '../services/authService'
 
 export const Navigation = () => {
   const history = useHistory()
+  const [error, setError] = useState('')
   const [selectMenu, setSelectMenu] = useState(false)
 
   const StyeledHeader = styled.header`
@@ -77,16 +79,7 @@ export const Navigation = () => {
   `
 
   const logout = async () => {
-    try {
-      await axios({
-        method: API_ROUTES.logout.method,
-        url: API_ROUTES.logout.url
-      })
-      history.push('/login')
-    } catch (error) {
-      console.log(error)
-      // history.push('/login')
-    }
+    logoutService(history, setError)
   }
 
   return (
