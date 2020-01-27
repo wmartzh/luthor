@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { getCurrentUser } from '../helpers/getCurrentLocalStorage'
 import { statusService } from '../services/statusService'
-import { axios } from '../plugins/axios'
 
 export const useUser = () => {
   const initialUser = () => getCurrentUser
   const localToken = localStorage.getItem('token')
 
+  const [auth, setAuth] = useState(false)
   const [user, setUser] = useState(initialUser)
   const [token, setToken] = useState('f34th3r.io')
 
@@ -36,6 +36,8 @@ export const useUser = () => {
     user,
     setUser,
     token,
-    setToken
+    setToken,
+    auth,
+    setAuth
   }
 }

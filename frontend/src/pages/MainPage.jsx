@@ -5,8 +5,10 @@ import { StyledSpacer } from '../styles/StyledSpacer'
 import { StyledContainer } from '../styles/StyledContainer'
 import { Dashboard } from './Dashboard'
 import { DashboardAdmin } from './role.preceptor/DashboardAdmin'
+import { useUserValues } from '../context/UserContext'
 
-export const MainPage = ({ user }) => {
+export const MainPage = () => {
+  const { user } = useUserValues()
   const { role } = user
 
   return (

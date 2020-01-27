@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import moment from 'moment'
 import { axios } from '../../plugins/axios'
 
 import TextField from '@material-ui/core/es/TextField'
@@ -10,7 +9,6 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import { API_ROUTES } from '../../constants/apiRoutes'
 
 import { Navigation } from '../../layout/Navigation'
-import { LinkComponent } from '../../components/LinkComponent'
 import { ButtonComponent } from '../../components/ButtonComponent'
 
 import { StyledH1 } from '../../styles/StyledH1'
@@ -25,14 +23,12 @@ import {
   StyledTableItem,
   StyledTableItemExpand
 } from '../../components/TableComponent'
-import { myEventsService } from '../../services/myEventsService'
 import { requestService } from '../../services/requestService'
 import { defaultColors } from '../../constants/statusColor'
 
 // TODO: presente, tarde, ausente
 
 export const CreateEvents = () => {
-  const [error, setError] = useState(false)
   const [toast, setToast] = useState(false)
   const [id, setId] = useState('')
   const [title, setTitle] = useState('')
@@ -44,6 +40,21 @@ export const CreateEvents = () => {
   const [expanded, setExpanded] = useState(false)
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+
+  const fetchData = () => {
+    requestService(
+      API_ROUTES.getEvents.method,
+      API_ROUTES.getEvents.url,
+      setEvents,
+      setLoading,
+      setError
+    )
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   const submitHandle = async () => {
     const request = await axios({
@@ -57,12 +68,7 @@ export const CreateEvents = () => {
       setTitle('')
       setCreate(false)
       setToast('Event was created successfully!')
-      requestService(
-        API_ROUTES.getEvents.method,
-        API_ROUTES.getEvents.url,
-        setEvents,
-        setLoading
-      )
+      fetchData()
     }
   }
 
@@ -94,16 +100,6 @@ export const CreateEvents = () => {
       color: '#FBB84D'
     }
   ]
-
-  useEffect(() => {
-    // myEventsService(setEvents, setLoading)
-    requestService(
-      API_ROUTES.getEvents.method,
-      API_ROUTES.getEvents.url,
-      setEvents,
-      setLoading
-    )
-  }, [])
 
   const editHandler = (id, title, time, tolerance) => {
     setTitle(title)
@@ -207,7 +203,7 @@ export const CreateEvents = () => {
   )
 
   const tableContent = (title, time, tolerance) => (
-    <StyledTableBody>
+    <StyledTableBody onClick={() => editHandler(id, title, time, tolerance)}>
       <StyledTableItem
         width={tableheader[0].size}
         display={tableheader[0].display ? 'block' : 'none'}
@@ -348,7 +344,6 @@ export const CreateEvents = () => {
                   margin="0 0 16px 0"
                   key={id}
                   style={{ cursor: 'pointer' }}
-                  onClick={() => editHandler(id, title, time, tolerance)}
                 >
                   {tableContent(title, time, tolerance)}
                   {tableExpand(time, tolerance)}

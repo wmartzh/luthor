@@ -1,5 +1,4 @@
 import { axios } from '../plugins/axios'
-import { getCurrentToken } from '../helpers/getCurrentLocalStorage'
 
 export const requestService = async (
   method,
@@ -12,10 +11,7 @@ export const requestService = async (
     setLoading(true)
     const request = await axios({
       method: method,
-      url: url,
-      headers: {
-        Authorization: `Bearer ${getCurrentToken}`
-      }
+      url: url
     })
     if (request.status === 200) {
       setData(request.data.data)
