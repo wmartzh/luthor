@@ -174,19 +174,22 @@ class UserController extends Controller
         //Users update information
 
         $auth_user = Auth::user();
+        $data = $request->validate([
+
+            'profile_image'=>'nullable',
+            'username'=>'nullable',
+            'first_name'=>'nullable',
+            'last_name'=>'nullable',
+            'phone_number'=>'nullable',
+            'is_active' => 'nullable',
+            'code' => 'nullable'
+
+        ]);
 
         if($auth_user->rol_id == 3 || $auth_user->rol_id == 2){
 
-            $data = $request->validate([
 
-                'profile_image'=>'nullable',
-                'username'=>'nullable',
-                'first_name'=>'nullable',
-                'last_name'=>'nullable',
-                'phone_number'=>'nullable'
 
-            ]);
-           
             $m_user = \App\User::findOrFail($auth_user->id);
 
             if(array_key_exists('profile_image',$data)){
@@ -205,8 +208,80 @@ class UserController extends Controller
             return response(['data'=>$m_user],200);
 
 
-        }
+        }else if($auth_user->rol_id == 4){
 
+            if(array_key_exists('is_active', $data)){
+
+                if(array_key_exists('code',$data)){
+
+                    $check_student = \App\User::select('id','intership')->where('code',$data['code'])->get()->first();
+
+                    if($check_student['intership']==$auth_user->intership){
+
+                        $m_user = \App\User::findOrFail($check_student['id']);
+                        $m_user->update($data);
+                        $m_user->save();
+                        return response(['message'=> 'User changed to '.$data['is_active']],200);
+
+                    }else{
+                        return response([
+                            'message'=>'The given data was invalid',
+                            'errors' => [
+                                'code' => 'wrong intership'
+                            ]
+                            ],400);
+                    }
+
+
+                }else{
+                    return response([
+                        'message'=>'The given data was invalid',
+                        'errors' => [
+                            'code' => 'please provide student code'
+                        ]
+                        ],400);
+                }
+
+            }else{
+                return response([
+                    'message'=>'The given data was invalid',
+                    'errors' => [
+                        'is_active' => 'state not provided'
+                    ]
+                    ],400);
+
+            }
+
+        }else if ($auth_user->rol_id ==6){
+            if(array_key_exists('is_active', $data)){
+
+                if(array_key_exists('code',$data)){
+
+                    $check_student = \App\User::select('id')->where('code',$data['code'])->get()->first();
+                    $m_user = \App\User::findOrFail($check_student['id']);
+                    $m_user->update($data);
+                    $m_user->save();
+                    return response(['message'=> 'User changed to '.$data['is_active']],200);
+
+
+                }else{
+                    return response([
+                        'message'=>'The given data was invalid',
+                        'errors' => [
+                            'code' => 'please provide student code'
+                        ]
+                        ],400);
+                }
+
+            }else{
+                return response([
+                        'message'=>'The given data was invalid',
+                            'errors' => [
+                                'is_active' => 'state not provided'
+                            ]
+                    ],400);
+            }
+        }
 
     }
 

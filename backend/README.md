@@ -12,17 +12,61 @@ This is a backend of the project.
 
 ### New Requests
 ```
-/students/filter/{parameter}
+/students/filter/{parameter} [get]
 ```
 #####  valid parameters
-**rol id 4**
+**only rol id 4**
 ```
 actives = get active students
 inactives = get inactive students
 penalized = get penalized students
 ```
 
-  ## Database config
+```
+/students/block-all   [post]
+```
+#####  valid parameters
+**only rol id 4**
+```
+block = 0/1 
+        0 = false
+        1 = true
+```
+```
+/students/   [post]
+```
+#####  valid parameters
+**available to rol id 4 and 6 **
+```
+is_active = 0/1            : set if student is active
+code    = code_studen      : student code
+```
+```
+/alerts/   [get]
+```
+#####  valid parameters
+**available to rol id 4 and 3**
+```
+no parameter needed
+
+```
+
+```
+/alerts/   [post]
+```
+#####  valid parameters
+**available to rol id 4 and 3**
+```
+preceptor params
+    content  : content alert
+    code     : student to sent alert, can be nullable if the alert is for all students
+
+monitor params
+    content  : content alert
+```
+
+
+## Database config
 
 To run the backend you will need the database name
 ```
