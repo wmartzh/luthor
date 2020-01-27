@@ -97,15 +97,19 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
         $request->validate([
-                'title'=> 'required',
-                'start_time' => 'required'
+            'title'=> 'required',
+            'start_time' => 'required',
+            'tolerance_present' => 'required',
+            'tolerance_late' => 'required',
         ]);
 
 
         try{
             $event->update([
                 'title' => $request->title,
-                'start_time' => $request->start_time
+                'start_time' => $request->start_time,
+                'tolerance_present' => $request->tolerance_present,
+                'tolerance_late' => $request->tolerance_late,
             ]);
 
             return response()->json(['message'=> $event],$status = 200);
@@ -129,6 +133,6 @@ class EventController extends Controller
         $event = \App\Event::findOrFail($id);
         $event->delete();
 
-        return response()->json(['message'=>'OK'],$status=402);
+        return response()->json(['message'=>'OK'],$status=200);
     }
 }

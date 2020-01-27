@@ -28,44 +28,39 @@ import Checkbox from '@material-ui/core/es/Checkbox'
 import MenuItem from '@material-ui/core/MenuItem'
 import { StyledTypography } from '../styles/StyledTypography'
 import { Copyright } from '../components/Copyright'
+import { HourMinComponent } from '../components/HourMinComponent'
 
 export const ToTest = () => {
-  const submitHandle = () => {}
+  const [tolerancePrecent, setTolerancePrecent] = useState({
+    h: '00',
+    m: '10'
+  })
+  const [toleranceLate, setToleranceLate] = useState({
+    h: '00',
+    m: '10'
+  })
+  const submitHandle = () => {
+    console.log(`precent = ${tolerancePrecent.h}:${tolerancePrecent.m}`)
+    console.log(`late = ${toleranceLate.h}:${toleranceLate.m}`)
+  }
   return (
     <StyledContainer maxWidth="380px">
       <StyledSpacer height="100px" />
-      <StyledCard flexDirection="column" roundedTop width="340px">
-        <StyledAvatar radius="50%" background="#08B1C5" fill="#fff">
-          <LockOutlinedIcon />
-        </StyledAvatar>
-        <StyledTypography fontSize="20px">Sign In</StyledTypography>
-        <StyledSpacer height="20px" />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          id="email"
-          label="Email Address"
-          name="email"
-          autoComplete="email"
-          autoFocus
+      <StyledCard flexDirection="column" roundedTop width="400px">
+        <HourMinComponent
+          title="Tolerance Precent"
+          time={tolerancePrecent}
+          setTime={setTolerancePrecent}
+          color="#08B1C5"
         />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          name="password"
-          label="Password"
-          type="password"
-          id="password"
-          autoComplete="current-password"
+
+        <HourMinComponent
+          title="Tolerance Late"
+          time={toleranceLate}
+          setTime={setToleranceLate}
+          color="#08B1C5"
         />
-        {/* <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
-          label="Remember me"
-        /> */}
+
         <StyledSpacer height="40px" />
         <ButtonComponent
           click={submitHandle}
@@ -75,15 +70,7 @@ export const ToTest = () => {
         >
           Sign In
         </ButtonComponent>
-        <StyledSpacer height="30px" />
-        <Copyright />
-        <StyledSpacer height="10px" />
       </StyledCard>
-      <StyledStatusBar
-        background={userStatusColor('in')}
-        width="340px"
-        margin="auto"
-      />
     </StyledContainer>
   )
 }

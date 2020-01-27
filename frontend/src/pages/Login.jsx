@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import { useHistory } from 'react-router-dom'
 import { axios } from '../plugins/axios'
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
@@ -17,7 +17,8 @@ import { StyledContainer } from '../styles/StyledContainer'
 import { API_ROUTES } from '../constants/apiRoutes'
 import { useUserValues } from '../context/UserContext'
 
-export const Login = ({ history, location }) => {
+export const Login = ({ location }) => {
+  const history = useHistory()
   const { setUser, setToken, setAuth } = useUserValues()
 
   const [loading, setLoading] = useState(false)
@@ -58,20 +59,32 @@ export const Login = ({ history, location }) => {
         setError(request.data.message)
         return
       }
-      const { username, status, code, token } = request.data
-      localStorage.setItem('token', JSON.stringify(token))
-      localStorage.setItem('user', JSON.stringify({ username, status, code }))
 
-      setUser({ username, status, code, role: token[0] })
+      const {
+        username,
+        status,
+        code,
+        token,
+        profile_image: photo
+      } = request.data
+      localStorage.setItem('token', JSON.stringify(token))
+      localStorage.setItem(
+        'user',
+        JSON.stringify({ username, status, code, photo })
+      )
+
+      setUser({ username, status, code, role: token[0], photo })
       setToken(token)
-      const realToken = token.substr(1)
-      // TODO: leak memory
-      axios.defaults.headers.common['Authorization'] = `Bearer ${realToken}`
-      //
       setAuth(true)
 
-      const { from } = location.state || { from: { pathname: '/' } }
-      history.push(from)
+      // TODO: leak memory
+      // const realToken = token.substr(1)
+      // axios.defaults.headers.common['Authorization'] = `Bearer ${realToken}`
+      //
+
+      // this route go to the last path
+      // const { from } = location.state || { from: { pathname: '/' } }
+      history.push('/')
     } catch (err) {
       err.message === 'Request failed with status code 401'
         ? setError('Invalid Credentials, please try again')

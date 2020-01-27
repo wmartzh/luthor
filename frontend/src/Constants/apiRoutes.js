@@ -37,6 +37,14 @@ export const API_ROUTES = {
     method: 'POST',
     url: '/events'
   },
+  updateEvent: {
+    method: 'PUT',
+    url: '/events'
+  },
+  deleteEvent: {
+    method: 'DELETE',
+    url: '/events'
+  },
   getStudents: {
     method: 'GET',
     url: {
