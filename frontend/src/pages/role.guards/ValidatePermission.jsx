@@ -16,22 +16,23 @@ import { requestService } from '../../services/requestService'
 import { API_ROUTES } from '../../constants/apiRoutes'
 import { StyledCard } from '../../styles/StyledCard'
 import { submitService } from '../../services/submitService'
-import { StyledTypography } from '../../styles/StyledTypography'
 import { LoadingComponent } from '../../components/LoadingComponent'
+import { NoDataComponent } from '../../components/NoDataComponent'
 
 export const ValidatePermission = () => {
   const [permission, setPermission] = useState([])
   const [tempData, setTempData] = useState([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const [expanded, setExpanded] = useState(false)
 
   const requestData = () => {
     requestService(
       API_ROUTES.getPermission.method,
       API_ROUTES.getPermission.url,
-      null,
       setTempData,
-      setLoading
+      setLoading,
+      setError
     )
   }
 
@@ -168,18 +169,8 @@ export const ValidatePermission = () => {
                 </StyledCard>
               ) : null
             }
-          )) || (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledTypography
-              fontSize="14px"
-              fontFamily="Segoe UI"
-              fontWeigth="600"
-              color="#1D7AA2"
-            >
-              No data
-            </StyledTypography>
-          </StyledCard>
-        )}
+          )) ||
+          (!loading && <NoDataComponent color="#1D7AA2" />)}
       </TableComponent>
       {/* TODO: get user photo */}
       {expanded && <StyledCard>TODO Dialog</StyledCard>}

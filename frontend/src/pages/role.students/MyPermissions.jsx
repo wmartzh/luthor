@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import { axios } from '../../plugins/axios'
+
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import {
@@ -10,6 +10,7 @@ import {
   StyledTableBody
 } from '../../components/TableComponent'
 
+import { requestService } from '../../services/requestService'
 import { API_ROUTES } from '../../constants/apiRoutes'
 
 import { StyledH2 } from '../../styles/StyledH2'
@@ -20,26 +21,27 @@ import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledContainer } from '../../styles/StyledContainer'
 import { LoadingComponent } from '../../components/LoadingComponent'
 import { NoDataComponent } from '../../components/NoDataComponent'
+import { getCurrentToken } from '../../helpers/getCurrentLocalStorage'
 
 export const MyPermissions = () => {
-  const [expanded, setExpanded] = useState(false)
   const [permission, setPermission] = useState([])
+  const [expanded, setExpanded] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  // TODO: create a loading component
+  // TODO: memory leak when the page is reloaded
+
+  const fetchData = () => {
+    requestService(
+      API_ROUTES.getPermission.method,
+      API_ROUTES.getPermission.url,
+      setPermission,
+      setLoading,
+      setError
+    )
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      const request = await axios({
-        method: API_ROUTES.getPermission.method,
-        url: API_ROUTES.getPermission.url
-      })
-      if (request.status === 200) {
-        setPermission(request.data.data)
-      }
-      setLoading(false)
-    }
     fetchData()
   }, [])
 
@@ -174,7 +176,6 @@ export const MyPermissions = () => {
         tableheader={tableheader}
       >
         {loading && <LoadingComponent color="#FB7140" />}
-        {/* TODO: fix no data! */}
         {(permission.length !== 0 &&
           permission.map(
             ({
