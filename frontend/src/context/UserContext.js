@@ -4,7 +4,7 @@ import { useUser } from '../hooks/useUser'
 export const UserContext = createContext()
 
 export const UserProvider = ({ children }) => {
-  const { user, setUser, token, setToken } = useUser()
+  const { user, setUser, token, setToken, auth, setAuth } = useUser()
 
   return (
     <UserContext.Provider
@@ -12,7 +12,9 @@ export const UserProvider = ({ children }) => {
         user,
         setUser,
         token,
-        setToken
+        setToken,
+        auth,
+        setAuth
       }}
     >
       {children}

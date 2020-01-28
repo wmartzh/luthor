@@ -18,21 +18,28 @@ import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledContainer } from '../../styles/StyledContainer'
 import { requestService } from '../../services/requestService'
 import { defaultColors } from '../../constants/statusColor'
+import { NoDataComponent } from '../../components/NoDataComponent'
+import { LoadingComponent } from '../../components/LoadingComponent'
 
 export const StudentList = () => {
   const [expanded, setExpanded] = useState(false)
   const [students, setStudents] = useState([])
   const [selected, setSelected] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
 
-  useEffect(() => {
+  const fetchData = () => {
     requestService(
       API_ROUTES.getStudents.method,
       API_ROUTES.getStudents.url.base,
-      null,
       setStudents,
-      setLoading
+      setLoading,
+      setError
     )
+  }
+
+  useEffect(() => {
+    fetchData()
   }, [])
 
   const tableheader = [
@@ -88,12 +95,15 @@ export const StudentList = () => {
   )
 
   const tableContent = (code, firstName, lastName, phone, status) => (
-    <StyledTableBody>
+    <StyledTableBody style={{ cursor: 'pointer' }}>
       <StyledTableItem
         width={tableheader[0].size}
         display={tableheader[0].display ? 'block' : 'none'}
         displayMd={tableheader[0].displayMd ? 'block' : 'none'}
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
+        onClick={() =>
+          setSelected({ code, firstName, lastName, phone, status })
+        }
       >
         <StyledSpan
           fontFamily="Segoe UI"
@@ -108,6 +118,9 @@ export const StudentList = () => {
         display={tableheader[1].display ? 'block' : 'none'}
         displayMd={tableheader[1].displayMd ? 'block' : 'none'}
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
+        onClick={() =>
+          setSelected({ code, firstName, lastName, phone, status })
+        }
       >
         <StyledH2 fontWeigth="600" color="#007991">
           {firstName}
@@ -118,6 +131,9 @@ export const StudentList = () => {
         display={tableheader[2].display ? 'block' : 'none'}
         displayMd={tableheader[2].displayMd ? 'block' : 'none'}
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
+        onClick={() =>
+          setSelected({ code, firstName, lastName, phone, status })
+        }
       >
         <StyledH2 fontWeigth="600" color="#007991">
           {lastName}
@@ -148,52 +164,41 @@ export const StudentList = () => {
     </StyledTableBody>
   )
 
-  const tableExpand = (lastName, phone) =>
-    expanded && (
-      <StyledTableItemExpand paddingLerft={tableheader[0].size}>
-        <StyledTableItem
-          width={tableheader[3].size}
-          displayMd="none"
-          displaySm="flex"
-        >
-          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#00A7CA">
-            {tableheader[2].title}
-          </StyledSpan>
-          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
-            {lastName}
-          </StyledSpan>
-          <StyledSpacer height="28px" />
-        </StyledTableItem>
-
+  const tableExpand = (lastName, phone) => (
+    <StyledTableItemExpand paddingLerft={tableheader[0].size}>
+      <StyledTableItem
+        width={tableheader[3].size}
+        displayMd="none"
+        displaySm="flex"
+      >
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#00A7CA">
-          {tableheader[3].title}
+          {tableheader[2].title}
         </StyledSpan>
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
-          {phone || 'none'}
+          {lastName}
         </StyledSpan>
-      </StyledTableItemExpand>
-    )
+        <StyledSpacer height="28px" />
+      </StyledTableItem>
+
+      <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#00A7CA">
+        {tableheader[3].title}
+      </StyledSpan>
+      <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
+        {phone || 'none'}
+      </StyledSpan>
+    </StyledTableItemExpand>
+  )
 
   return (
     <StyledContainer>
       <Navigation />
       {selected === '' && (
         <TableComponent
-          title="Studnets"
+          title="Students"
           titleColor="#007991"
           tableheader={tableheader}
         >
-          {loading && (
-            <StyledCard width="100%" flexDirection="column" alignItems="center">
-              <StyledSpan
-                fontFamily="Segoe UI"
-                fontWeigth="600"
-                color="#007991"
-              >
-                Loading...
-              </StyledSpan>
-            </StyledCard>
-          )}
+          {loading && <LoadingComponent color="#007991" />}
           {(students &&
             students.map(
               ({
@@ -209,26 +214,13 @@ export const StudentList = () => {
                   alignItems="start"
                   margin="0 0 16px 0"
                   key={code}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() =>
-                    setSelected({ code, firstName, lastName, phone, status })
-                  }
                 >
                   {tableContent(code, firstName, lastName, phone, status)}
-                  {tableExpand(lastName, phone)}
+                  {expanded && tableExpand(lastName, phone)}
                 </StyledCard>
               )
-            )) || (
-            <StyledCard width="100%" flexDirection="column" alignItems="center">
-              <StyledSpan
-                fontFamily="Segoe UI"
-                fontWeigth="600"
-                color="#007991"
-              >
-                No data
-              </StyledSpan>
-            </StyledCard>
-          )}
+            )) ||
+            (!loading && <NoDataComponent color="#007991" />)}
         </TableComponent>
       )}
       {selected && studentInfo}

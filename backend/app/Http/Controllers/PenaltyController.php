@@ -123,7 +123,8 @@ class PenaltyController extends Controller
             'user_code'=> 'required',
             'active',
             'reason' => 'required',
-            'intership' => 'nullable'
+            'conclusion' => 'required',
+
         ]);
 
 
@@ -149,7 +150,7 @@ class PenaltyController extends Controller
                 }else{
                     $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();
 
-                    if($intership['interhsip']==$auth_user->intership){
+                    if($auth_user->intership == $intership['intership']){
                         $data['active']= true;
                         $student->update(['status'=>'penalized']);
                         \App\Penalty::create($data);
@@ -245,10 +246,9 @@ class PenaltyController extends Controller
      * @param  \App\Penalty  $penalty
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
-    {
+    public function update(Request $request){
         $data = $request->validate([
-            'user_code'=> 'required',
+            'user_code'=> 'nullable',
             'active',
 
         ]);
@@ -257,10 +257,28 @@ class PenaltyController extends Controller
             $auth_user = Auth::user();
 
             //check rol id --- only rector and preceptor can access
-            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 || $auth_user->rol_id == 5){
+            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 ){
 
-                return response(['message'=>'user cant access'],401);
+                $active = \App\Penalty::select()->where([['active', true],['user_code',$auth_user->code]])->get()->first();
+
+                if($active != null){
+                    $u_mdl = \App\User::findOrFail($auth_user->id);
+                    $p_mdl = \App\Penalty::findOrFail($active['id']);
+
+                    if(date('Y-m-d')>=$active->conclusion){
+                        $dta['active'] = false;
+                        $p_mdl->update($data);
+                        $u_mdl->update(['status'=>'in']);
+                    }
+
+                }else{
+                    return response(['message'=>'user has not active penalties'],200);
+                }
+
+
             }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6){
+
+
                 $penalty_active = \App\Penalty::select()->where([['user_code',$data['user_code']],['active',true]])->get()->first();
                 if($penalty_active==null){
                     return response(['message'=>'user has not active penalties'],404);
@@ -287,6 +305,29 @@ class PenaltyController extends Controller
         }
     }
 
+    public function blockAll(Request $request){
+        $data = $request->validate(['block'=>'required']);
+
+        $auth_user = Auth::user();
+
+        if($auth_user->rol_id==4){
+            if($data['block']){
+
+                \App\User::where([['is_active',true],['rol_id',2]])
+                ->orWhere([['is_active',true],['rol_id',3]])
+                ->update(['status'=>'penalized']);
+
+            }else{
+                \App\User::where([['is_active',true],['rol_id',2]])
+                ->orWhere([['is_active',true],['rol_id',3]])
+                ->update(['status'=>'in']);
+
+            }
+
+        }
+
+
+    }
     /**
      * Remove the specified resource from storage.
      *

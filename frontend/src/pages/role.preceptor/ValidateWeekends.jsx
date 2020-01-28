@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 
-import ExpandMore from '@material-ui/icons/ExpandMore'
-
 import {
   TableComponent,
   StyledTableItem,
@@ -19,18 +17,17 @@ import { submitService } from '../../services/submitService'
 import { LoadingComponent } from '../../components/LoadingComponent'
 import { NoDataComponent } from '../../components/NoDataComponent'
 
-export const ValidatePermission = () => {
+export const ValidateWeekends = () => {
   const [permission, setPermission] = useState([])
-  const [tempData, setTempData] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [expanded, setExpanded] = useState(false)
 
   const requestData = () => {
     requestService(
-      API_ROUTES.getPermission.method,
-      API_ROUTES.getPermission.url,
-      setTempData,
+      API_ROUTES.getWeekends.method,
+      API_ROUTES.getWeekends.url,
+      setPermission,
       setLoading,
       setError
     )
@@ -39,21 +36,6 @@ export const ValidatePermission = () => {
   useEffect(() => {
     requestData()
   }, [])
-
-  useEffect(() => {
-    if (tempData.normal && tempData.weekend) {
-      const normal = tempData.normal.map(data => ({
-        ...data,
-        type: 'normal'
-      }))
-      const weekend = tempData.weekend.map(data => ({
-        ...data,
-        type: 'weekend'
-      }))
-      const newArray = [].concat(normal, weekend)
-      setPermission(newArray)
-    }
-  }, [tempData.normal, tempData.weekend])
 
   const tableheader = [
     {
@@ -65,10 +47,18 @@ export const ValidatePermission = () => {
       color: '#77B0C8'
     },
     {
-      size: '440px',
+      size: '340px',
       title: 'Name',
       display: true,
       displayMd: true,
+      displaySm: true,
+      color: '#77B0C8'
+    },
+    {
+      size: '340px',
+      title: 'Preceptor',
+      display: true,
+      displayMd: false,
       displaySm: true,
       color: '#77B0C8'
     },
@@ -96,7 +86,16 @@ export const ValidatePermission = () => {
     requestData()
   }
 
-  const tableContent = (code, fristName, lastName, type) => (
+  const tableContent = (
+    state,
+    location,
+    vicerector,
+    preceptor,
+    entryDay,
+    outDay,
+    fristName,
+    lastName
+  ) => (
     <StyledTableBody>
       <StyledTableItem
         width={tableheader[0].size}
@@ -104,8 +103,8 @@ export const ValidatePermission = () => {
         displayMd={tableheader[0].displayMd ? 'block' : 'none'}
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#1D7AA2">
-          {code}
+        <StyledH2 fontWeigth="600" color="#A1C010">
+          {state}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -119,18 +118,28 @@ export const ValidatePermission = () => {
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
-        className="last-item"
         width={tableheader[2].size}
         display={tableheader[2].display ? 'block' : 'none'}
         displayMd={tableheader[2].displayMd ? 'block' : 'none'}
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
+        <StyledH2 fontWeigth="600" color="#77B0C8">
+          {preceptor}
+        </StyledH2>
+      </StyledTableItem>
+      <StyledTableItem
+        className="last-item"
+        width={tableheader[3].size}
+        display={tableheader[3].display ? 'block' : 'none'}
+        displayMd={tableheader[3].displayMd ? 'block' : 'none'}
+        displaySm={tableheader[3].displaySm ? 'block' : 'none'}
+      >
         <ButtonComponent
-          background="#12B6C6"
+          background="#A1C010"
           width="100px"
           height="40px"
           margin="0"
-          click={() => openDialog(type, code)}
+          // click={() => openDialog(type, code)}
         >
           Validate
         </ButtonComponent>
@@ -142,35 +151,47 @@ export const ValidatePermission = () => {
     <StyledContainer>
       <Navigation />
       <TableComponent
-        title="Validate Permissions"
-        titleColor="#1D7AA2"
+        title="Validate weekends"
+        titleColor="#A1C010"
         tableheader={tableheader}
       >
-        {loading && <LoadingComponent color="#1D7AA2" />}
-        {(permission.length &&
+        {loading && <LoadingComponent color="#A1C010" />}
+        {(permission.length !== 0 &&
           permission.map(
             ({
-              type,
-              status,
+              id,
+              state,
+              vicerector,
+              preceptor,
+              location,
+              in_date_time: entryDay,
+              out_date_time: outDay,
               check_exit: check,
               user: { code, first_name: firstName, last_name: lastName }
             }) => {
-              return check.toString() === '0' &&
-                status !== 'deprecated' &&
-                status !== 'rejected' ? (
+              return check.toString() === '0' && state === 'in process' ? (
                 <StyledCard
                   width="100%"
                   flexDirection="column"
                   alignItems="start"
                   margin="0 0 16px 0"
-                  key={code}
+                  key={id}
                 >
-                  {tableContent(code, firstName, lastName, type)}
+                  {tableContent(
+                    state,
+                    location,
+                    vicerector,
+                    preceptor,
+                    entryDay,
+                    outDay,
+                    firstName,
+                    lastName
+                  )}
                 </StyledCard>
               ) : null
             }
           )) ||
-          (!loading && <NoDataComponent color="#1D7AA2" />)}
+          (!loading && <NoDataComponent color="#A1C010" />)}
       </TableComponent>
       {/* TODO: get user photo */}
       {expanded && <StyledCard>TODO Dialog</StyledCard>}

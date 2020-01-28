@@ -18,8 +18,8 @@ class CreatePermissionsTable extends Migration
             $table->bigInteger('code_user');
             $table->boolean('check_exit')->default(false);
             $table->enum('status',['active','rejected','deprecated'])->default('active');
-            $table->dateTimeTz('output_date_time')->nullable();
-            $table->dateTimeTz('entry_date_time')->nullable();
+            $table->time('output_date_time')->nullable();
+            $table->time('entry_date_time')->nullable();
             $table->date('date');
             $table->string('place');
             $table->enum('intership',['boys','girls','no-def'])->default('no-def');

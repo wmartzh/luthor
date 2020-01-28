@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Route } from 'react-router-dom'
 
 import {
@@ -10,51 +10,70 @@ import {
 } from '../routes'
 
 import { Login } from '../pages/Login'
+import { ProtectedRoute } from './ProtectedRoute'
 import { useUserValues } from '../context/UserContext'
+// import { ToTest } from '../layout/ToTEst'
 
 export const RouterHelper = () => {
   const { user } = useUserValues()
+
+  // useEffect(() => {
+  //   console.log(token)
+  //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  // }, [token])
+
   return (
     <>
       <Route exact path="/login" component={Login} />
       {/* <Route exact path="/test" component={ToTest} /> */}
+
       {globalRoutes.map(({ path, component: Component }) => (
-        <Route
+        <ProtectedRoute
+          key={path}
           exact
           path={path}
           component={props => <Component user={user} />}
-          key={path}
         />
       ))}
 
       {user.role === '2' &&
         studentRoute.map(({ path, component: Component }) => (
-          <Route
+          <ProtectedRoute
+            key={path}
             exact
             path={path}
             component={props => <Component user={user} />}
-            key={path}
           />
         ))}
 
       {user.role === '3' &&
         monitorRoute.map(({ path, component: Component }) => (
-          <Route
+          <ProtectedRoute
+            key={path}
             exact
             path={path}
             component={props => <Component user={user} />}
-            key={path}
           />
         ))}
 
       {user.role === '4' &&
         preceptorRoutes.map(({ path, component: Component }) => (
-          <Route exact path={path} component={Component} key={path} />
+          <ProtectedRoute
+            key={path}
+            exact
+            path={path}
+            component={props => <Component user={user} />}
+          />
         ))}
 
       {user.role === '5' &&
         guardRoute.map(({ path, component: Component }) => (
-          <Route exact path={path} component={Component} key={path} />
+          <ProtectedRoute
+            key={path}
+            exact
+            path={path}
+            component={props => <Component user={user} />}
+          />
         ))}
     </>
   )

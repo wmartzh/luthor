@@ -21,35 +21,41 @@ class WeekendController extends Controller
 
             if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 ){
                 if($auth_user->is_active){
-                    $data = \App\Weekend::select('state','vicerector','preceptor','in_date_time','out_date_time','location')->where('user_code',$auth_user->code)->get();
+                    $data = \App\Weekend::select('id','state','vicerector','preceptor','in_date_time','out_date_time','location')
+                        ->where('user_code',$auth_user->code)
+                        ->orderBy('id', 'DESC')
+                        ->get();
                     return response(['data'=> $data],200);
                 }else{
                     return response(['message'=>'user is not active'],401);
                 }
             }else if($auth_user->rol_id == 4 ){
 
-                $data = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
-                ->with(['user' => function($query){
-                    $query->select('code','first_name','last_name');
-                }])
-                ->where('intership',$auth_user->intership)
-                ->get();
+                $data = \App\Weekend::select('id','user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
+                    ->with(['user' => function($query){
+                        $query->select('code','first_name','last_name');
+                    }])
+                    ->where('intership',$auth_user->intership)
+                    ->orderBy('id', 'DESC')
+                    ->get();
 
-                return response(['data'=> $data],200);
+                return response(['data'=> $data], 200);
             }else if($auth_user->rol_id == 6){
-                $boys = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
+                $boys = \App\Weekend::select('user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
                 ->with(['user' => function($query){
                     $query->select('code','first_name','last_name','intership');
 
                 }])
                 ->where('intership','boys')
+                ->orderBy('id', 'DESC')
                 ->get();
-                $girls = \App\Weekend::select('user_code','state','vicerector','preceptor','out_date_time','in_date_time','check_exit')
+                $girls = \App\Weekend::select('user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
                 ->with(['user' => function($query){
                     $query->select('code','first_name','last_name','intership');
 
                 }])
                 ->where('intership','boys')
+                ->orderBy('id', 'DESC')
                 ->get();
 
                 return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
@@ -96,7 +102,7 @@ class WeekendController extends Controller
                             $search = \App\Weekend::where([['user_code',$usermodel['code']],['state','in process']])->exists();
 
                             if(!$search){
-
+                                $vD['intership']=$auth_user->intership;
                                 \App\Weekend::create($vD);
                                 return response()->json(['message'=>'Permission requested']);
                             }

@@ -196,10 +196,6 @@ class AssistanceController extends Controller
 
                 }
 
-
-
-
-
             }else{
                 return response(['errors'=>['user'=>'user unauthorized']],401);
             }

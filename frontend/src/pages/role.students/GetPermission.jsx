@@ -27,6 +27,7 @@ import { StyledBackButton } from '../../styles/StyledBackButton'
 import { StyledTypography } from '../../styles/StyledTypography'
 import { statusService } from '../../services/statusService'
 import { useUserValues } from '../../context/UserContext'
+import { getCurrentToken } from '../../helpers/getCurrentLocalStorage'
 
 export const GetPermission = () => {
   const history = useHistory()
@@ -61,7 +62,6 @@ export const GetPermission = () => {
         request.data.message === 'User already has a request in process'
       ) {
         setError('You already have a permission')
-      } else {
       }
       history.push('/my-permissions')
     } catch (error) {

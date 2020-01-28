@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import { useHistory } from 'react-router-dom'
 import { axios } from '../plugins/axios'
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
@@ -17,21 +17,27 @@ import { StyledContainer } from '../styles/StyledContainer'
 import { API_ROUTES } from '../constants/apiRoutes'
 import { useUserValues } from '../context/UserContext'
 
-export const Login = ({ history, location }) => {
+export const Login = ({ location }) => {
+  const history = useHistory()
+  const { setUser, setToken, setAuth } = useUserValues()
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-
-  const { setUser, setToken } = useUserValues()
 
   const [email, setEmail] = useState('studentMale@mail.com')
   const [password, setPassword] = useState('secret')
 
   useEffect(() => {
-    localStorage.removeItem('user')
-    localStorage.removeItem('token')
-    setUser({})
-    setToken('')
-  }, [setToken, setUser])
+    let mounted = true
+    if (mounted) {
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
+      setUser({})
+      setToken('')
+      setAuth(false)
+    }
+    return () => (mounted = false)
+  }, [setAuth, setToken, setUser])
 
   const submitHandle = async () => {
     if (!email && !password) {
@@ -49,24 +55,42 @@ export const Login = ({ history, location }) => {
           password
         }
       })
-      console.log(request.status)
       if (request.status === 401) {
         setError(request.data.message)
         return
       }
-      const { username, status, code, token } = request.data
+
+      const {
+        username,
+        status,
+        code,
+        token,
+        profile_image: photo
+      } = request.data
       localStorage.setItem('token', JSON.stringify(token))
-      localStorage.setItem('user', JSON.stringify({ username, status, code }))
-      setUser({ username, status, code, role: token[0] })
+      localStorage.setItem(
+        'user',
+        JSON.stringify({ username, status, code, photo })
+      )
+
+      setUser({ username, status, code, role: token[0], photo })
       setToken(token)
+      setAuth(true)
+
+      // TODO: leak memory
+      // const realToken = token.substr(1)
+      // axios.defaults.headers.common['Authorization'] = `Bearer ${realToken}`
+      //
+
+      // this route go to the last path
+      // const { from } = location.state || { from: { pathname: '/' } }
+      history.push('/')
     } catch (err) {
       err.message === 'Request failed with status code 401'
         ? setError('Invalid Credentials, please try again')
         : setError('Error, please try again')
     }
     setLoading(false)
-    const { from } = location.state || { from: { pathname: '/' } }
-    history.push(from)
   }
 
   return (

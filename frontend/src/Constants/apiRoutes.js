@@ -5,11 +5,18 @@ export const API_ROUTES = {
     method: 'POST',
     url: '/logout'
   },
+  getWeekends: {
+    method: 'GET',
+    url: '/weekends'
+  },
   getPermission: {
     method: 'GET',
     url: '/permissions'
   },
-  getAssistance: '/assistance',
+  getAssistance: {
+    method: 'GET',
+    url: '/assistance'
+  },
   getStatus: {
     method: 'GET',
     url: '/user-status'
@@ -32,6 +39,14 @@ export const API_ROUTES = {
   },
   createEvent: {
     method: 'POST',
+    url: '/events'
+  },
+  updateEvent: {
+    method: 'PUT',
+    url: '/events'
+  },
+  deleteEvent: {
+    method: 'DELETE',
     url: '/events'
   },
   getStudents: {

@@ -26,7 +26,38 @@ class EventController extends Controller
         }
     }
 
+    public  function getActualEvent(){
 
+        $user_auth = Auth::user();
+
+        if($user_auth->rol_id == 3 ||$user_auth->rol_id == 4 ){
+
+            $actual_date = date('H');
+
+            $limit = $actual_date + 1;
+
+
+            $events = \App\Event::select('title','start_time')->get();
+
+            $result =[];
+
+            foreach($events as $event)  {
+                 $e_time = strtotime($event['start_time']);
+
+                 $check_date =date('H',$e_time);
+
+                if( $check_date>= $actual_date){
+                    if($check_date <= $limit){
+                        array_push($result, ['title'=>$event['title'], 'start_time' =>$event['start_time']]);
+                    }
+                }
+            }
+
+            return response(['data'=>$result]);
+
+        }
+
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -97,15 +128,19 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
         $request->validate([
-                'title'=> 'required',
-                'start_time' => 'required'
+            'title'=> 'required',
+            'start_time' => 'required',
+            'tolerance_present' => 'required',
+            'tolerance_late' => 'required',
         ]);
 
 
         try{
             $event->update([
                 'title' => $request->title,
-                'start_time' => $request->start_time
+                'start_time' => $request->start_time,
+                'tolerance_present' => $request->tolerance_present,
+                'tolerance_late' => $request->tolerance_late,
             ]);
 
             return response()->json(['message'=> $event],$status = 200);
@@ -129,6 +164,6 @@ class EventController extends Controller
         $event = \App\Event::findOrFail($id);
         $event->delete();
 
-        return response()->json(['message'=>'OK'],$status=402);
+        return response()->json(['message'=>'OK'],$status=200);
     }
 }

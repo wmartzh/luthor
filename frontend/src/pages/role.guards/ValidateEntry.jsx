@@ -16,27 +16,28 @@ import { API_ROUTES } from '../../constants/apiRoutes'
 import { requestService } from '../../services/requestService'
 import { submitService } from '../../services/submitService'
 import { StyledCard } from '../../styles/StyledCard'
-import { StyledTypography } from '../../styles/StyledTypography'
 import { LoadingComponent } from '../../components/LoadingComponent'
+import { NoDataComponent } from '../../components/NoDataComponent'
 
 export const ValidateEntry = () => {
   const [permission, setPermission] = useState([])
   const [tempData, setTempData] = useState([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const [expanded, setExpanded] = useState(false)
 
-  const requestData = () => {
+  const fetchData = () => {
     requestService(
       API_ROUTES.getPermission.method,
       API_ROUTES.getPermission.url,
-      null,
       setTempData,
-      setLoading
+      setLoading,
+      setError
     )
   }
 
   useEffect(() => {
-    requestData()
+    fetchData()
   }, [])
 
   useEffect(() => {
@@ -51,7 +52,6 @@ export const ValidateEntry = () => {
       }))
       const newArray = [].concat(normal, weekend)
       setPermission(newArray)
-      console.log(newArray)
     }
   }, [tempData.normal, tempData.weekend])
 
@@ -93,7 +93,7 @@ export const ValidateEntry = () => {
         : API_ROUTES.updateWeekendsPermission.url,
       { check_exit: 0, user_code: code }
     )
-    requestData()
+    fetchData()
   }
 
   const tableContent = (code, fristName, lastName, type) => (
@@ -147,7 +147,7 @@ export const ValidateEntry = () => {
         tableheader={tableheader}
       >
         {loading && <LoadingComponent color="#4F3C75" />}
-        {(permission.length === 0 &&
+        {(permission.length &&
           permission.map(
             ({
               type,
@@ -155,9 +155,7 @@ export const ValidateEntry = () => {
               check_exit: check,
               user: { code, first_name: firstName, last_name: lastName }
             }) => {
-              return check.toString() === '1' &&
-                status !== 'deprecated' &&
-                status !== 'rejected' ? (
+              return check.toString() === '1' && status === 'active' ? (
                 <StyledCard
                   width="100%"
                   flexDirection="column"
@@ -169,18 +167,8 @@ export const ValidateEntry = () => {
                 </StyledCard>
               ) : null
             }
-          )) || (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledTypography
-              fontSize="14px"
-              fontFamily="Segoe UI"
-              fontWeigth="600"
-              color="#4F3C75"
-            >
-              No data
-            </StyledTypography>
-          </StyledCard>
-        )}
+          )) ||
+          (!loading && <NoDataComponent color="#4F3C75" />)}
       </TableComponent>
       {/* TODO: get user photo */}
       {expanded && <StyledCard>TODO Dialog</StyledCard>}
