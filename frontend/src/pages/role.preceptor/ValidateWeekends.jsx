@@ -19,16 +19,15 @@ import { NoDataComponent } from '../../components/NoDataComponent'
 
 export const ValidateWeekends = () => {
   const [permission, setPermission] = useState([])
-  const [tempData, setTempData] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [expanded, setExpanded] = useState(false)
 
   const requestData = () => {
     requestService(
-      API_ROUTES.getPermission.method,
-      API_ROUTES.getPermission.url,
-      setTempData,
+      API_ROUTES.getWeekends.method,
+      API_ROUTES.getWeekends.url,
+      setPermission,
       setLoading,
       setError
     )
@@ -37,21 +36,6 @@ export const ValidateWeekends = () => {
   useEffect(() => {
     requestData()
   }, [])
-
-  useEffect(() => {
-    if (tempData.normal && tempData.weekend) {
-      const normal = tempData.normal.map(data => ({
-        ...data,
-        type: 'normal'
-      }))
-      const weekend = tempData.weekend.map(data => ({
-        ...data,
-        type: 'weekend'
-      }))
-      const newArray = [].concat(normal, weekend)
-      setPermission(newArray)
-    }
-  }, [tempData.normal, tempData.weekend])
 
   const tableheader = [
     {
@@ -63,10 +47,18 @@ export const ValidateWeekends = () => {
       color: '#77B0C8'
     },
     {
-      size: '440px',
+      size: '340px',
       title: 'Name',
       display: true,
       displayMd: true,
+      displaySm: true,
+      color: '#77B0C8'
+    },
+    {
+      size: '340px',
+      title: 'Preceptor',
+      display: true,
+      displayMd: false,
       displaySm: true,
       color: '#77B0C8'
     },
@@ -94,7 +86,16 @@ export const ValidateWeekends = () => {
     requestData()
   }
 
-  const tableContent = (code, fristName, lastName, type) => (
+  const tableContent = (
+    state,
+    location,
+    vicerector,
+    preceptor,
+    entryDay,
+    outDay,
+    fristName,
+    lastName
+  ) => (
     <StyledTableBody>
       <StyledTableItem
         width={tableheader[0].size}
@@ -103,7 +104,7 @@ export const ValidateWeekends = () => {
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#A1C010">
-          {code}
+          {state}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -117,18 +118,28 @@ export const ValidateWeekends = () => {
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
-        className="last-item"
         width={tableheader[2].size}
         display={tableheader[2].display ? 'block' : 'none'}
         displayMd={tableheader[2].displayMd ? 'block' : 'none'}
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
+      >
+        <StyledH2 fontWeigth="600" color="#77B0C8">
+          {preceptor}
+        </StyledH2>
+      </StyledTableItem>
+      <StyledTableItem
+        className="last-item"
+        width={tableheader[3].size}
+        display={tableheader[3].display ? 'block' : 'none'}
+        displayMd={tableheader[3].displayMd ? 'block' : 'none'}
+        displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
         <ButtonComponent
           background="#A1C010"
           width="100px"
           height="40px"
           margin="0"
-          click={() => openDialog(type, code)}
+          // click={() => openDialog(type, code)}
         >
           Validate
         </ButtonComponent>
@@ -145,25 +156,37 @@ export const ValidateWeekends = () => {
         tableheader={tableheader}
       >
         {loading && <LoadingComponent color="#A1C010" />}
-        {(permission.length &&
+        {(permission.length !== 0 &&
           permission.map(
             ({
-              type,
-              status,
+              id,
+              state,
+              vicerector,
+              preceptor,
+              location,
+              in_date_time: entryDay,
+              out_date_time: outDay,
               check_exit: check,
               user: { code, first_name: firstName, last_name: lastName }
             }) => {
-              return check.toString() === '1' &&
-                status !== 'deprecated' &&
-                status !== 'rejected' ? (
+              return check.toString() === '0' && state === 'in process' ? (
                 <StyledCard
                   width="100%"
                   flexDirection="column"
                   alignItems="start"
                   margin="0 0 16px 0"
-                  key={code}
+                  key={id}
                 >
-                  {tableContent(code, firstName, lastName, type)}
+                  {tableContent(
+                    state,
+                    location,
+                    vicerector,
+                    preceptor,
+                    entryDay,
+                    outDay,
+                    firstName,
+                    lastName
+                  )}
                 </StyledCard>
               ) : null
             }
