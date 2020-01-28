@@ -1,9 +1,13 @@
 export const API_ROUTES = {
-  base: ' http://127.0.0.1:8000/api',
+  base: ' http://127.0.0.1:6060/api',
   login: '/login',
   logout: {
     method: 'POST',
     url: '/logout'
+  },
+  getWeekends: {
+    method: 'GET',
+    url: '/weekends'
   },
   getPermission: {
     method: 'GET',
