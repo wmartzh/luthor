@@ -21,7 +21,7 @@ class WeekendController extends Controller
 
             if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 ){
                 if($auth_user->is_active){
-                    $data = \App\Weekend::select('state','vicerector','preceptor','in_date_time','out_date_time','location')->where('user_code',$auth_user->code)->get();
+                    $data = \App\Weekend::select('id','state','vicerector','preceptor','in_date_time','out_date_time','location')->where('user_code',$auth_user->code)->get();
                     return response(['data'=> $data],200);
                 }else{
                     return response(['message'=>'user is not active'],401);
