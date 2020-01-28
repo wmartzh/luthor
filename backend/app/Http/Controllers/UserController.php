@@ -83,7 +83,7 @@ class UserController extends Controller
                     ->get();
                     return response(['data'=>$data],200);
                 }
-                case 'indicatores':{
+                case 'indicators':{
                     $student_out = \App\User::select()->where([['intership',$auth_user->intership],['is_active',true],['status','out']])->get();
                     $assitance = \App\Assistance::select()->where([['intership',$auth_user->intership],['date',date('Y-m-d')]])->get();
                     $penalties = \App\Penalty::select()->where([['intership',$auth_user->intership],['active',true]])->get();
