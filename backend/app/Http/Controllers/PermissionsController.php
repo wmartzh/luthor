@@ -149,7 +149,7 @@ class PermissionsController extends Controller
 
             $data = request()->validate([
                 'code_user',
-                'output_date_time',
+                'output_date_time' => 'required',
                 'date' => 'required',
                 'place' => 'required',
                 'status',
@@ -179,9 +179,16 @@ class PermissionsController extends Controller
 
                             //create reg
 
-                            $data['status'] = 'active';
-                            \App\Permissions::create($data);
-                            return response(['response'=> 'Authorized']);
+                            if(strtotime($data['output_date_time'])<strtotime('17:30:00')){
+                                $data['status'] = 'active';
+                                \App\Permissions::create($data);
+                                return response(['response'=> 'Authorized']);
+                            }
+                            else{
+                                return response(['response'=> 'Time not permitted']);
+
+                            }
+
                         }
                         else{
                             return response(['response'=> 'user has already a request']);
@@ -284,7 +291,7 @@ class PermissionsController extends Controller
 
 
                         if(!$data['check_exit']){//check entry
-                            $data['entry_date_time'] = date("Y-m-d H:i:s");
+                            $data['entry_date_time'] = date("H:i:s");
                             $data['status']= 'deprecated';
                             //Update user and permissions status
                             $usermodel->update(['status'=>'in']);
@@ -294,7 +301,7 @@ class PermissionsController extends Controller
                         }else{//check exit
                             //Update user and permissions status
                             $usermodel->update(['status'=>'out']);
-                            $data['output_date_time'] = date("Y-m-d H:i:s");
+                            $data['output_date_time'] = date("H:i:s");
                             $permissionModel->update($data);
                             return response(['message'=> 'accepted'],200);
                         }
