@@ -20,6 +20,8 @@ This is a backend of the project.
 actives = get active students
 inactives = get inactive students
 penalized = get penalized students
+out = get out students
+indicators = get indicators students out, today assistance, students penalized
 ```
 
 ```
