@@ -5,6 +5,10 @@ export const API_ROUTES = {
     method: 'POST',
     url: '/logout'
   },
+  getWeekends: {
+    method: 'GET',
+    url: '/weekends'
+  },
   getPermission: {
     method: 'GET',
     url: '/permissions'

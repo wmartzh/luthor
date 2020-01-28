@@ -1,7 +1,7 @@
 # Project Luthor
 
 # Futures changes 
-* add new color tu the estatus user
+* add new color tu the status user
 
 # TODO
 * validate user register
