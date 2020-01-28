@@ -26,7 +26,38 @@ class EventController extends Controller
         }
     }
 
+    public  function getActualEvent(){
 
+        $user_auth = Auth::user();
+
+        if($user_auth->rol_id == 3 ||$user_auth->rol_id == 4 ){
+
+            $actual_date = date('H');
+
+            $limit = $actual_date + 1;
+
+
+            $events = \App\Event::select('title','start_time')->get();
+
+            $result =[];
+
+            foreach($events as $event)  {
+                 $e_time = strtotime($event['start_time']);
+
+                 $check_date =date('H',$e_time);
+
+                if( $check_date>= $actual_date){
+                    if($check_date <= $limit){
+                        array_push($result, ['title'=>$event['title'], 'start_time' =>$event['start_time']]);
+                    }
+                }
+            }
+
+            return response(['data'=>$result]);
+
+        }
+
+    }
 
     /**
      * Store a newly created resource in storage.

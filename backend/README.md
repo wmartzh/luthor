@@ -55,6 +55,7 @@ no parameter needed
 /alerts/   [post]
 ```
 #####  valid parameters
+
 **available to rol id 4 and 3**
 ```
 preceptor params
@@ -63,6 +64,16 @@ preceptor params
 
 monitor params
     content  : content alert
+```
+
+```
+/actual-event/   [get]
+```
+#####  valid parameters
+
+**available to rol id 4 and 3**
+```
+     Get  events of the last  hour
 ```
 
 

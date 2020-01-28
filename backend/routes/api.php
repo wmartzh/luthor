@@ -77,6 +77,8 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
 
 
     ///Event Routes
+    Route::get('/actual-event','EventController@getActualEvent');
+
     Route::group(['prefix'  =>  '/events'], function () {
         Route::get('/','EventController@index');
         Route::get('/{id}','EventController@show');
