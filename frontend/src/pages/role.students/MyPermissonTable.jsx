@@ -147,8 +147,8 @@ export const MyPermissionTable = ({
           fontWeigth="600"
           color="#FB7140"
         >
-          {`${out ? moment(out).format('DD-MMM-YYYY') : '--'} / ${
-            entry ? moment(entry).format('DD-MMM-YYYY') : '--'
+          {`${out ? out.substr(0, out.length - 3) : '--'} / ${
+            entry ? entry.substr(0, entry.length - 3) : '--'
           }`}
         </StyledTypography>
       </StyledTableItem>

@@ -19,7 +19,8 @@ const statusColor = {
 export const defaultColors = {
   primary: '#00A7CA',
   red: '#FF004C',
-  green: '#A1C010'
+  green: '#A1C010',
+  yellow: '#FBB13C'
 }
 
 export const userStatusColor = status => {

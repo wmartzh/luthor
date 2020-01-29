@@ -35,7 +35,8 @@ class EventController extends Controller
             $actual_date = date('H');
             $limit = $actual_date + 1;
 
-            $events = \App\Event::select('title','start_time')->get();
+
+            $events = \App\Event::select('id','title','start_time')->get();
 
             $result =[];
 
@@ -46,7 +47,7 @@ class EventController extends Controller
 
                 if( $check_date>= $actual_date){
                     if($check_date <= $limit){
-                        array_push($result, ['title'=>$event['title'], 'start_time' =>$event['start_time']]);
+                        array_push($result, ['id'=>$event['id'],'title'=>$event['title'], 'start_time' =>$event['start_time']]);
                     }
                 }
             }

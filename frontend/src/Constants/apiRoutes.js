@@ -5,6 +5,14 @@ export const API_ROUTES = {
     method: 'POST',
     url: '/logout'
   },
+  getFilter: {
+    method: 'GET',
+    url: '/students/filter'
+  },
+  getActualEvent: {
+    method: 'GET',
+    url: '/actual-event'
+  },
   getWeekends: {
     method: 'GET',
     url: '/weekends'
@@ -15,6 +23,10 @@ export const API_ROUTES = {
   },
   getAssistance: {
     method: 'GET',
+    url: '/assistance'
+  },
+  checkAssistance: {
+    method: 'POST',
     url: '/assistance'
   },
   getStatus: {
@@ -31,6 +43,10 @@ export const API_ROUTES = {
   },
   requestWeekendsPermission: {
     method: 'POST',
+    url: '/weekends'
+  },
+  updateWeekendsApprove: {
+    method: 'PUT',
     url: '/weekends'
   },
   updateWeekendsPermission: {
@@ -66,9 +82,3 @@ export const API_ROUTES = {
     url: '/events'
   }
 }
-
-// id: 1
-// title: "Culto 01"
-// start_time: "04:31:55"
-// created_at: "2020-01-06 04:32:01"
-// updated_at: "2020-01-06 04:32:04"
