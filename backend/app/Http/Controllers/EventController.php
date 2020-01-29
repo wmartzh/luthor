@@ -33,9 +33,7 @@ class EventController extends Controller
         if($user_auth->rol_id == 3 ||$user_auth->rol_id == 4 ){
 
             $actual_date = date('H');
-
             $limit = $actual_date + 1;
-
 
             $events = \App\Event::select('title','start_time')->get();
 
