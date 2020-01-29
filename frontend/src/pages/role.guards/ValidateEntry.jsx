@@ -152,10 +152,16 @@ export const ValidateEntry = () => {
             ({
               type,
               status,
+              state,
               check_exit: check,
               user: { code, first_name: firstName, last_name: lastName }
             }) => {
-              return check.toString() === '1' && status === 'active' ? (
+              return check.toString() === '1' &&
+                state !== 'rejected' &&
+                state !== 'deprecated' &&
+                state !== 'in process' &&
+                status !== 'deprecated' &&
+                status !== 'rejected' ? (
                 <StyledCard
                   width="100%"
                   flexDirection="column"
