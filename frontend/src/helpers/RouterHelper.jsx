@@ -12,6 +12,7 @@ import {
 import { Login } from '../pages/Login'
 import { ProtectedRoute } from './ProtectedRoute'
 import { useUserValues } from '../context/UserContext'
+import { rectorRoutes } from '../routes/rectorRoutes'
 // import { ToTest } from '../layout/ToTEst'
 
 export const RouterHelper = () => {
@@ -68,6 +69,16 @@ export const RouterHelper = () => {
 
       {user.role === '5' &&
         guardRoute.map(({ path, component: Component }) => (
+          <ProtectedRoute
+            key={path}
+            exact
+            path={path}
+            component={props => <Component user={user} />}
+          />
+        ))}
+
+      {user.role === '6' &&
+        rectorRoutes.map(({ path, component: Component }) => (
           <ProtectedRoute
             key={path}
             exact

@@ -33,6 +33,10 @@ export const API_ROUTES = {
     method: 'POST',
     url: '/weekends'
   },
+  updateWeekendsApprove: {
+    method: 'PUT',
+    url: '/weekends'
+  },
   updateWeekendsPermission: {
     method: 'PUT',
     url: '/weekends'

@@ -41,24 +41,32 @@ class WeekendController extends Controller
 
                 return response(['data'=> $data], 200);
             }else if($auth_user->rol_id == 6){
-                $boys = \App\Weekend::select('user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
-                ->with(['user' => function($query){
-                    $query->select('code','first_name','last_name','intership');
 
-                }])
-                ->where('intership','boys')
-                ->orderBy('id', 'DESC')
-                ->get();
-                $girls = \App\Weekend::select('user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
-                ->with(['user' => function($query){
-                    $query->select('code','first_name','last_name','intership');
+                $data = \App\Weekend::select('id','user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
+                    ->with(['user' => function($query){
+                        $query->select('code','first_name','last_name','intership');
+                    }])
+                    ->orderBy('id', 'DESC')
+                    ->get();
 
-                }])
-                ->where('intership','boys')
-                ->orderBy('id', 'DESC')
-                ->get();
+                // $boys = \App\Weekend::select('id','user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
+                // ->with(['user' => function($query){
+                //     $query->select('code','first_name','last_name','intership');
 
-                return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
+                // }])
+                // ->where('intership','boys')
+                // ->orderBy('id', 'DESC')
+                // ->get();
+                // $girls = \App\Weekend::select('user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
+                // ->with(['user' => function($query){
+                //     $query->select('code','first_name','last_name','intership');
+                // }])
+                // ->where('intership','boys')
+                // ->orderBy('id', 'DESC')
+                // ->get();
+
+                // return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
+                return response(['data'=> $data], 200);
             }
 
 
