@@ -32,7 +32,7 @@ import { getCurrentToken } from '../../helpers/getCurrentLocalStorage'
 export const GetPermission = () => {
   const history = useHistory()
   const { user, setUser } = useUserValues()
-  const { status } = user
+  const { status, intership } = user
 
   const [error, setError] = useState(false)
   const [type, setType] = useState('')
@@ -62,20 +62,23 @@ export const GetPermission = () => {
         request.data.message === 'User already has a request in process'
       ) {
         setError('You already have a permission')
+      } else {
+        history.push('/my-permissions')
       }
-      history.push('/my-permissions')
     } catch (error) {
       const {
         data: { message },
         status
       } = error.response
-      if (status === 400) {
+      if (status === 400 || status === 422 || status === 500) {
         if (
           message === 'User has already permission request' ||
           message === 'User already has a request in process'
         ) {
           setError('You already have a permission')
           setDislableAll(true)
+        } else if (message === 'The given data was invalid.') {
+          setError('Missing fields.')
         } else {
           setError('Another Error')
         }
@@ -88,13 +91,19 @@ export const GetPermission = () => {
       axiosQuery(
         API_ROUTES.requestPermission.method,
         API_ROUTES.requestPermission.url,
-        { place, date: moment().format('YYYY/MM/DD') }
+        {
+          place,
+          intership,
+          date: moment().format('YYYY/MM/DD'),
+          output_date_time: moment().format('YYYY/MM/DD H:mm:ss')
+        }
       )
     } else if (type === 'weekends') {
       axiosQuery(
         API_ROUTES.requestWeekendsPermission.method,
         API_ROUTES.requestWeekendsPermission.url,
         {
+          intership,
           in_date_time: entry.replace('T', ' '),
           out_date_time: out.replace('T', ' '),
           location: googleLocation

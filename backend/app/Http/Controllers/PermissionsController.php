@@ -181,6 +181,7 @@ class PermissionsController extends Controller
 
                             if(strtotime($data['output_date_time'])<strtotime('17:30:00')){
                                 $data['status'] = 'active';
+                                $data['output_date_time'] = null;
                                 \App\Permissions::create($data);
                                 return response(['response'=> 'Authorized']);
                             }
@@ -292,6 +293,7 @@ class PermissionsController extends Controller
 
                         if(!$data['check_exit']){//check entry
                             $data['entry_date_time'] = date("H:i:s");
+                            $data['output_date_time'] = date("H:i:s");
                             $data['status']= 'deprecated';
                             //Update user and permissions status
                             $usermodel->update(['status'=>'in']);

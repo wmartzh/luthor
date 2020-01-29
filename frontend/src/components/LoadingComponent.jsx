@@ -2,9 +2,9 @@ import React from 'react'
 import { StyledTypography } from '../styles/StyledTypography'
 import { StyledCard } from '../styles/StyledCard'
 
-export const LoadingComponent = ({ color }) => (
+export const LoadingComponent = ({ color, width = '100%' }) => (
   <StyledCard
-    width="100%"
+    width={width}
     flexDirection="column"
     alignItems="center"
     margin="0 0 16px 0"

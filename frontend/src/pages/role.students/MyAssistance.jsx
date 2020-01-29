@@ -66,7 +66,7 @@ export const MyAssitance = () => {
       color: '#B0A3CC'
     },
     {
-      size: '250px',
+      size: '200px',
       title: 'Monitor',
       display: true,
       displayMd: false,
@@ -74,7 +74,7 @@ export const MyAssitance = () => {
       color: '#B0A3CC'
     },
     {
-      size: '100px',
+      size: '150px',
       title: 'Date',
       display: true,
       displayMd: true,
@@ -83,7 +83,7 @@ export const MyAssitance = () => {
     }
   ]
 
-  const tableContent = (status, date, title, monitor) => (
+  const tableContent = (status, date, title, monitor, time) => (
     <StyledTableBody>
       <StyledTableItem
         width={tableheader[0].size}
@@ -120,7 +120,7 @@ export const MyAssitance = () => {
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
-          {moment(date).format('DD-MMM-YYYY')}
+          {moment(date).format('DD-MMM-YYYY')}, {time}
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -138,7 +138,7 @@ export const MyAssitance = () => {
     </StyledTableBody>
   )
 
-  const tableExpand = (date, monitor) =>
+  const tableExpand = (date, monitor, time) =>
     expanded && (
       <StyledTableItemExpand paddingLerft={tableheader[0].size}>
         <StyledTableItem displayMd="none" displaySm="flex">
@@ -146,7 +146,7 @@ export const MyAssitance = () => {
             {tableheader[3].title}
           </StyledSpan>
           <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
-            {moment(date).format('DD-MMM-YYYY')}
+            {moment(date).format('DD-MMM-YYYY')}, {time}
           </StyledSpan>
 
           <StyledSpacer height="28px" />
@@ -187,8 +187,8 @@ export const MyAssitance = () => {
                 margin="0 0 16px 0"
                 key={id}
               >
-                {tableContent(status, date, title, monitor)}
-                {tableExpand(date, monitor)}
+                {tableContent(status, date, title, monitor, time)}
+                {tableExpand(date, monitor, time)}
               </StyledCard>
             )
           )) ||

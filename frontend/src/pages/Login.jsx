@@ -65,15 +65,16 @@ export const Login = ({ location }) => {
         status,
         code,
         token,
+        intership,
         profile_image: photo
       } = request.data
       localStorage.setItem('token', JSON.stringify(token))
       localStorage.setItem(
         'user',
-        JSON.stringify({ username, status, code, photo })
+        JSON.stringify({ username, status, code, intership, photo })
       )
 
-      setUser({ username, status, code, role: token[0], photo })
+      setUser({ username, status, code, role: token[0], intership, photo })
       setToken(token)
       setAuth(true)
 
