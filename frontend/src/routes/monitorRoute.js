@@ -1,6 +1,7 @@
 import { GetPermission } from '../pages/role.students/GetPermission'
 import { MyAssitance } from '../pages/role.students/MyAssistance'
 import { MyPermissions } from '../pages/role.students/MyPermissions'
+import { AssistanceDay } from '../pages/role.preceptor/AssistanceDay'
 
 export const monitorRoute = [
   {
@@ -17,7 +18,7 @@ export const monitorRoute = [
   },
   {
     path: '/take-assistance',
-    component: GetPermission
+    component: AssistanceDay
   },
   {
     path: '/alert',

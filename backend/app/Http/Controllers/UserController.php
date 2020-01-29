@@ -18,11 +18,16 @@ class UserController extends Controller
         //
         $auth_user = Auth::user();
 
-        if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){
-
+        if($auth_user->rol_id == 2){
 
             return response(['message'=>'User unauthorized'],401);
-
+        }else if($auth_user->rol_id == 3){
+            $data  = \App\User::select('code',
+             'first_name',
+             'last_name')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
+            ->orderBy('id', 'DESC')
+            ->get();
+            return response(['data'=>$data],200);
         }else if($auth_user->rol_id == 4){
 
              $data  = \App\User::select('code',
@@ -31,7 +36,7 @@ class UserController extends Controller
              'profile_image',
              'last_name',
              'phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
-            ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true]])
+            ->orderBy('id', 'DESC')
             ->get();
 
 
@@ -39,15 +44,25 @@ class UserController extends Controller
         }
         else if($auth_user->rol_id == 6 ){
 
-            $boys  = \App\User::select('code','status','first_name','last_name','phone_number')
-            ->where([['intership','boys'],['rol_id',2],['is_active',true]])
-            ->orWhere([['intership','boys'],['rol_id',3]])
+            // $boys  = \App\User::select('code','status','first_name','last_name','phone_number')
+            // ->where([['intership','boys'],['rol_id',2],['is_active',true]])
+            // ->orWhere([['intership','boys'],['rol_id',3]])
+            // ->get();
+            // $girls  = \App\User::select('code','status','first_name','last_name','phone_number')
+            // ->where([['intership','boys'],['rol_id',2],['is_active',true]])
+            // ->orWhere([['intership','boys'],['rol_id',3]])
+            // ->get();
+            // return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
+            $data  = \App\User::select('code',
+             'status',
+             'first_name',
+             'profile_image',
+             'last_name',
+             'phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
+            ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true]])
+            ->orderBy('id', 'DESC')
             ->get();
-            $girls  = \App\User::select('code','status','first_name','last_name','phone_number')
-            ->where([['intership','boys'],['rol_id',2],['is_active',true]])
-            ->orWhere([['intership','boys'],['rol_id',3]])
-            ->get();
-            return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
+            return response(['data'=>$data],200);
         }
 
     }
