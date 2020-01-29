@@ -16,13 +16,11 @@ import { ButtonComponent } from '../../components/ButtonComponent'
 import { requestService } from '../../services/requestService'
 import { API_ROUTES } from '../../constants/apiRoutes'
 import { StyledCard } from '../../styles/StyledCard'
-import { submitService } from '../../services/submitService'
 import { LoadingComponent } from '../../components/LoadingComponent'
 import { NoDataComponent } from '../../components/NoDataComponent'
 import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledTypography } from '../../styles/StyledTypography'
 import { StyledBackButton } from '../../styles/StyledBackButton'
-import { LinkComponent } from '../../components/LinkComponent'
 import { TextLabelContent } from '../../components/TextLabelContent'
 import { axios } from '../../plugins/axios'
 import { useUserValues } from '../../context/UserContext'
@@ -141,7 +139,7 @@ export const ValidateWeekends = () => {
         <StyledTypography
           fontSize="22px"
           color="#A1C010"
-          fontWeigth="600"
+          fontWeigth="400"
           style={{ margin: '5px 25px 8px' }}
         >
           User Details

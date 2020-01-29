@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 
 import usersIcon from '../../assets/svg/users.svg'
@@ -15,10 +15,27 @@ import { BigButtonComponent } from '../../components/BigButtonComponent'
 import { StyledItemsContainer } from '../../styles/StyledItemsContainer'
 import { IcoButtonComponent } from '../../components/IcoButtonComponent'
 import { preceptorRoutes } from '../../routes'
+import { useUserValues } from '../../context/UserContext'
+import { requestService } from '../../services/requestService'
+import { API_ROUTES } from '../../constants/apiRoutes'
 // import { Navigation } from '../../layout/Navigation'
 
-export const DashboardAdmin = ({ user }) => {
+export const DashboardAdmin = () => {
+  const { user } = useUserValues()
   const { username, code } = user
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    requestService(
+      API_ROUTES.getFilter.method,
+      `${API_ROUTES.getFilter.url}/indicators`,
+      setData,
+      setLoading,
+      setError
+    )
+  }, [])
 
   const StyledSectionHeader = styled.section`
     display: flex;
@@ -90,19 +107,19 @@ export const DashboardAdmin = ({ user }) => {
           <BigButtonComponent
             color="#4F3C75"
             label={labels('Students out', 'per day', '#4F3C75', '#B0A3CC')}
-            content="24"
+            content={data.students_out}
             to={preceptorRoutes[0].path}
           />
           <BigButtonComponent
             color="#12B6C6"
             label={labels('Assistance', 'per day', '#12B6C6', '#77B0C8')}
-            content="88"
+            content={data.assitance}
             to={preceptorRoutes[1].path}
           />
           <BigButtonComponent
             color="#FF004C"
             label={labels('Penalties', 'per month', '#FF004C', '#FF719B')}
-            content="11"
+            content={data.penalties}
             to={preceptorRoutes[2].path}
           />
         </div>

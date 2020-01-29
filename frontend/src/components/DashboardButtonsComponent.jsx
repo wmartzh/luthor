@@ -69,6 +69,7 @@ export const DashboardButtonsComponent = ({ role }) => {
             to={monitorRoute[4].path}
             background="#FF004C"
             width="300px"
+            disable={true}
           >
             Alert
           </ButtonComponent>
