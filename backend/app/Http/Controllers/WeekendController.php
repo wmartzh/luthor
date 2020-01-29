@@ -91,7 +91,8 @@ class WeekendController extends Controller
             'user_code',
             'out_date_time' => 'required',
             'in_date_time' => 'required',
-            'location' => 'required'
+            'location' => 'required',
+            'intership' => 'required'
         ]);
         try{
 
@@ -110,7 +111,6 @@ class WeekendController extends Controller
                             $search = \App\Weekend::where([['user_code',$usermodel['code']],['state','in process']])->exists();
 
                             if(!$search){
-                                $vD['intership']=$auth_user->intership;
                                 \App\Weekend::create($vD);
                                 return response()->json(['message'=>'Permission requested']);
                             }

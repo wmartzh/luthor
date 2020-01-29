@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import moment from 'moment'
 
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
@@ -91,7 +92,11 @@ export const ValidatePermission = () => {
       type === 'normal'
         ? API_ROUTES.updatePermission.url
         : API_ROUTES.updateWeekendsPermission.url,
-      { check_exit: 1, user_code: code }
+      {
+        check_exit: 1,
+        user_code: code,
+        output_date_time: moment().format('YYYY/MM/DD H:mm:ss')
+      }
     )
     requestData()
   }
@@ -152,10 +157,14 @@ export const ValidatePermission = () => {
             ({
               type,
               status,
+              state,
               check_exit: check,
               user: { code, first_name: firstName, last_name: lastName }
             }) => {
               return check.toString() === '0' &&
+                state !== 'rejected' &&
+                state !== 'deprecated' &&
+                state !== 'in process' &&
                 status !== 'deprecated' &&
                 status !== 'rejected' ? (
                 <StyledCard
