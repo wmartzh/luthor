@@ -101,6 +101,29 @@ class AssistanceController extends Controller
         }
     }
 
+    public function getByEvent($event){
+        $auth_user = Auth::user();
+        if($auth_user->rol_id == 4){
+
+            $data = \App\Assistance::select('user_code','monitor_id','event_id','status','date','time')
+            ->where('intership',$auth_user->intership)
+            ->with(['user'=>function($query){
+                $query->select('code','first_name','last_name');
+            }])
+            ->with(['event'=> function($query){
+                $query->select('id','title');
+            }])
+            ->with(['monitor' => function($query){
+                $query->select('id','first_name','last_name');
+            }])
+            ->where([['event_id',$event],['intership',$auth_user->intership]])
+            ->orderBy('date','desc')->get();
+
+            return response(['data'=>$data],200);
+        }
+
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -130,7 +153,7 @@ class AssistanceController extends Controller
                 $data['monitor_id']= $user->id; // get user that check the assistance
 
                 date_default_timezone_set("America/Costa_Rica");
-                $data['time'] =   "06:25:00"; //date('H:i:s');
+                $data['time'] =   date('H:i:s');
                  $event = \App\Event::select()->where('id',$data['event_id'])->get()->first();
 
                 $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();

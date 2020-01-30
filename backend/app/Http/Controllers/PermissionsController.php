@@ -89,7 +89,7 @@ class PermissionsController extends Controller
                         'check_exit'
                     )
                     ->with(['user'=> function($query){
-                        $query->select('code','first_name','last_name',);
+                        $query->select('code','profile_image','first_name','last_name',);
                     }])
                     ->orderBy('code_user','asc')
                     ->get();
@@ -148,7 +148,7 @@ class PermissionsController extends Controller
 
 
             $data = request()->validate([
-                'code_user',
+                'code_user'=>'nullable',
                 'output_date_time' => 'required',
                 'date' => 'required',
                 'place' => 'required',
@@ -158,14 +158,13 @@ class PermissionsController extends Controller
             ]);
 
             $auth_user = Auth::user();
-            $usermodel = \App\User::findOrFail($auth_user->id);
-            $data['code_user'] = $usermodel['code'];
-            $data['intership'] = $auth_user->intership; //intership control
-            if($auth_user->rol_id != 2 && $auth_user->rol_id!= 3){
-                return response()->json(['error'=> 'user can not request a permission']);
-            }else{
+
+            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){
 
                 if($auth_user->is_active){
+                    $usermodel = \App\User::findOrFail($auth_user->id);
+                    $data['code_user'] = $usermodel['code'];
+                    $data['intership'] = $auth_user->intership; //intership control
                     $a_permission = \App\Permissions::select()->where([['code_user',$data['code_user']],['status','active']])->get()->first();
                     if($a_permission == null ){
                         if($usermodel['status'] =='penalized'){//check status
@@ -187,9 +186,7 @@ class PermissionsController extends Controller
                             }
                             else{
                                 return response(['response'=> 'Time not permitted']);
-
                             }
-
                         }
                         else{
                             return response(['response'=> 'user has already a request']);
@@ -203,10 +200,53 @@ class PermissionsController extends Controller
                     return response(['message'=>'user is not active'],401);
                 }
 
+            }else if( $auth_user->rol_id == 4) { //Preceptor
+
+                if(array_key_exists('code_user',$data)){
+                    $user = \App\User::select('id','intership')->where('code',$data['code_user'])->get()->first();
+                    $usermodel = \App\User::findOrFail($user['id']);
+
+
+                    if($user['intership']==$auth_user->intership){
+                        $data['intership'] = $auth_user->intership; //intership control
+                        $a_permission = \App\Permissions::select()->where([['code_user',$data['code_user']],['status','active']])->get()->first();
+                        if($a_permission == null ){
+                            if($usermodel['status'] =='penalized'){//check status
+                                //create reg
+                                $data['status'] = 'rejected';
+                                \App\Permissions::create($data);
+                                return response(['response'=>'Unauthorized']);
+
+
+                            }else if($usermodel['status']=='in'){//check status
+
+                                //create reg
+                                $data['status'] = 'active';
+                                $data['output_date_time'] = null;
+                                \App\Permissions::create($data);
+                                return response(['response'=> 'Authorized']);
+
+
+                            }
+                            else{
+                                return response(['response'=> 'user has already a request']);
+                            }
+
+                        }else{
+                            return response(['message'=>'User has already permission request'],400);
+                        }
+
+                    }else{
+                        return response(['message'=> 'Bad request',
+                        'errors'=> ['user_code'=>'wrong interhsip']],400);
+                    }
+
+                }else{
+                        return response(['message'=> 'Bad request',
+                                        'errors'=> ['user_code'=>'user_code is required']],400);
+                }
+
             }
-
-
-
         }catch(Exception $e){
             return response()->http_response_code(400);
         }
