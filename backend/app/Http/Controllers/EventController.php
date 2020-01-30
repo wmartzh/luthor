@@ -32,20 +32,22 @@ class EventController extends Controller
 
         if($user_auth->rol_id == 3 ||$user_auth->rol_id == 4 ){
 
-            $actual_date = date('H');
-            $limit = $actual_date + 1;
+            $actual_time = date('H');
+            $actual_day = date('l');
+            $limit = $actual_time + 1;
 
-
-            $events = \App\Event::select('id','title','start_time')->get();
+            $day_events = \App\Week::select('event_id')->where($actual_day,True)->get();
 
             $result =[];
 
-            foreach($events as $event)  {
-                 $e_time = strtotime($event['start_time']);
+            foreach($day_events as $day) {
+                $event = \App\Event::select('id','title','start_time')->where('id',$day['event_id'])->get()->first();
+
+                $e_time = strtotime($event['start_time']);
 
                  $check_date =date('H',$e_time);
 
-                if( $check_date>= $actual_date){
+                if( $check_date>= $actual_time){
                     if($check_date <= $limit){
                         array_push($result, ['id'=>$event['id'],'title'=>$event['title'], 'start_time' =>$event['start_time']]);
                     }
@@ -71,6 +73,14 @@ class EventController extends Controller
             'start_time'=> 'required',
             'tolerance_present' => 'required',
             'tolerance_late' => 'required',
+            'event_id' => 'nullable',
+            'sunday' => 'nullable',
+            'monday' => 'nullable',
+            'tuesday' => 'nullable',
+            'wednesday' => 'nullable',
+            'thursday' => 'nullable',
+            'friday' => 'nullable',
+            'saturday' => 'nullable',
 
         ]);
         try{
@@ -83,8 +93,17 @@ class EventController extends Controller
 
                 $check_regs = \App\Event::select()->where('title',$data['title'])->exists();
 
+
+
                 if(!$check_regs){ // Check if exists
+
                     \App\Event::create($data);
+                    $actual_event = \App\Event::select()->where('title',$data['title'])->get()->first();
+
+                    $data['event_id'] = $actual_event ['id'];
+
+                    \App\Week::create($data);
+
                     return response(['message'=>'Event created suscessfully'],201);
                 }else{
                     return response(['message'=> $data['title'].' is already register'],400);

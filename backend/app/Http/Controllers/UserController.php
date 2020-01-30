@@ -115,7 +115,7 @@ class UserController extends Controller
             }
 
 
-        }else if($auth_user->rol_id == 4){
+        }else if($auth_user->rol_id == 6){
 
             switch($filterBy){
 

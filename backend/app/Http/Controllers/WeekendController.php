@@ -36,7 +36,6 @@ class WeekendController extends Controller
                             else if( $weekendModel['vicerector']=='rejected' && $weekendModel['preceptor']='rejected' ){
                                 $data['state'] = 'rejected';
                                 $mdl->update($data);
-
                             }
                         }
                     #### User Data retrieve ###
