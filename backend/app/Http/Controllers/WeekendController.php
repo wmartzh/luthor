@@ -110,7 +110,9 @@ class WeekendController extends Controller
             'out_date_time' => 'required',
             'in_date_time' => 'required',
             'location' => 'required',
-            'intership' => 'required'
+            'intership' => 'required',
+            'contact_name',
+            'contact_phone'
         ]);
         try{
 

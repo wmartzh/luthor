@@ -89,7 +89,7 @@ class PermissionsController extends Controller
                         'check_exit'
                     )
                     ->with(['user'=> function($query){
-                        $query->select('code','first_name','last_name',);
+                        $query->select('code','profile_image','first_name','last_name',);
                     }])
                     ->orderBy('code_user','asc')
                     ->get();
