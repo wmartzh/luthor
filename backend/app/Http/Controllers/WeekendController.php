@@ -21,6 +21,25 @@ class WeekendController extends Controller
 
             if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 ){
                 if($auth_user->is_active){
+
+                    #### Update Data ####
+                    $weekendModel = \App\Weekend::select()->where([['user_code',$auth_user->code,['state','in process']]])->get()->first();
+                        if($weekendModel != null){
+                            $mdl = \App\Weekend::findOrFail($weekendModel['id']);
+                        }
+                        if($weekendModel['state'] == 'in process'){
+
+                            if($weekendModel['vicerector']=='approved' && $weekendModel['preceptor']=='approved'){ //Check requirements
+                                $data['state'] = 'approved';
+                                $mdl->update($data);
+                            }
+                            else if( $weekendModel['vicerector']=='rejected' && $weekendModel['preceptor']='rejected' ){
+                                $data['state'] = 'rejected';
+                                $mdl->update($data);
+
+                            }
+                        }
+                    #### User Data retrieve ###
                     $data = \App\Weekend::select('id','state','vicerector','preceptor','in_date_time','out_date_time','location')
                         ->where('user_code',$auth_user->code)
                         ->orderBy('id', 'DESC')
@@ -122,13 +141,8 @@ class WeekendController extends Controller
                     }else{
                         return response(['message'=>'user is not active'],401);
                     }
-
-
-
                 }
-
             }
-
         }
         catch(Exception $e){
             return response()->json(['response'=> 400]);

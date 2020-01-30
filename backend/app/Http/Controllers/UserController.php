@@ -301,7 +301,7 @@ class UserController extends Controller
                             ]
                             ],400);
                     }
-                    
+
                 }else{
                     return response([
                         'message'=>'The given data was invalid',
