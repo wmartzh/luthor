@@ -37,10 +37,12 @@ class EventController extends Controller
                 ];
                 $same_assistance = \App\Assistance::select()->where([['user_code',$data['user_code']],['date',$data['date']],['event_id',$data['event_id']]])->exists();
                 if(!$same_assistance){
-                    \App\Assistance::create($data);
+
+                    if($data['user_code'] != $user_auth->code){
+                        \App\Assistance::create($data);
+                    }
+
                 }
-
-
             }
         }
 
