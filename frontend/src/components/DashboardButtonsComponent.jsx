@@ -86,7 +86,7 @@ export const DashboardButtonsComponent = ({ role, status }) => {
             background="#12B6C6"
             width="300px"
           >
-            validate Exit
+            Validate Exit
           </ButtonComponent>
           <ButtonComponent
             to={guardRoute[1].path}

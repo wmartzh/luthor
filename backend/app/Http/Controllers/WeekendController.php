@@ -23,21 +23,7 @@ class WeekendController extends Controller
                 if($auth_user->is_active){
 
                     #### Update Data ####
-                    $weekendModel = \App\Weekend::select()->where([['user_code',$auth_user->code,['state','in process']]])->get()->first();
-                        if($weekendModel != null){
-                            $mdl = \App\Weekend::findOrFail($weekendModel['id']);
-                        }
-                        if($weekendModel['state'] == 'in process'){
-
-                            if($weekendModel['vicerector']=='approved' && $weekendModel['preceptor']=='approved'){ //Check requirements
-                                $data['state'] = 'approved';
-                                $mdl->update($data);
-                            }
-                            else if( $weekendModel['vicerector']=='rejected' && $weekendModel['preceptor']='rejected' ){
-                                $data['state'] = 'rejected';
-                                $mdl->update($data);
-                            }
-                        }
+                    
                     #### User Data retrieve ###
                     $data = \App\Weekend::select('id','state','vicerector','preceptor','in_date_time','out_date_time','location')
                         ->where('user_code',$auth_user->code)
@@ -373,16 +359,24 @@ class WeekendController extends Controller
             }else if($auth_user->rol_id == 5){ //guard access
 
                 if(array_key_exists('check_exit',$data)){
+                    $mdl = \App\Weekend::findOrFail($weekendModel['id']);
+                    $res = \App\User::select()->where('code',$data['user_code'])->get()->first();
+                    $usermodel = \App\User::findOrFail($res['id']);
                     if($weekendModel['state']== 'approved'){
 
-                        if($weekendModel['check_exit'] ==  true){
-
-                            return response(['message'=>'user alredy exit']);
-
-                        }else if($weekendModel['check_exit'] ==  false){
-                            $data['check_exit'] == true;
+                        if(!$data['check_exit']){ //Check entrty
+                            $data['in_date_time'] = date("Y-m-d H:i:s");
+                            $usermodel->update(['status'=>'in']);
+                            $data['state'] = 'deprecated';
                             $mdl->update($data);
-                            return response(['message'=>'Exit checked'],202);
+                            return response(['message'=> 'accepted'],200);
+
+                        }else{
+                            $data['out_date_time'] = date("Y-m-d H:i:s");
+                            $usermodel->update(['status'=>'out']);
+                            $mdl->update($data);
+                            return response(['message'=> 'accepted'],200);
+
                         }
 
 

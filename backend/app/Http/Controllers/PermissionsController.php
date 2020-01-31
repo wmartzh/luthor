@@ -333,7 +333,7 @@ class PermissionsController extends Controller
 
                         if(!$data['check_exit']){//check entry
                             $data['entry_date_time'] = date("H:i:s");
-                            $data['output_date_time'] = date("H:i:s");
+                            
                             $data['status']= 'deprecated';
                             //Update user and permissions status
                             $usermodel->update(['status'=>'in']);
