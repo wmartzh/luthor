@@ -33,9 +33,13 @@ class EventController extends Controller
                     'status'=> 'present',
                     'date' => date('Y-m-d'),
                     'time' => date('H:i:s'),
-                    'intership' => $actual_time->intership
+                    'intership' => $user_auth->intership
                 ];
-                \App\Assistance::create($data);
+                $same_assistance = \App\Assistance::select()->where([['user_code',$data['user_code']],['date',$data['date']],['event_id',$data['event_id']]])->exists();
+                if(!$same_assistance){
+                    \App\Assistance::create($data);
+                }
+
 
             }
         }
