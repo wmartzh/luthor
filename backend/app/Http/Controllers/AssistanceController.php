@@ -147,7 +147,7 @@ class AssistanceController extends Controller
 
             //Check if user can access
             $user = Auth::user();
-            if($user->rol_id ==3 || $user->rol_id == 4 || $user->rol_id ==6){
+            if($user->rol_id ==3 || $user->rol_id == 4 ){
 
 
                 $data['monitor_id']= $user->id; // get user that check the assistance

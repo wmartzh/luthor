@@ -3,6 +3,7 @@ namespace App\Helpers;
 use \Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+
 class ResponsesHelper{
 
 
@@ -26,6 +27,9 @@ class ResponsesHelper{
             return false;
         }
 
+    }
+    public static function errorMessage($message){
+        return response(['error'=>$message],400);
     }
     public static function customResponse($array){
         return response([$array['title']=>$array['content']],200);

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Weekend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Helpers\ResponsesHelper;
 class WeekendController extends Controller
 {
     /**
@@ -19,23 +19,32 @@ class WeekendController extends Controller
         try{
             $auth_user = Auth::user();
 
-            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 ){
-                if($auth_user->is_active){
+            switch($auth_user->rol_id){
+                case 2 :{
+                    if($auth_user->is_active){
+                            $data = \App\Weekend::select('id','state','vicerector','preceptor','in_date_time','out_date_time','location')
+                            ->where('user_code',$auth_user->code)
+                            ->orderBy('id', 'DESC')
+                            ->get();
+                        return ResponsesHelper::dataResponse($data);
+                    }else{
+                        return ResponsesHelper::erroMessage('user is not active');
 
-                    #### Update Data ####
-                    
-                    #### User Data retrieve ###
-                    $data = \App\Weekend::select('id','state','vicerector','preceptor','in_date_time','out_date_time','location')
+                    }
+                }
+                case 3 :{
+                    if($auth_user->is_active){
+                        $data = \App\Weekend::select('id','state','vicerector','preceptor','in_date_time','out_date_time','location')
                         ->where('user_code',$auth_user->code)
                         ->orderBy('id', 'DESC')
                         ->get();
-                    return response(['data'=> $data],200);
-                }else{
-                    return response(['message'=>'user is not active'],401);
+                        return ResponsesHelper::dataResponse($data);
+                    }else{
+                        return ResponsesHelper::errorMessage('user is not active');
+                    }
                 }
-            }else if($auth_user->rol_id == 4 ){
-
-                $data = \App\Weekend::select('id','user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
+                case 4:{
+                    $data = \App\Weekend::select('id','user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
                     ->with(['user' => function($query){
                         $query->select('code','first_name','last_name');
                     }])
@@ -43,36 +52,25 @@ class WeekendController extends Controller
                     ->orderBy('id', 'DESC')
                     ->get();
 
-                return response(['data'=> $data], 200);
-            }else if($auth_user->rol_id == 6){
-
-                $data = \App\Weekend::select('id','user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
+                    return ResponsesHelper::dataResponse($data);
+                }
+                case 6 :{
+                    $data = \App\Weekend::select('id','user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
                     ->with(['user' => function($query){
                         $query->select('code','first_name','last_name','intership');
                     }])
                     ->orderBy('id', 'DESC')
                     ->get();
 
-                // $boys = \App\Weekend::select('id','user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
-                // ->with(['user' => function($query){
-                //     $query->select('code','first_name','last_name','intership');
 
-                // }])
-                // ->where('intership','boys')
-                // ->orderBy('id', 'DESC')
-                // ->get();
-                // $girls = \App\Weekend::select('user_code','state','vicerector','preceptor','location','out_date_time','in_date_time','check_exit')
-                // ->with(['user' => function($query){
-                //     $query->select('code','first_name','last_name','intership');
-                // }])
-                // ->where('intership','boys')
-                // ->orderBy('id', 'DESC')
-                // ->get();
+                    return ResponsesHelper::dataResponse($data);
 
-                // return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
-                return response(['data'=> $data], 200);
+                }
+                default :{
+                    return ResponsesHelper::authError();
+                }
+
             }
-
 
         }catch(Exception $e){
 
@@ -107,26 +105,30 @@ class WeekendController extends Controller
                 $user_auth = Auth::user();
                 $usermodel = \App\User::findOrFail($user_auth->id);
                 if($usermodel['rol_id'] != 2 && $usermodel['rol_id']!=3){
-                    return response()->json(['error'=>'user can not make a request']);
+                    return ResponsesHelper::errorMessage('user can not make a request');
+
                 }else{
                     if($user_auth->is_active){
                         if($usermodel['status'] == 'penalized'){
-                            return response()->json(['message'=> 'Can not process, the user is penalized']);
+
+                            return ResponsesHelper::errorMessage('Can not process, the user is penalized');
                         }else{
                             $vD['user_code']=$usermodel['code'];
                             $search = \App\Weekend::where([['user_code',$usermodel['code']],['state','in process']])->exists();
 
                             if(!$search){
                                 \App\Weekend::create($vD);
-                                return response()->json(['message'=>'Permission requested']);
+
+                                return ResponsesHelper::errorMessage('Permission requested');
                             }
                             else{
-                                return response()->json(['message'=>'User already has a request in process']);
+                                return ResponsesHelper::errorMessage('User already has a request in process');
                             }
                         }
 
                     }else{
-                        return response(['message'=>'user is not active'],401);
+
+                        return ResponsesHelper::errorMessage('user is not active');
                     }
                 }
             }
@@ -155,7 +157,7 @@ class WeekendController extends Controller
                 ->where('intership',$intership)
                 ->get();
 
-                return response(['data'=> $data],200);
+                return ResponsesHelper::dataResponse($data);
             }
 
         }catch(Exception $e){
@@ -186,8 +188,6 @@ class WeekendController extends Controller
         try{
             $auth_user = Auth::user(); //verify auth
             //chek request
-
-
 
             if(array_key_exists('user_code',$data)){
                 $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code'],['state','in process']]])->get()->first();
@@ -285,16 +285,11 @@ class WeekendController extends Controller
                                         ]
                                         ],400);
                                 }
-
                             }
-
                         }else{
                             return response(['message'=>'invalid operation',
                                                 'errors' => ['user_code'=>'Wrong intership']],401);
                         }
-
-
-
 
                     }else{
                         return response(['message'=>'The given data was invalid',
@@ -345,9 +340,7 @@ class WeekendController extends Controller
                                     ]
                                     ],400);
                             }
-
                         }
-
 
                     }else{
                         return response(['message'=>'The given data was invalid',
@@ -376,10 +369,7 @@ class WeekendController extends Controller
                             $usermodel->update(['status'=>'out']);
                             $mdl->update($data);
                             return response(['message'=> 'accepted'],200);
-
                         }
-
-
 
                     }else{
                         return response(['message'=>'Requirements not satisfied ',
@@ -387,7 +377,6 @@ class WeekendController extends Controller
                                                         'state' => 'user has not approved requests'
                                                     ]
                                                     ],304);
-
                     }
 
                 }else{
@@ -397,8 +386,6 @@ class WeekendController extends Controller
                                                 ]
                                                 ],400);
                 }
-
-
             }
 
         }catch(Exception $e){
