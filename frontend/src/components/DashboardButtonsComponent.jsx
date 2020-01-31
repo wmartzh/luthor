@@ -4,7 +4,7 @@ import { studentRoute, monitorRoute, guardRoute } from '../routes'
 
 import { ButtonComponent } from './ButtonComponent'
 
-export const DashboardButtonsComponent = ({ role }) => {
+export const DashboardButtonsComponent = ({ role, status }) => {
   return (
     <>
       {/* Student View */}
@@ -14,6 +14,7 @@ export const DashboardButtonsComponent = ({ role }) => {
             to={studentRoute[0].path}
             background="#12B6C6"
             width="300px"
+            disable={status === 'penalized'}
           >
             Get Permission
           </ButtonComponent>
@@ -85,7 +86,7 @@ export const DashboardButtonsComponent = ({ role }) => {
             background="#12B6C6"
             width="300px"
           >
-            Validate Permissions
+            validate Exit
           </ButtonComponent>
           <ButtonComponent
             to={guardRoute[1].path}

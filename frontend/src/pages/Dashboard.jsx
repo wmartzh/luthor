@@ -23,7 +23,8 @@ export const Dashboard = () => {
       {/* <Navigation />
       <StyledSpacer height="54px" /> */}
       <StyledCard flexDirection="column" roundedTop width="340px">
-        <StyledAvatar image={userPhoto} />
+        {role !== '5' && <StyledAvatar image={userPhoto} />}
+
         <StyledTypography
           fontSize="24px"
           fontWeigth="400"
@@ -31,12 +32,14 @@ export const Dashboard = () => {
         >
           {username}
         </StyledTypography>
-        <StyledTypography fontSize="14px" fontWeigth="400" color="#919191">
-          #{code}
-        </StyledTypography>
+        {role !== '5' && (
+          <StyledTypography fontSize="14px" fontWeigth="400" color="#919191">
+            #{code}
+          </StyledTypography>
+        )}
         <StyledSpacer height="20px" />
 
-        <DashboardButtonsComponent role={role} />
+        <DashboardButtonsComponent role={role} status={status} />
 
         <StyledSpacer height="40px" />
         <ButtonComponent
