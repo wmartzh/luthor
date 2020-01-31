@@ -140,7 +140,7 @@ class UserController extends Controller
                     return response(['data'=>$data],200);
 
                 }
-                case 'indicatores':{
+                case 'indicators':{
                     $student_out = \App\User::select()->where([['is_active',true],['status','out']])->get();
                     $assitance = \App\Assistance::select()->where([['date',date('Y-m-d')]])->get();
                     $penalties = \App\Penalty::select()->where([['active',true]])->get();
