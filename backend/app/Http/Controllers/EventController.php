@@ -6,26 +6,42 @@ use App\Event;
 use Illuminate\Http\Request;
 use League\Flysystem\Exception;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\ResponsesHelper;
 
 class EventController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         //
         try{
             $dta = \App\Event::all();
-
-            return response()->json(['data'=>$dta,'response'=>200]);
+            return ResponsesHelper::dataResponse($dta);
         }catch(Exception $e){
-
         }
     }
 
+    private  function justifyAssistance($user_auth,$event){
+        $weekends = \App\Weekend::select('user_code')->where('state','approved')->get();
+
+        if ($weekends != null){
+            foreach($weekends as $weekend){
+                $data=[
+                    'user_code' => $weekend['user_code'],
+                    'monitor_id' =>$user_auth->id,
+                    'event_id' => $event,
+                    'status'=> 'present',
+                    'date' => date('Y-m-d'),
+                    'time' => date('H:i:s'),
+                    'intership' => $actual_time->intership
+                ];
+                \App\Assistance::create($data);
+
+            }
+        }
+
+
+    }
     public  function getActualEvent(){
 
         $user_auth = Auth::user();
@@ -37,12 +53,8 @@ class EventController extends Controller
             $limit = $actual_time + 1;
 
 
-
             $day_events = \App\Week::select('event_id')->where($actual_day,True)->get();
-
-     
             $result =[];
-
             foreach($day_events as $day) {
                 $event = \App\Event::select('id','title','start_time')->where('id',$day['event_id'])->get()->first();
 
@@ -53,6 +65,7 @@ class EventController extends Controller
                 if( $check_date>= $actual_time){
                     if($check_date <= $limit){
                         array_push($result, ['id'=>$event['id'],'title'=>$event['title'], 'start_time' =>$event['start_time']]);
+                        $this->justifyAssistance($user_auth,$event['id']);
                     }
                 }
             }
@@ -62,13 +75,6 @@ class EventController extends Controller
         }
 
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $data = request()->validate([
