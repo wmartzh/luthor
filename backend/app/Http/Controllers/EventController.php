@@ -37,8 +37,10 @@ class EventController extends Controller
             $limit = $actual_time + 1;
 
 
+
             $day_events = \App\Week::select('event_id')->where($actual_day,True)->get();
 
+     
             $result =[];
 
             foreach($day_events as $day) {

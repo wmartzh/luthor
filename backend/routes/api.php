@@ -25,7 +25,8 @@ Route::post('/logout','Api\AuthController@logout')->middleware('auth:api');
 
 Route::group(['middleware'  =>  ['auth:api']], function () {
 
-    Route::get('user-status','UserController@getStatus');
+    Route::get('status-test','DataStateServiceController@test');
+    Route::get('user-status','DataStateServiceController@getStatus');
 
     ///Students
     Route::group(['prefix'  =>  '/students'], function () { //penalties-actives

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use \Illuminate\Http\Response;
+use App\Helpers\ResponsesHelper;
 class UserController extends Controller
 {
     /**
@@ -20,7 +21,7 @@ class UserController extends Controller
 
         if($auth_user->rol_id == 2){
 
-            return response(['message'=>'User unauthorized'],401);
+            return ResponsesHelper::authError();
         }else if($auth_user->rol_id == 3){
             $data  = \App\User::select('code',
              'first_name',
@@ -45,15 +46,7 @@ class UserController extends Controller
         }
         else if($auth_user->rol_id == 6 ){
 
-            // $boys  = \App\User::select('code','status','first_name','last_name','phone_number')
-            // ->where([['intership','boys'],['rol_id',2],['is_active',true]])
-            // ->orWhere([['intership','boys'],['rol_id',3]])
-            // ->get();
-            // $girls  = \App\User::select('code','status','first_name','last_name','phone_number')
-            // ->where([['intership','boys'],['rol_id',2],['is_active',true]])
-            // ->orWhere([['intership','boys'],['rol_id',3]])
-            // ->get();
-            // return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
+
             $data  = \App\User::select('code',
              'status',
              'first_name',
@@ -157,25 +150,6 @@ class UserController extends Controller
 
         }
 
-    }
-    public function getStatus(){
-         try{
-
-            $auth_user = Auth::user();
-
-            if($auth_user->rol_id == 3 ||$auth_user->rol_id == 2){
-
-                return  response(['status'=>$auth_user->status],200);
-            }
-            else{
-                return response(['message'=> 'User unauthorized'],401);
-            }
-
-
-         }catch(Exception $e){
-
-
-         }
     }
 
     /**
