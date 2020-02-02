@@ -304,10 +304,6 @@ class PenaltyController extends Controller
 
                 }
             }
-
-
-
-
         }catch(Exception $e){
             return response()->json(['message'=>'something was wrong'],$status=400);
         }
@@ -319,6 +315,20 @@ class PenaltyController extends Controller
         $auth_user = Auth::user();
 
         if($auth_user->rol_id==4){
+            if($data['block']){
+
+                \App\User::where([['is_active',true],['rol_id',2],['intership',$auth_user->intership]])
+                ->orWhere([['is_active',true],['rol_id',3],['intership',$auth_user->intership]])
+                ->update(['status'=>'penalized']);
+
+            }else{
+                \App\User::where([['is_active',true],['rol_id',2],['intership',$auth_user->intership]])
+                ->orWhere([['is_active',true],['rol_id',3],['intership',$auth_user->intership]])
+                ->update(['status'=>'in']);
+
+            }
+
+        }else if($auth_user->rol_id==6){
             if($data['block']){
 
                 \App\User::where([['is_active',true],['rol_id',2]])

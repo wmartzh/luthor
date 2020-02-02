@@ -189,17 +189,10 @@ class WeekendController extends Controller
             $auth_user = Auth::user(); //verify auth
             //chek request
 
-            if(array_key_exists('user_code',$data)){
-                $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code']],['state','in process']])->get()->first();
-
-                if($weekendModel == null){
-                    return response(['message'=>'no data exist',
-                        'errors' =>['user has not requests']]);
-                }
-            }
-
+           
                 //Check if the auth user is a student
                 if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){//Student access
+
 
                     if($auth_user->is_active){ // check if user is active
 
@@ -243,6 +236,15 @@ class WeekendController extends Controller
                         return response(['message'=>'user is not active'],401);
                     }
                 }else if($auth_user->rol_id == 4){//preceptor access
+
+                    if(array_key_exists('user_code',$data)){
+                        $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code']],['state','in process']])->get()->first();
+
+                        if($weekendModel == null){
+                            return response(['message'=>'no data exist',
+                                'errors' =>['user has not requests']]);
+                        }
+                    }
                     $mdl = \App\Weekend::findOrFail($weekendModel['id']);
                     //Preceptor
                     $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();
@@ -300,6 +302,14 @@ class WeekendController extends Controller
                     }
 
                 } else if($auth_user->rol_id == 6){ //vicerrector access
+                    if(array_key_exists('user_code',$data)){
+                        $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code']],['state','in process']])->get()->first();
+
+                        if($weekendModel == null){
+                            return response(['message'=>'no data exist',
+                                'errors' =>['user has not requests']]);
+                        }
+                    }
 
                     ///Vicerector
                     $mdl = \App\Weekend::findOrFail($weekendModel['id']);
@@ -360,7 +370,7 @@ class WeekendController extends Controller
                     if($weekendmdl != null){
 
                         if($data['check_exit']){
-
+                            unset($data['output_date_time']);
                             $mdl->update($data);
                             $umdl->update(['status'=>'out']);
                             return ResponsesHelper::messageResponse('Exit checked');

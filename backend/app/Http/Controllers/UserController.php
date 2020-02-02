@@ -56,8 +56,8 @@ class UserController extends Controller
              'first_name',
              'profile_image',
              'last_name',
-             'phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
-            ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true]])
+             'phone_number')->where([['rol_id',2],['is_active',true]])
+            ->orWhere([['rol_id',3],['is_active',true]])
             ->orderBy('id', 'DESC')
             ->get();
             return response(['data'=>$data],200);

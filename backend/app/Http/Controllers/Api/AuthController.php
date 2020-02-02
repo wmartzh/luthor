@@ -31,14 +31,14 @@ class AuthController extends Controller
 
         if($data['gender'] == 'F' || $data['gender'] == 'f' || $data['gender'] == 'Female' || $data['gender'] == 'female'){
 
-            if(array_key_exists('profile_image',$data)){
+            if(array_key_exists('profile_image',$data) && $data['profile_image']!=null){
                 $path = $request->file('profile_image')->store('avatars',['disk'=>'public']);
                 $data['profile_image'] = '/storage/'.$path;
 
             }else{
                 $data['profile_image'] = '/storage/avatars/default_profile_f.png';
             }
-
+            $data['gender'] = 'F';
             $data['intership'] = 'girls';
             $data['password'] = bcrypt($request->password);
             $data['rol_id'] = 2;
@@ -46,13 +46,14 @@ class AuthController extends Controller
             return response(['message' => 'created'],201);
 
         }else if ($data['gender']=='M'|| $data['gender']=='m' || $data['gender'] == 'Male' || $data['gender'] == 'male'){
-            if(array_key_exists('profile_image',$data)){
+            if(array_key_exists('profile_image',$data)&& $data['profile_image']!=null){
                 $path = $request->file('profile_image')->store('avatars',['disk'=>'public']);
                 $data['profile_image'] = '/storage/'.$path;
 
             }else{
                 $data['profile_image'] = '/storage/avatars/default_profile_m.png';
             }
+            $data['gender'] = 'M';
             $data['intership'] = 'boys';
             $data['password'] = bcrypt($request->password);
             $data['rol_id'] = 2;
