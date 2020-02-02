@@ -190,7 +190,7 @@ class WeekendController extends Controller
             //chek request
 
             if(array_key_exists('user_code',$data)){
-                $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code'],['state','in process']]])->get()->first();
+                $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code']],['state','in process']])->get()->first();
 
                 if($weekendModel == null){
                     return response(['message'=>'no data exist',
