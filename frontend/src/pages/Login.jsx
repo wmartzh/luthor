@@ -78,13 +78,6 @@ export const Login = ({ location }) => {
       setToken(token)
       setAuth(true)
 
-      // TODO: leak memory
-      // const realToken = token.substr(1)
-      // axios.defaults.headers.common['Authorization'] = `Bearer ${realToken}`
-      //
-
-      // this route go to the last path
-      // const { from } = location.state || { from: { pathname: '/' } }
       history.push('/')
     } catch (err) {
       err.message === 'Request failed with status code 401'
@@ -95,8 +88,8 @@ export const Login = ({ location }) => {
   }
 
   return (
-    <StyledContainer maxWidth="380px">
-      <StyledSpacer height="100px" />
+    <StyledContainer maxWidth="390px">
+      <StyledSpacer height="80px" />
       <StyledCard flexDirection="column" roundedTop width="340px">
         <StyledAvatar radius="50%" background="#08B1C5" fill="#fff">
           <LockOutlinedIcon />
@@ -155,6 +148,15 @@ export const Login = ({ location }) => {
         >
           Sign In
         </ButtonComponent>
+        <StyledSpacer height="10px" />
+        <ButtonComponent
+          to="register"
+          background="#F0F2F0"
+          color="#000"
+          width="300px"
+        >
+          Sign Up
+        </ButtonComponent>
         <StyledSpacer height="30px" />
         <Copyright />
         <StyledSpacer height="10px" />
@@ -164,6 +166,7 @@ export const Login = ({ location }) => {
         width="340px"
         margin="auto"
       />
+      <StyledSpacer height="40px" />
     </StyledContainer>
   )
 }

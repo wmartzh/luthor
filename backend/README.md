@@ -25,7 +25,7 @@ indicators = get indicators students out, today assistance, students penalized
 ```
 
 ```
-/students/block-all   [post]
+/students/block-all   [PUT]
 ```
 
 ##### valid parameters

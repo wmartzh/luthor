@@ -2,40 +2,51 @@ import React, { useState, useEffect } from 'react'
 
 import moment from 'moment'
 
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+
 import { Navigation } from '../../layout/Navigation'
 import { StyledContainer } from '../../styles/StyledContainer'
 import {
   StyledTableItem,
   TableComponent,
-  StyledTableItemExpand,
   StyledTableBody
 } from '../../components/TableComponent'
 import { StyledH2 } from '../../styles/StyledH2'
 import { ButtonComponent } from '../../components/ButtonComponent'
-import { StyledTypography } from '../../styles/StyledTypography'
 import { API_ROUTES } from '../../constants/apiRoutes'
 import { axios } from '../../plugins/axios'
 import { StyledCard } from '../../styles/StyledCard'
-import { StyledSpan } from '../../styles/StyledSpan'
+import { defaultColors } from '../../constants/statusColor'
+import { LoadingComponent } from '../../components/LoadingComponent'
+import { NoDataComponent } from '../../components/NoDataComponent'
+import { CreatePenaltiesForm } from './CreatePenaltiesForm'
+import { StyledSpacer } from '../../styles/StyledSpacer'
+import { StyledBackButton } from '../../styles/StyledBackButton'
+import { StyledTypography } from '../../styles/StyledTypography'
+import { TextLabelContent } from '../../components/TextLabelContent'
 
 export const Penalties = () => {
+  const [create, setCreate] = useState(false)
+  const [edit, setEdit] = useState(false)
+  const [detailUser, setDetailUser] = useState(false)
+
   const [loading, setLoading] = useState(false)
-  const [expanded, setExpanded] = useState(false)
   const [penalties, setPenalties] = useState([])
   const [weekends, setWeekends] = useState(false)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      const request = await axios({
-        method: API_ROUTES.getPenalties.method,
-        url: API_ROUTES.getPenalties.url
-      })
-      if (request.status === 200) {
-        setPenalties(request.data.data)
-      }
-      setLoading(false)
+  const fetchData = async () => {
+    setLoading(true)
+    const request = await axios({
+      method: API_ROUTES.getPenalties.method,
+      url: API_ROUTES.getPenalties.url
+    })
+    if (request.status === 200) {
+      setPenalties(request.data.data)
     }
+    setLoading(false)
+  }
+
+  useEffect(() => {
     fetchData()
   }, [])
 
@@ -58,7 +69,7 @@ export const Penalties = () => {
     },
     {
       size: '120px',
-      title: 'Type',
+      title: 'End',
       display: true,
       displayMd: false,
       displaySm: false,
@@ -74,7 +85,14 @@ export const Penalties = () => {
     }
   ]
 
-  const tableContent = (code, firstName, created) => (
+  const tableContent = (
+    code,
+    firstName,
+    lastName,
+    conclusion,
+    reason,
+    created
+  ) => (
     <StyledTableBody>
       <StyledTableItem
         width={tableheader[0].size}
@@ -93,7 +111,7 @@ export const Penalties = () => {
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color={!weekends ? '#FF004C' : '#A1C010'}>
-          {firstName}
+          {firstName} {lastName}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -103,7 +121,7 @@ export const Penalties = () => {
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color={!weekends ? '#FF004C' : '#A1C010'}>
-          {moment(created).format('DD/MMM/YYYY')}
+          {moment(conclusion).format('DD/MMM/YYYY')}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -118,7 +136,16 @@ export const Penalties = () => {
           width="100px"
           height="40px"
           margin="0"
-          click={() => setExpanded(prev => !prev)}
+          click={() =>
+            setDetailUser({
+              code,
+              firstName,
+              lastName,
+              conclusion,
+              reason,
+              created
+            })
+          }
         >
           More
         </ButtonComponent>
@@ -126,70 +153,159 @@ export const Penalties = () => {
     </StyledTableBody>
   )
 
-  const tableExpand = expanded && (
-    <StyledTableItemExpand
-      paddingLerft={tableheader[0].size}
-      mediaExpand="block"
-    >
-      {/* TODO: add textfields to change penalty's type */}
-      <StyledTableItem displayMd="none" displaySm="flex">
+  const displayUserDetails = (
+    <>
+      <StyledSpacer height="90px" />
+      <StyledCard flexDirection="column" width="400px">
+        <StyledBackButton>
+          <ArrowBackIosIcon
+            onClick={() => {
+              setDetailUser(false)
+              setEdit(false)
+            }}
+            fontSize="small"
+            style={{ marginTop: '5px' }}
+          />
+        </StyledBackButton>
         <StyledTypography
-          fontSize="14px"
-          fontFamily="Segoe UI"
+          fontSize="24px"
           fontWeigth="600"
-          color="#FF719B"
-        >
-          Location
-        </StyledTypography>
-        <StyledTypography
-          fontSize="16px"
           fontFamily="Segoe UI"
-          fontWeigth="600"
-          color={!weekends ? '#FF004C' : '#A1C010'}
+          color="#FF004C"
+          style={{ margin: '0 0 8px 0' }}
         >
-          Automercado
+          Details of {detailUser.firstName}
         </StyledTypography>
-      </StyledTableItem>
-    </StyledTableItemExpand>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'start',
+            width: '100%'
+          }}
+        >
+          <TextLabelContent
+            label="Code"
+            content={detailUser.code}
+            colorLabel="#FF004C"
+          />
+
+          <TextLabelContent
+            label="Complete name:"
+            content={`${detailUser.firstName} ${detailUser.lastName}`}
+            colorLabel="#FF004C"
+          />
+          <TextLabelContent
+            label="Reason:"
+            content={detailUser.reason}
+            colorLabel="#FF004C"
+          />
+
+          <TextLabelContent
+            label="Penaltie end:"
+            content={moment(detailUser.conclusion).format('DD/MMM/YYYY')}
+            colorLabel="#FF004C"
+          />
+
+          <StyledSpacer height="10px" />
+          <TextLabelContent
+            label="Created:"
+            content={moment(detailUser.created).format('DD/MMM/YYYY')}
+            colorLabel="#FF004C"
+          />
+
+          <StyledSpacer height="40px" />
+        </div>
+        <ButtonComponent
+          background="#A1C010"
+          width="360px"
+          height="40px"
+          margin="0"
+          click={() => {
+            setCreate(true)
+            setEdit(detailUser)
+            setDetailUser(false)
+          }}
+          // disable={isActive}
+        >
+          Edit
+        </ButtonComponent>
+        <StyledSpacer height="20px" />
+        {/* <ButtonComponent
+          background={defaultColors.red}
+          width="360px"
+          height="40px"
+          margin="0"
+          click={() => deleteHandler('rejected')}
+          // disable={isActive}
+        >
+          Disable
+        </ButtonComponent> */}
+      </StyledCard>
+    </>
   )
 
   return (
     <StyledContainer>
       <Navigation />
-      <TableComponent
-        title="Penalties"
-        subtitle="Total: 11"
-        titleColor="#FF004C"
-        tableheader={tableheader}
-      >
-        {loading && (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FF004C">
-              Loading...
-            </StyledSpan>
-          </StyledCard>
-        )}
-        {(penalties &&
-          penalties.map(({ user_code: code, active, created_at: created }) => (
-            <StyledCard
-              width="100%"
-              flexDirection="column"
-              alignItems="start"
-              margin="0 0 16px 0"
-              key={code}
+      {!detailUser && !create && (
+        <TableComponent
+          title="Penalties"
+          subtitle={
+            <ButtonComponent
+              background={defaultColors.green}
+              color="#fff"
+              width="90px"
+              height="40px"
+              margin="0"
+              click={() => setCreate(prev => !prev)}
             >
-              {/* TODO: get the username */}
-              {tableContent(code, active, created)}
-              {/* {tableExpand(date, output_date_time, entry_date_time)} */}
-            </StyledCard>
-          ))) || (
-          <StyledCard width="100%" flexDirection="column" alignItems="center">
-            <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
-              No data
-            </StyledSpan>
-          </StyledCard>
-        )}
-      </TableComponent>
+              Create
+            </ButtonComponent>
+          }
+          titleColor="#FF004C"
+          tableheader={tableheader}
+        >
+          {loading && <LoadingComponent color="#FF004C" />}
+          {(penalties.length &&
+            penalties.map(
+              ({
+                user: { code, first_name: firstName, last_name: lastName },
+                active,
+                conclusion,
+                reason,
+                created_at: created
+              }) => (
+                <StyledCard
+                  width="100%"
+                  flexDirection="column"
+                  alignItems="start"
+                  margin="0 0 16px 0"
+                  key={code}
+                >
+                  {/* TODO: get the username */}
+                  {tableContent(
+                    code,
+                    firstName,
+                    lastName,
+                    conclusion,
+                    reason,
+                    created
+                  )}
+                </StyledCard>
+              )
+            )) ||
+            (!loading && <NoDataComponent color="#FF004C" />)}
+        </TableComponent>
+      )}
+      {create && (
+        <CreatePenaltiesForm
+          display={setCreate}
+          edit={edit}
+          fetchExternData={fetchData}
+        />
+      )}
+      {detailUser && displayUserDetails}
     </StyledContainer>
   )
 }

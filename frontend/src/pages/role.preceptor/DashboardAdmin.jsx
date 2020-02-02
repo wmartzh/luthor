@@ -27,7 +27,6 @@ export const DashboardAdmin = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
- 
   useEffect(() => {
     requestService(
       API_ROUTES.getFilter.method,
