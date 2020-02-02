@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Redirect } from 'react-router-dom'
 import moment from 'moment'
 
 import Select from '@material-ui/core/es/Select'
@@ -121,7 +121,7 @@ export const GetPermission = () => {
     </ButtonComponent>
   )
 
-  return (
+  return status !== 'penalized' ? (
     <StyledContainer>
       <Navigation />
       <StyledSpacer height="54px" />
@@ -253,5 +253,7 @@ export const GetPermission = () => {
         onClick={() => statusService(setUser)}
       />
     </StyledContainer>
+  ) : (
+    <Redirect to="/" />
   )
 }
