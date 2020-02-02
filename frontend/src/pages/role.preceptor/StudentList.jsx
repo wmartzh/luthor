@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import {
@@ -20,13 +20,35 @@ import { requestService } from '../../services/requestService'
 import { defaultColors } from '../../constants/statusColor'
 import { NoDataComponent } from '../../components/NoDataComponent'
 import { LoadingComponent } from '../../components/LoadingComponent'
+import { ButtonComponent } from '../../components/ButtonComponent'
+import { axios } from '../../plugins/axios'
 
 export const StudentList = () => {
+  const [blockAll, setBlockAll] = useState(false)
+
   const [expanded, setExpanded] = useState(false)
   const [students, setStudents] = useState([])
   const [selected, setSelected] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+
+  const test = useCallback(() => {
+    let block = []
+    let result
+    students.map(student => {
+      student['status'] === 'penalized' ? block.push(true) : block.push(false)
+    })
+    for (var i in block) {
+      if (block[i] === true) {
+        result = true
+        break
+      } else {
+        result = false
+        break
+      }
+    }
+    return result
+  }, [students])
 
   const fetchData = () => {
     requestService(
@@ -40,7 +62,19 @@ export const StudentList = () => {
 
   useEffect(() => {
     fetchData()
+    return () => {
+      setStudents([])
+      setLoading(false)
+      setError(false)
+    }
   }, [])
+
+  useEffect(() => {
+    setBlockAll(test())
+    return () => {
+      setBlockAll(false)
+    }
+  }, [test])
 
   const tableheader = [
     {
@@ -93,6 +127,22 @@ export const StudentList = () => {
       </StyledCard>
     </>
   )
+
+  const blockerHandler = async () => {
+    try {
+      const response = await axios({
+        method: API_ROUTES.blockAll.method,
+        url: API_ROUTES.blockAll.url,
+        data: { block: blockAll ? '0' : '1' }
+      })
+      // console.log(response)
+      fetchData()
+      // setBlockAll(test())
+    } catch (err) {
+      console.log(err)
+    }
+    setBlockAll(test())
+  }
 
   const tableContent = (code, firstName, lastName, phone, status) => (
     <StyledTableBody style={{ cursor: 'pointer' }}>
@@ -197,6 +247,18 @@ export const StudentList = () => {
           title="Students"
           titleColor="#007991"
           tableheader={tableheader}
+          subtitle={
+            <ButtonComponent
+              background={blockAll ? defaultColors.green : defaultColors.red}
+              color="#fff"
+              width="90px"
+              height="40px"
+              margin="0"
+              click={() => blockerHandler()}
+            >
+              {blockAll ? 'Unlock' : 'Block'}
+            </ButtonComponent>
+          }
         >
           {loading && <LoadingComponent color="#007991" />}
           {(students &&

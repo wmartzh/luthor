@@ -201,7 +201,7 @@ export const MyEvents = () => {
   return (
     <StyledContainer>
       <Navigation />
-      <StyledSpacer height="54px" />
+
       {!create && (
         <TableComponent
           title="My Events"

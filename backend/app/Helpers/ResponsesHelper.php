@@ -28,6 +28,9 @@ class ResponsesHelper{
         }
 
     }
+    public static function oneEmptyField($field){
+        return response(['message'=>'The given data was invalid', 'errors'=> [$field => 'please provide '.$field.' field']  ],400);
+    }
     public static function errorMessage($message){
         return response(['error'=>$message],400);
     }
@@ -38,7 +41,6 @@ class ResponsesHelper{
         return response(['message'=>$message],200);
 
     }
-
     public static function dataResponse($data){
         return response(['data'=>$data],200);
     }

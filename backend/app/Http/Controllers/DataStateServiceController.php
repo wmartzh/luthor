@@ -125,6 +125,23 @@ class DataStateServiceController extends Controller
 
     }
 
+    private function autoRemovePenalty($auth_user){
+
+        $active = \App\Penalty::select()->where([['active', true],['user_code',$auth_user->code]])->get()->first();
+
+        if($active != null){
+            $u_mdl = \App\User::findOrFail($auth_user->id);
+            $p_mdl = \App\Penalty::findOrFail($active['id']);
+
+            if(date('Y-m-d')==$active->conclusion){
+               
+                $p_mdl->update(['active'=>false]);
+                $u_mdl->update(['status'=>'in']);
+            }
+
+        }
+    }
+
     public function getStatus(){
 
         $auth_user = Auth::user();
@@ -137,6 +154,7 @@ class DataStateServiceController extends Controller
                 $this->updateWeekendStatus($auth_user);
                 $this->autoPenalize($auth_user);
                 $this->blockSaturday($auth_user);
+                $this->autoRemovePenalty($auth_user);
                 $response = [
                     'title' => 'status',
                     'content' =>$auth_user->status
@@ -146,6 +164,8 @@ class DataStateServiceController extends Controller
             case 3:{
                 $this->updateWeekendStatus($auth_user);
                 $this->autoPenalize($auth_user);
+                $this->blockSaturday($auth_user);
+                $this->autoRemovePenalty($auth_user);
                 $response = [
                     'title' => 'status',
                     'content' =>$auth_user->status

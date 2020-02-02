@@ -22,10 +22,13 @@ class EventController extends Controller
     }
 
     private  function justifyAssistance($user_auth,$event){
+
+        // Get weekends actives
         $weekends = \App\Weekend::select('user_code')->where('state','approved')->get();
 
         if ($weekends != null){
             foreach($weekends as $weekend){
+                // Set assistance data
                 $data=[
                     'user_code' => $weekend['user_code'],
                     'monitor_id' =>$user_auth->id,
@@ -35,10 +38,13 @@ class EventController extends Controller
                     'time' => date('H:i:s'),
                     'intership' => $user_auth->intership
                 ];
+
+                // Exclude user that check the assistance
                 $same_assistance = \App\Assistance::select()->where([['user_code',$data['user_code']],['date',$data['date']],['event_id',$data['event_id']]])->exists();
                 if(!$same_assistance){
 
                     if($data['user_code'] != $user_auth->code){
+
                         \App\Assistance::create($data);
                     }
 
@@ -54,29 +60,33 @@ class EventController extends Controller
 
         if($user_auth->rol_id == 3 ||$user_auth->rol_id == 4 ){
 
-            $actual_time = date('H');
+            $actual_time = date('H'); // Min limit
             $actual_day = date('l');
-            $limit = $actual_time + 1;
+            $limit = $actual_time + 1; // Max limit
 
-
+            //Get day event
             $day_events = \App\Week::select('event_id')->where($actual_day,True)->get();
-            $result =[];
-            foreach($day_events as $day) {
-                $event = \App\Event::select('id','title','start_time')->where('id',$day['event_id'])->get()->first();
 
+            $result =[];
+
+            //check hour
+            foreach($day_events as $day) {
+
+                $event = \App\Event::select('id','title','start_time')->where('id',$day['event_id'])->get()->first();
                 $e_time = strtotime($event['start_time']);
 
                  $check_date =date('H',$e_time);
 
                 if( $check_date>= $actual_time){
                     if($check_date <= $limit){
+
                         array_push($result, ['id'=>$event['id'],'title'=>$event['title'], 'start_time' =>$event['start_time']]);
+                        //Justify event
                         $this->justifyAssistance($user_auth,$event['id']);
                     }
                 }
             }
-
-            return response(['data'=>$result]);
+            return ResponsesHelper::dataResponse($result);
 
         }
 
@@ -108,12 +118,12 @@ class EventController extends Controller
 
                 $check_regs = \App\Event::select()->where('title',$data['title'])->exists();
 
-
-
                 if(!$check_regs){ // Check if exists
 
                     \App\Event::create($data);
                     $actual_event = \App\Event::select()->where('title',$data['title'])->get()->first();
+
+                    // set repeats day
 
                     $data['event_id'] = $actual_event ['id'];
 
@@ -123,9 +133,7 @@ class EventController extends Controller
                 }else{
                     return response(['message'=> $data['title'].' is already register'],400);
                 }
-
             }
-
 
         }catch(Exception $e){
             return response()->json(['response'=> 400]);
@@ -169,15 +177,14 @@ class EventController extends Controller
 
 
         try{
+
             $event->update([
                 'title' => $request->title,
                 'start_time' => $request->start_time,
                 'tolerance_present' => $request->tolerance_present,
                 'tolerance_late' => $request->tolerance_late,
             ]);
-
             return response()->json(['message'=> $event],$status = 200);
-
 
         }catch(Exception $e){
             return response()->json(['message'=>'something was wrong'],$status=400);

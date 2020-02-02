@@ -27,7 +27,6 @@ export const DashboardAdmin = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
- 
   useEffect(() => {
     requestService(
       API_ROUTES.getFilter.method,
@@ -107,7 +106,7 @@ export const DashboardAdmin = () => {
         <div className="grid-row">
           <BigButtonComponent
             color="#4F3C75"
-            label={labels('Students out', 'per day', '#4F3C75', '#B0A3CC')}
+            label={labels('Students out', 'actives', '#4F3C75', '#B0A3CC')}
             content={data.students_out}
             to={preceptorRoutes[0].path}
           />
@@ -119,7 +118,7 @@ export const DashboardAdmin = () => {
           />
           <BigButtonComponent
             color="#FF004C"
-            label={labels('Penalties', 'per month', '#FF004C', '#FF719B')}
+            label={labels('Penalties', 'actives', '#FF004C', '#FF719B')}
             content={data.penalties}
             to={preceptorRoutes[2].path}
           />

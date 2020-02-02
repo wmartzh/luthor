@@ -1,6 +1,10 @@
 export const API_ROUTES = {
   base: ' http://127.0.0.1:8000/api',
   login: '/login',
+  register: {
+    method: 'POST',
+    url: '/register'
+  },
   logout: {
     method: 'POST',
     url: '/logout'
@@ -77,8 +81,20 @@ export const API_ROUTES = {
     method: 'GET',
     url: '/penalties'
   },
+  penalizeUser: {
+    method: 'POST',
+    url: '/penalties'
+  },
+  updatePenalizeUser: {
+    method: 'PUT',
+    url: '/penalties'
+  },
   getEvents: {
     method: 'GET',
     url: '/events'
+  },
+  blockAll: {
+    method: 'PUT',
+    url: '/students/block-all'
   }
 }

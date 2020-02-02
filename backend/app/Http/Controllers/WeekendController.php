@@ -119,7 +119,7 @@ class WeekendController extends Controller
                             if(!$search){
                                 \App\Weekend::create($vD);
 
-                                return ResponsesHelper::errorMessage('Permission requested');
+                                return ResponsesHelper::messageResponse('Permission requested');
                             }
                             else{
                                 return ResponsesHelper::errorMessage('User already has a request in process');
@@ -189,17 +189,10 @@ class WeekendController extends Controller
             $auth_user = Auth::user(); //verify auth
             //chek request
 
-            if(array_key_exists('user_code',$data)){
-                $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code'],['state','in process']]])->get()->first();
-
-                if($weekendModel == null){
-                    return response(['message'=>'no data exist',
-                        'errors' =>['user has not requests']]);
-                }
-            }
-
+           
                 //Check if the auth user is a student
                 if($auth_user->rol_id == 2 || $auth_user->rol_id == 3){//Student access
+
 
                     if($auth_user->is_active){ // check if user is active
 
@@ -243,6 +236,15 @@ class WeekendController extends Controller
                         return response(['message'=>'user is not active'],401);
                     }
                 }else if($auth_user->rol_id == 4){//preceptor access
+
+                    if(array_key_exists('user_code',$data)){
+                        $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code']],['state','in process']])->get()->first();
+
+                        if($weekendModel == null){
+                            return response(['message'=>'no data exist',
+                                'errors' =>['user has not requests']]);
+                        }
+                    }
                     $mdl = \App\Weekend::findOrFail($weekendModel['id']);
                     //Preceptor
                     $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();
@@ -300,6 +302,14 @@ class WeekendController extends Controller
                     }
 
                 } else if($auth_user->rol_id == 6){ //vicerrector access
+                    if(array_key_exists('user_code',$data)){
+                        $weekendModel = \App\Weekend::select()->where([['user_code',$data['user_code']],['state','in process']])->get()->first();
+
+                        if($weekendModel == null){
+                            return response(['message'=>'no data exist',
+                                'errors' =>['user has not requests']]);
+                        }
+                    }
 
                     ///Vicerector
                     $mdl = \App\Weekend::findOrFail($weekendModel['id']);
@@ -352,40 +362,32 @@ class WeekendController extends Controller
             }else if($auth_user->rol_id == 5){ //guard access
 
                 if(array_key_exists('check_exit',$data)){
-                    $mdl = \App\Weekend::findOrFail($weekendModel['id']);
-                    $res = \App\User::select()->where('code',$data['user_code'])->get()->first();
-                    $usermodel = \App\User::findOrFail($res['id']);
-                    if($weekendModel['state']== 'approved'){
 
-                        if(!$data['check_exit']){ //Check entrty
-                            $data['in_date_time'] = date("Y-m-d H:i:s");
-                            $usermodel->update(['status'=>'in']);
+                    $weekendmdl = \App\Weekend::select()->where([['user_code',$data['user_code']],['state','approved']])->get()->first();
+                    $user = \App\User::select('id')->where('code',$data['user_code'])->get()->first();
+                    $umdl = $user = \App\User::findOrFail($user['id']);
+                    $mdl = \App\Weekend::findOrFail($weekendmdl['id']);
+                    if($weekendmdl != null){
+
+                        if($data['check_exit']){
+                            unset($data['output_date_time']);
+                            $mdl->update($data);
+                            $umdl->update(['status'=>'out']);
+                            return ResponsesHelper::messageResponse('Exit checked');
+                        }else{
                             $data['state'] = 'deprecated';
                             $mdl->update($data);
-                            return response(['message'=> 'accepted'],200);
-
-                        }else{
-                            $data['out_date_time'] = date("Y-m-d H:i:s");
-                            $usermodel->update(['status'=>'out']);
-                            $mdl->update($data);
-                            return response(['message'=> 'accepted'],200);
+                            $umdl->update(['status'=>'in']);
+                            return ResponsesHelper::messageResponse('Entry checked');
                         }
 
-                    }else{
-                        return response(['message'=>'Requirements not satisfied ',
-                                                    'errors' => [
-                                                        'state' => 'user has not approved requests'
-                                                    ]
-                                                    ],304);
                     }
 
                 }else{
-                    return response(['message'=>'The given data was invalid',
-                                                'errors' => [
-                                                    'check_exit' => 'check_exit value is required'
-                                                ]
-                                                ],400);
+                    return ResponsesHelper::oneEmptyField('check_exit');
                 }
+
+
             }
 
         }catch(Exception $e){
