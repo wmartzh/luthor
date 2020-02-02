@@ -3,6 +3,7 @@ namespace App\Helpers;
 use \Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+
 class ResponsesHelper{
 
 
@@ -27,6 +28,12 @@ class ResponsesHelper{
         }
 
     }
+    public static function oneEmptyField($field){
+        return response(['message'=>'The given data was invalid', 'errors'=> [$field => 'please provide '.$field.' field']  ],400);
+    }
+    public static function errorMessage($message){
+        return response(['error'=>$message],400);
+    }
     public static function customResponse($array){
         return response([$array['title']=>$array['content']],200);
     }
@@ -34,7 +41,6 @@ class ResponsesHelper{
         return response(['message'=>$message],200);
 
     }
-
     public static function dataResponse($data){
         return response(['data'=>$data],200);
     }
