@@ -39,7 +39,7 @@ class PenaltyController extends Controller
                 return response(['data'=>$data],200);
             }else if($auth_user->rol_id == 6){
 
-                $data  = \App\Penalty::select('user_code','active','reason','conclusion','created_at')
+                $data  = \App\Penalty::select('user_code','active','reason','conclusion','created_at', 'intership')
                 ->with(['user'=>function($query){
                     $query->select('code','first_name','last_name');
                 }])
