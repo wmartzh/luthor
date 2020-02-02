@@ -45,13 +45,10 @@ class AuthController extends Controller
             $user =  User::create($data);
             return response(['message' => 'created'],201);
 
-
-
         }else if ($data['gender']=='M'|| $data['gender']=='m' || $data['gender'] == 'Male' || $data['gender'] == 'male'){
             if(array_key_exists('profile_image',$data)){
                 $path = $request->file('profile_image')->store('avatars',['disk'=>'public']);
                 $data['profile_image'] = '/storage/'.$path;
-
 
             }else{
                 $data['profile_image'] = '/storage/avatars/default_profile_m.png';
