@@ -90,6 +90,23 @@ class UserController extends Controller
                     ->get();
                     return response(['data'=>$data],200);
                 }
+                case 'assistance-day':{
+                    $data = \App\Assistance::select('user_code','monitor_id','event_id','status','date','time')
+                    ->where('intership',$auth_user->intership)
+                    ->with(['user'=>function($query){
+                        $query->select('code','first_name','last_name');
+                    }])
+                    ->with(['event'=> function($query){
+                        $query->select('id','title');
+                    }])
+                    ->with(['monitor' => function($query){
+                        $query->select('id','first_name','last_name');
+                    }])
+                    ->where([['intership',$auth_user->intership],['date',date('Y-m-d')]])
+                    ->orderBy('date','desc')->get();
+
+                    return response(['data'=>$data],200);
+                }
                 case 'out':{
                     $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['status','out']])
                     ->orWhere([['intership',$auth_user->intership],['rol_id',3],['status','out']])

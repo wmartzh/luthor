@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Penalty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\ResponsesHelper;
 class PenaltyController extends Controller
 {
     /**
@@ -78,16 +79,42 @@ class PenaltyController extends Controller
         try{
             $auth_user = Auth::user();
 
-            if($auth_user->rol_id == 4){
+            switch($auth_user->rol_id){
 
-                $data  = \App\Penalty::select('user_code','active','reason','created_at')
-                ->with(['user'=>function($query){
-                    $query->select('code','first_name','last_name');
-                }])
-                ->where([['intership',$auth_user->intership],['active',1]])
-                ->orderBy('created_at', 'desc')
-                ->get();
-                return response(['data'=>$data],200);
+                case 4:{ //preceptor
+                    $data  = \App\Penalty::select('user_code','active','reason','created_at')
+                    ->with(['user'=>function($query){
+                        $query->select('code','first_name','last_name');
+                    }])
+                    ->where([['intership',$auth_user->intership],['active',1]])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+                    return ResponsesHelper::dataResponse($data);
+                }
+                case 6:{ //vicerector
+                    $boys  = \App\Penalty::select('user_code','active','reason','created_at')
+                    ->with(['user'=>function($query){
+                        $query->select('code','first_name','last_name');
+                    }])
+                    ->where([['intership','boys'],['active',1]])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                    $girls  = \App\Penalty::select('user_code','active','reason','created_at')
+                    ->with(['user'=>function($query){
+                        $query->select('code','first_name','last_name');
+                    }])
+                    ->where([['intership','girls'],['active',1]])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+
+                    return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
+                }
+
+                default:{
+                    return ResponsesHelper::authError();
+                }
             }
 
         }catch(Exception $e){
@@ -186,7 +213,6 @@ class PenaltyController extends Controller
 
                     if($check_state){
 
-
                         $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();
 
                         if($data['intership'] == $intership['intership']){
@@ -204,7 +230,6 @@ class PenaltyController extends Controller
                         return response(['message'=> 'The given data was invalid',
                                         'errors'=>['intership'=>'The intership field is required']],401);
                     }
-
                 }
             }
 
@@ -265,45 +290,49 @@ class PenaltyController extends Controller
             $auth_user = Auth::user();
 
             //check rol id --- only rector and preceptor can access
-            if($auth_user->rol_id == 2 || $auth_user->rol_id == 3 ){
 
-                $active = \App\Penalty::select()->where([['active', true],['user_code',$auth_user->code]])->get()->first();
+            switch($auth_user->rol_id){
 
-                if($active != null){
-                    $u_mdl = \App\User::findOrFail($auth_user->id);
-                    $p_mdl = \App\Penalty::findOrFail($active['id']);
+                case 4:{
+                    $penalty_active = \App\Penalty::select()->where([['user_code',$data['user_code']],['active',true]])->get()->first();
+                    if($penalty_active==null){
+                        return response(['message'=>'user has not active penalties'],404);
+                    }else{
+                        $p_mdl = \App\Penalty::findOrFail($penalty_active['id']);
+                        $user = \App\User::select()->where('code',$data['user_code'])->get()->first();
+                        $u_mdl = \App\User::findOrFail($user['id']);
+                        //check if there are active penalties
 
-                    if(date('Y-m-d')>=$active->conclusion){
-                        $dta['active'] = false;
+                        $data['active'] = false;
                         $p_mdl->update($data);
                         $u_mdl->update(['status'=>'in']);
+                        return response(['message'=>'Penalty removed'],200);
+
                     }
 
-                }else{
-                    return response(['message'=>'user has not active penalties'],200);
                 }
+                case 6:{
+                    $penalty_active = \App\Penalty::select()->where([['user_code',$data['user_code']],['active',true]])->get()->first();
+                    if($penalty_active==null){
+                        return response(['message'=>'user has not active penalties'],404);
+                    }else{
+                        $p_mdl = \App\Penalty::findOrFail($penalty_active['id']);
+                        $user = \App\User::select()->where('code',$data['user_code'])->get()->first();
+                        $u_mdl = \App\User::findOrFail($user['id']);
+                        //check if there are active penalties
 
+                        $data['active'] = false;
+                        $p_mdl->update($data);
+                        $u_mdl->update(['status'=>'in']);
+                        return response(['message'=>'Penalty removed'],200);
 
-            }else if($auth_user->rol_id == 4 || $auth_user->rol_id == 6){
-
-
-                $penalty_active = \App\Penalty::select()->where([['user_code',$data['user_code']],['active',true]])->get()->first();
-                if($penalty_active==null){
-                    return response(['message'=>'user has not active penalties'],404);
-                }else{
-                    $p_mdl = \App\Penalty::findOrFail($penalty_active['id']);
-                    $user = \App\User::select()->where('code',$data['user_code'])->get()->first();
-                    $u_mdl = \App\User::findOrFail($user['id']);
-                    //check if there are active penalties
-
-                    $data['active'] = false;
-                    $p_mdl->update($data);
-                    $u_mdl->update(['status'=>'in']);
-                    return response(['message'=>'Penalty removed'],200);
-
-
+                    }
+                }
+                default:{
+                    return ResponsesHelper::authError();
                 }
             }
+
         }catch(Exception $e){
             return response()->json(['message'=>'something was wrong'],$status=400);
         }
