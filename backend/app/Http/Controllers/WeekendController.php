@@ -119,7 +119,7 @@ class WeekendController extends Controller
                             if(!$search){
                                 \App\Weekend::create($vD);
 
-                                return ResponsesHelper::errorMessage('Permission requested');
+                                return ResponsesHelper::messageResponse('Permission requested');
                             }
                             else{
                                 return ResponsesHelper::errorMessage('User already has a request in process');
@@ -352,40 +352,32 @@ class WeekendController extends Controller
             }else if($auth_user->rol_id == 5){ //guard access
 
                 if(array_key_exists('check_exit',$data)){
-                    $mdl = \App\Weekend::findOrFail($weekendModel['id']);
-                    $res = \App\User::select()->where('code',$data['user_code'])->get()->first();
-                    $usermodel = \App\User::findOrFail($res['id']);
-                    if($weekendModel['state']== 'approved'){
 
-                        if(!$data['check_exit']){ //Check entrty
-                            $data['in_date_time'] = date("Y-m-d H:i:s");
-                            $usermodel->update(['status'=>'in']);
+                    $weekendmdl = \App\Weekend::select()->where([['user_code',$data['user_code']],['state','approved']])->get()->first();
+                    $user = \App\User::select('id')->where('code',$data['user_code'])->get()->first();
+                    $umdl = $user = \App\User::findOrFail($user['id']);
+                    $mdl = \App\Weekend::findOrFail($weekendmdl['id']);
+                    if($weekendmdl != null){
+
+                        if($data['check_exit']){
+
+                            $mdl->update($data);
+                            $umdl->update(['status'=>'out']);
+                            return ResponsesHelper::messageResponse('Exit checked');
+                        }else{
                             $data['state'] = 'deprecated';
                             $mdl->update($data);
-                            return response(['message'=> 'accepted'],200);
-
-                        }else{
-                            $data['out_date_time'] = date("Y-m-d H:i:s");
-                            $usermodel->update(['status'=>'out']);
-                            $mdl->update($data);
-                            return response(['message'=> 'accepted'],200);
+                            $umdl->update(['status'=>'in']);
+                            return ResponsesHelper::messageResponse('Entry checked');
                         }
 
-                    }else{
-                        return response(['message'=>'Requirements not satisfied ',
-                                                    'errors' => [
-                                                        'state' => 'user has not approved requests'
-                                                    ]
-                                                    ],304);
                     }
 
                 }else{
-                    return response(['message'=>'The given data was invalid',
-                                                'errors' => [
-                                                    'check_exit' => 'check_exit value is required'
-                                                ]
-                                                ],400);
+                    return ResponsesHelper::oneEmptyField('check_exit');
                 }
+
+
             }
 
         }catch(Exception $e){
