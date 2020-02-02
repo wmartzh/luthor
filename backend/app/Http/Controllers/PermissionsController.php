@@ -99,6 +99,7 @@ class PermissionsController extends Controller
                         $query->select('code','first_name','last_name',);
 
                     }])
+                    ->where('out_date_time',date('Y-m-d'))
                     ->get();
 
                     return response(['data'=> ['normal'=> $normal,'weekend'=> $weekend]]);
@@ -333,7 +334,7 @@ class PermissionsController extends Controller
 
                         if(!$data['check_exit']){//check entry
                             $data['entry_date_time'] = date("H:i:s");
-                            
+
                             $data['status']= 'deprecated';
                             //Update user and permissions status
                             $usermodel->update(['status'=>'in']);

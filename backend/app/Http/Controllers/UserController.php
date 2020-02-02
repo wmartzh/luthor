@@ -25,7 +25,11 @@ class UserController extends Controller
         }else if($auth_user->rol_id == 3){
             $data  = \App\User::select('code',
              'first_name',
-             'last_name')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true]])
+             'last_name')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true],['status','in']])
+            ->orWhere([['intership',$auth_user->intership],['rol_id',2],['is_active',true],['status','penalized']])
+            ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true],['status','in'],['code','!=',$auth_user->code]])
+            ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true],['status','penalized'],['code','!=',$auth_user->code]])
+
             ->orderBy('id', 'DESC')
             ->get();
             return response(['data'=>$data],200);
