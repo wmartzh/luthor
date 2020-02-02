@@ -98,7 +98,13 @@ class UserController extends Controller
                     $penalties = \App\Penalty::select()->where([['intership',$auth_user->intership],['active',true]])->get();
 
                     return response(['data'=>['students_out'=> count($student_out), 'assitance'=> count($assitance),'penalties'=> count($penalties)]],200);
-
+                }
+                case 'studentCodeName':{
+                    $data  = \App\User::select('code','first_name','last_name')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',true],['status','!=','penalized']])
+                    ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',true],['status','!=','penalized']])
+                    ->orderBy('first_name', 'ASC')
+                    ->get();
+                    return response(['data'=>$data],200);
                 }
 
                 default:{
@@ -139,7 +145,13 @@ class UserController extends Controller
                     $penalties = \App\Penalty::select()->where([['active',true]])->get();
 
                     return response(['data'=>['students_out'=> count($student_out), 'assitance'=> count($assitance),'penalties'=> count($penalties)]],200);
-
+                }
+                case 'studentCodeName':{
+                    $data  = \App\User::select('code','first_name','last_name')->where([['rol_id',2],['is_active',true],['status','!=','penalized']])
+                    ->orWhere([['rol_id',3],['is_active',true],['status','!=','penalized']])
+                    ->orderBy('first_name', 'ASC')
+                    ->get();
+                    return response(['data'=>$data],200);
                 }
 
                 default:{

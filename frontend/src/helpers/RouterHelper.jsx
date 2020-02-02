@@ -13,7 +13,8 @@ import { Login } from '../pages/Login'
 import { ProtectedRoute } from './ProtectedRoute'
 import { useUserValues } from '../context/UserContext'
 import { rectorRoutes } from '../routes/rectorRoutes'
-// import { ToTest } from '../layout/ToTEst'
+import { ToTest } from '../layout/ToTEst'
+import { Register } from '../pages/Register'
 
 export const RouterHelper = () => {
   const { user } = useUserValues()
@@ -26,7 +27,8 @@ export const RouterHelper = () => {
   return (
     <>
       <Route exact path="/login" component={Login} />
-      {/* <Route exact path="/test" component={ToTest} /> */}
+      <Route exact path="/register" component={Register} />
+      <Route exact path="/test" component={ToTest} />
 
       {globalRoutes.map(({ path, component: Component }) => (
         <ProtectedRoute

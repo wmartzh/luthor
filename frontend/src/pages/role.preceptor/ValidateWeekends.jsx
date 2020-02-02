@@ -132,7 +132,7 @@ export const ValidateWeekends = () => {
   const studentInfo = (
     <>
       <StyledSpacer height="90px" />
-      <StyledCard width="400px" flexDirection="column" alignItems="start">
+      <StyledCard width="400px" flexDirection="column">
         <StyledBackButton onClick={() => setSelected('')}>
           <ArrowBackIosIcon fontSize="small" style={{ marginTop: '5px' }} />
         </StyledBackButton>
@@ -145,43 +145,53 @@ export const ValidateWeekends = () => {
           User Details
         </StyledTypography>
 
-        <TextLabelContent
-          label="Complete name:"
-          content={`${selected.fristName} ${selected.lastName}`}
-          colorLabel="#77B0C8"
-        />
-        <TextLabelContent
-          label="Permission State:"
-          content={selected.state}
-          colorLabel="#77B0C8"
-        />
-        <TextLabelContent
-          label="Location"
-          content={selected.location}
-          colorLabel="#77B0C8"
-        />
-        <TextLabelContent
-          label="Out Day:"
-          content={moment(selected.outDay).format('DD/MMM/YYYY, H:m a')}
-          colorLabel="#77B0C8"
-        />
-        <TextLabelContent
-          label="Entry Day"
-          content={moment(selected.entryDay).format('DD/MMM/YYYY, H:m a')}
-          colorLabel="#77B0C8"
-        />
-        <TextLabelContent
-          label="Permission state Preceptor:"
-          content={selected.preceptor}
-          colorLabel="#77B0C8"
-        />
-        <TextLabelContent
-          label="Permission state Vicerector:"
-          content={selected.vicerector}
-          colorLabel="#77B0C8"
-        />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'start',
+            width: '100%'
+          }}
+        >
+          <TextLabelContent
+            label="Complete name:"
+            content={`${selected.fristName} ${selected.lastName}`}
+            colorLabel="#77B0C8"
+          />
+          <TextLabelContent
+            label="Permission State:"
+            content={selected.state}
+            colorLabel="#77B0C8"
+          />
+          <TextLabelContent
+            label="Location"
+            content={selected.location}
+            colorLabel="#77B0C8"
+          />
+          <TextLabelContent
+            label="Out Day:"
+            content={moment(selected.outDay).format('DD/MMM/YYYY, H:m a')}
+            colorLabel="#77B0C8"
+          />
+          <TextLabelContent
+            label="Entry Day"
+            content={moment(selected.entryDay).format('DD/MMM/YYYY, H:m a')}
+            colorLabel="#77B0C8"
+          />
+          <TextLabelContent
+            label="Permission state Preceptor:"
+            content={selected.preceptor}
+            colorLabel="#77B0C8"
+          />
+          <TextLabelContent
+            label="Permission state Vicerector:"
+            content={selected.vicerector}
+            colorLabel="#77B0C8"
+          />
 
-        <StyledSpacer height="40px" />
+          <StyledSpacer height="40px" />
+        </div>
+
         <ButtonComponent
           background="#A1C010"
           width="360px"

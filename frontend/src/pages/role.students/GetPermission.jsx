@@ -11,10 +11,11 @@ import FormControl from '@material-ui/core/es/FormControl'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 import { axios } from '../../plugins/axios'
+import { Navigation } from '../../layout/Navigation'
 import { API_ROUTES } from '../../constants/apiRoutes'
 import { userStatusColor } from '../../constants/statusColor'
-
-import { Navigation } from '../../layout/Navigation'
+import { useUserValues } from '../../context/UserContext'
+import { statusService } from '../../services/statusService'
 import { LinkComponent } from '../../components/LinkComponent'
 import { ButtonComponent } from '../../components/ButtonComponent'
 
@@ -25,9 +26,6 @@ import { StyledContainer } from '../../styles/StyledContainer'
 import { StyledStatusBar } from '../../styles/StyledStatusBar'
 import { StyledBackButton } from '../../styles/StyledBackButton'
 import { StyledTypography } from '../../styles/StyledTypography'
-import { statusService } from '../../services/statusService'
-import { useUserValues } from '../../context/UserContext'
-import { getCurrentToken } from '../../helpers/getCurrentLocalStorage'
 
 export const GetPermission = () => {
   const history = useHistory()
@@ -43,7 +41,7 @@ export const GetPermission = () => {
   const [dislableAll, setDislableAll] = useState(false)
 
   const inputLabel = useRef(null)
-  const [labelWidth, setLabelWidth] = React.useState(0)
+  const [labelWidth, setLabelWidth] = useState(0)
 
   useEffect(() => {
     setLabelWidth(inputLabel.current.offsetWidth)
@@ -180,12 +178,12 @@ export const GetPermission = () => {
               variant="outlined"
               margin="normal"
               fullWidth
-              id="entry"
-              label="Return date"
+              id="out"
+              label="Departure date"
               type="datetime-local"
-              value={entry}
+              value={out}
               disabled={dislableAll}
-              onChange={e => setEntry(e.target.value)}
+              onChange={e => setOut(e.target.value)}
               InputLabelProps={{
                 shrink: true
               }}
@@ -194,12 +192,12 @@ export const GetPermission = () => {
               variant="outlined"
               margin="normal"
               fullWidth
-              id="out"
-              label="Departure date"
+              id="entry"
+              label="Return date"
               type="datetime-local"
-              value={out}
+              value={entry}
               disabled={dislableAll}
-              onChange={e => setOut(e.target.value)}
+              onChange={e => setEntry(e.target.value)}
               InputLabelProps={{
                 shrink: true
               }}
