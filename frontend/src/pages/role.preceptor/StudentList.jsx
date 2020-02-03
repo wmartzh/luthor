@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+
 import {
   TableComponent,
   StyledTableItem,
@@ -22,6 +24,9 @@ import { NoDataComponent } from '../../components/NoDataComponent'
 import { LoadingComponent } from '../../components/LoadingComponent'
 import { ButtonComponent } from '../../components/ButtonComponent'
 import { axios } from '../../plugins/axios'
+import { StyledBackButton } from '../../styles/StyledBackButton'
+import { StyledTypography } from '../../styles/StyledTypography'
+import { TextLabelContent } from '../../components/TextLabelContent'
 
 export const StudentList = () => {
   const [blockAll, setBlockAll] = useState(false)
@@ -60,6 +65,22 @@ export const StudentList = () => {
     )
   }
 
+  // TODO:
+  const penalizedHandler = () => {
+    try {
+      const response = axios({
+        method: API_ROUTES.penalizeUser.method,
+        url: API_ROUTES.penalizeUser.url,
+        data: {}
+      })
+      const { status } = response
+      if (status === 201 || status === 200) {
+      }
+    } catch (err) {
+      console.log(`student list Ln 76 = ${err}`)
+    }
+  }
+
   useEffect(() => {
     fetchData()
     return () => {
@@ -86,24 +107,24 @@ export const StudentList = () => {
       color: '#00A7CA'
     },
     {
-      size: '240px',
-      title: 'First Name',
+      size: '320px',
+      title: 'Name',
       display: true,
       displayMd: true,
       displaySm: true,
       color: '#00A7CA'
     },
     {
-      size: '260px',
-      title: 'Last Name',
+      size: '180px',
+      title: 'Phone',
       display: true,
       displayMd: true,
       displaySm: false,
       color: '#00A7CA'
     },
     {
-      size: '160px',
-      title: 'Phone',
+      size: '90px',
+      title: '',
       display: true,
       displayMd: false,
       displaySm: false,
@@ -121,9 +142,75 @@ export const StudentList = () => {
   const studentInfo = (
     <>
       <StyledSpacer height="90px" />
-      <StyledCard style={{ cursor: 'pointer' }} onClick={() => setSelected('')}>
-        User Details
-        {selected.code}
+      <StyledCard flexDirection="column" width="400px">
+        <StyledBackButton>
+          <ArrowBackIosIcon
+            onClick={() => {
+              setSelected(false)
+            }}
+            fontSize="small"
+            style={{ marginTop: '5px' }}
+          />
+        </StyledBackButton>
+        <StyledTypography
+          fontSize="24px"
+          fontWeigth="600"
+          fontFamily="Segoe UI"
+          color="#007991"
+          style={{ margin: '0 0 8px 0' }}
+        >
+          Details of {selected.firstName}
+        </StyledTypography>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'start',
+            width: '100%'
+          }}
+        >
+          <TextLabelContent
+            label="Status:"
+            content={selected.status}
+            colorLabel="#007991"
+            // colorContent={
+            //   selected.status === 'penalized'
+            //     ? defaultColors.red
+            //     : selected.status === 'in'
+            //     ? '#007991'
+            //     : defaultColors.green
+            // }
+          />
+
+          <TextLabelContent
+            label="Code:"
+            content={selected.code}
+            colorLabel="#007991"
+          />
+
+          <TextLabelContent
+            label="Complete name:"
+            content={`${selected.firstName} ${selected.lastName}`}
+            colorLabel="#007991"
+          />
+
+          <TextLabelContent
+            label="Phone Number:"
+            content={selected.phone || 'none'}
+            colorLabel="#007991"
+          />
+        </div>
+        {/* TODO: */}
+        {/* <StyledSpacer height="40px" /> */}
+        {/* <ButtonComponent
+          background={defaultColors.red}
+          width="360px"
+          height="40px"
+          margin="0"
+          click={() => penalizedHandler()}
+        >
+          Penalize
+        </ButtonComponent> */}
       </StyledCard>
     </>
   )
@@ -145,15 +232,12 @@ export const StudentList = () => {
   }
 
   const tableContent = (code, firstName, lastName, phone, status) => (
-    <StyledTableBody style={{ cursor: 'pointer' }}>
+    <StyledTableBody>
       <StyledTableItem
         width={tableheader[0].size}
         display={tableheader[0].display ? 'block' : 'none'}
         displayMd={tableheader[0].displayMd ? 'block' : 'none'}
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
-        onClick={() =>
-          setSelected({ code, firstName, lastName, phone, status })
-        }
       >
         <StyledSpan
           fontFamily="Segoe UI"
@@ -168,12 +252,9 @@ export const StudentList = () => {
         display={tableheader[1].display ? 'block' : 'none'}
         displayMd={tableheader[1].displayMd ? 'block' : 'none'}
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
-        onClick={() =>
-          setSelected({ code, firstName, lastName, phone, status })
-        }
       >
         <StyledH2 fontWeigth="600" color="#007991">
-          {firstName}
+          {firstName} {lastName}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -181,35 +262,35 @@ export const StudentList = () => {
         display={tableheader[2].display ? 'block' : 'none'}
         displayMd={tableheader[2].displayMd ? 'block' : 'none'}
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
-        onClick={() =>
-          setSelected({ code, firstName, lastName, phone, status })
-        }
       >
         <StyledH2 fontWeigth="600" color="#007991">
-          {lastName}
+          {phone || 'none'}
         </StyledH2>
       </StyledTableItem>
+
       <StyledTableItem
+        className="last-item"
         width={tableheader[3].size}
         display={tableheader[3].display ? 'block' : 'none'}
         displayMd={tableheader[3].displayMd ? 'block' : 'none'}
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#007991">
-          {phone || 'none'}
-        </StyledSpan>
-      </StyledTableItem>
-      <StyledTableItem
-        className="last-item"
-        width="24px"
-        display="none"
-        displayMd="block"
-      >
-        <ExpandMore
-          fontSize="small"
-          style={{ cursor: 'pointer' }}
-          onClick={() => setExpanded(prev => !prev)}
-        />
+        <ButtonComponent
+          background="#A1C010"
+          width="90px"
+          height="40px"
+          margin="0"
+          click={() =>
+            setSelected({
+              status: `${status.charAt(0).toUpperCase() + status.slice(1)}`,
+              code,
+              firstName,
+              lastName
+            })
+          }
+        >
+          More
+        </ButtonComponent>
       </StyledTableItem>
     </StyledTableBody>
   )
@@ -242,7 +323,7 @@ export const StudentList = () => {
   return (
     <StyledContainer>
       <Navigation />
-      {selected === '' && (
+      {!selected && (
         <TableComponent
           title="Students"
           titleColor="#007991"

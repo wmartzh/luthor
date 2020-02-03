@@ -133,7 +133,7 @@ export const Penalties = () => {
       >
         <ButtonComponent
           background={!weekends ? '#FF004C' : '#A1C010'}
-          width="100px"
+          width="90px"
           height="40px"
           margin="0"
           click={() =>
