@@ -44,6 +44,7 @@ class CreateWeeksTable extends Migration
             $table->dropForeign(['event_id']);
             $table->dropColumn('event_id');
         });
+        
         Schema::dropIfExists('weeks');
     }
 }

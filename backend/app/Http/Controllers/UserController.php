@@ -328,7 +328,7 @@ class UserController extends Controller
 
             }
 
-        }else if ($auth_user->rol_id ==6){
+        }else if ($auth_user->rol_id == 6){
             if(array_key_exists('is_active', $data)){
 
                 if(array_key_exists('code',$data)){
