@@ -35,8 +35,10 @@ export const GetPermission = () => {
   const [error, setError] = useState(false)
   const [type, setType] = useState('')
   const [place, setPlace] = useState('')
-  const [entry, setEntry] = useState('') // 2020-01-10 21:57:19
-  const [out, setOut] = useState('') // 2020-01-10 21:57:19
+  const [entryDate, setEntryDate] = useState('')
+  const [entryTime, setEntryTime] = useState('')
+  const [outDate, setOutDate] = useState('')
+  const [outTime, setOutTime] = useState('')
   const [googleLocation, setGoogleLocation] = useState('')
   const [students, setStudents] = useState([])
   const [userCode, setUserCode] = useState('')
@@ -131,8 +133,8 @@ export const GetPermission = () => {
         {
           user_code: userCode,
           intership,
-          in_date_time: entry.replace('T', ' '),
-          out_date_time: out.replace('T', ' '),
+          in_date_time: `${entryDate} ${entryTime}`,
+          out_date_time: `${outDate} ${outTime}`,
           location: googleLocation
         }
       )
@@ -245,10 +247,24 @@ export const GetPermission = () => {
               fullWidth
               id="out"
               label="Departure date"
-              type="datetime-local"
-              value={out}
+              type="date"
+              value={outDate}
               disabled={dislableAll}
-              onChange={e => setOut(e.target.value)}
+              onChange={e => setOutDate(e.target.value)}
+              InputLabelProps={{
+                shrink: true
+              }}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="out"
+              label="Departure time"
+              type="time"
+              value={outTime}
+              disabled={dislableAll}
+              onChange={e => setOutTime(e.target.value)}
               InputLabelProps={{
                 shrink: true
               }}
@@ -259,10 +275,24 @@ export const GetPermission = () => {
               fullWidth
               id="entry"
               label="Return date"
-              type="datetime-local"
-              value={entry}
+              type="date"
+              value={entryDate}
               disabled={dislableAll}
-              onChange={e => setEntry(e.target.value)}
+              onChange={e => setEntryDate(e.target.value)}
+              InputLabelProps={{
+                shrink: true
+              }}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="entry"
+              label="Return time"
+              type="time"
+              value={entryTime}
+              disabled={dislableAll}
+              onChange={e => setEntryTime(e.target.value)}
               InputLabelProps={{
                 shrink: true
               }}
@@ -295,7 +325,11 @@ export const GetPermission = () => {
             ? button(dislableAll || true)
             : button(dislableAll || false)
           : type === 'weekends'
-          ? !entry && !out && !googleLocation
+          ? !entryDate &&
+            !entryTime &&
+            !outDate &&
+            !entryTime &&
+            !googleLocation
             ? button(dislableAll || true)
             : button(dislableAll || false)
           : null}

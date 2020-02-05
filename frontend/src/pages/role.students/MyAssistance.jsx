@@ -99,7 +99,7 @@ export const MyAssitance = () => {
         displayMd={tableheader[1].displayMd ? 'block' : 'none'}
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#64c33d">
+        <StyledH2 fontWeigth="600" color="#A1C010">
           {title}
         </StyledH2>
       </StyledTableItem>
@@ -109,7 +109,7 @@ export const MyAssitance = () => {
         displayMd={tableheader[2].displayMd ? 'block' : 'none'}
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#64c33d">
+        <StyledH2 fontWeigth="600" color="#A1C010">
           {monitor}
         </StyledH2>
       </StyledTableItem>
@@ -119,7 +119,7 @@ export const MyAssitance = () => {
         displayMd={tableheader[3].displayMd ? 'block' : 'none'}
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#64c33d">
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#A1C010">
           {moment(date).format('DD-MMM-YYYY')}, {time}
         </StyledSpan>
       </StyledTableItem>
@@ -145,7 +145,7 @@ export const MyAssitance = () => {
           <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#7ccc5b">
             {tableheader[3].title}
           </StyledSpan>
-          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#64c33d">
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#A1C010">
             {moment(date).format('DD-MMM-YYYY')}, {time}
           </StyledSpan>
 
@@ -154,7 +154,7 @@ export const MyAssitance = () => {
         <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#7ccc5b">
           {tableheader[2].title}
         </StyledSpan>
-        <StyledH2 fontWeigth="600" color="#64c33d">
+        <StyledH2 fontWeigth="600" color="#A1C010">
           {monitor}
         </StyledH2>
       </StyledTableItemExpand>
@@ -165,10 +165,10 @@ export const MyAssitance = () => {
       <Navigation />
       <TableComponent
         title="My Assistance"
-        titleColor="#64c33d"
+        titleColor="#A1C010"
         tableheader={tableheader}
       >
-        {loading && <LoadingComponent color="#64c33d" />}
+        {loading && <LoadingComponent color="#A1C010" />}
         {/* TODO: fix no data! */}
         {(assistance.length !== 0 &&
           assistance.map(
@@ -192,7 +192,7 @@ export const MyAssitance = () => {
               </StyledCard>
             )
           )) ||
-          (!loading && <NoDataComponent color="#64c33d" />)}
+          (!loading && <NoDataComponent color="#A1C010" />)}
       </TableComponent>
     </StyledContainer>
   )
