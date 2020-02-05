@@ -178,7 +178,7 @@ class AssistanceController extends Controller
             case 4:{ ##Preceptor
 
                 $data = \App\Assistance::select('user_code','monitor_id','event_id','status','date','time')
-                ->where('intership',$auth_user->intership)
+                ->where([['intership',$auth_user->intership],])
                 ->with(['user'=>function($query){
                     $query->select('code','first_name','last_name');
                 }])
