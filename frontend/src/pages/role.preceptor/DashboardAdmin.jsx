@@ -153,17 +153,17 @@ export const DashboardAdmin = () => {
             to={preceptorRoutes[6].path}
           />
           <IcoButtonComponent
-            label="Students"
+            label="Ativate Students"
             color="#007991"
             svg={usersIcon}
             to={preceptorRoutes[4].path}
           />
-          <IcoButtonComponent
+          {/* <IcoButtonComponent
             label="Validate Permissions"
             color="#A1C010"
             svg={checkCircleIcon}
             to={preceptorRoutes[5].path}
-          />
+          /> */}
         </div>
       </StyledSectionSectionMore>
     </StyledContainer>
