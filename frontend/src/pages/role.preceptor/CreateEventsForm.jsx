@@ -1,6 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 
+import Checkbox from '@material-ui/core/Checkbox'
+import FormGroup from '@material-ui/core/FormGroup'
+import FormLabel from '@material-ui/core/es/FormLabel'
 import TextField from '@material-ui/core/es/TextField'
+import FormControl from '@material-ui/core/es/FormControl'
+import FormControlLabel from '@material-ui/core/es/FormControlLabel'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 import { axios } from '../../plugins/axios'
@@ -31,6 +36,25 @@ export const CreateEventsForm = ({
   setToleranceLate,
   fetchData
 }) => {
+  const [days, setDays] = useState({
+    sunday: false,
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+    saturday: false
+  })
+
+  const {
+    sunday,
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday
+  } = days
   const cancel = () => {
     setTitle('')
     setTime('')
@@ -66,7 +90,14 @@ export const CreateEventsForm = ({
         title,
         start_time: time,
         tolerance_present: `${tolerancePrecent.h}:${tolerancePrecent.m}`,
-        tolerance_late: `${toleranceLate.h}:${toleranceLate.m}`
+        tolerance_late: `${toleranceLate.h}:${toleranceLate.m}`,
+        sunday,
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday
       }
     })
     if (response.status === 201 || response.status === 200) {
@@ -85,10 +116,15 @@ export const CreateEventsForm = ({
       fetchData()
     }
   }
+
+  const handleChangeCheckbox = name => event => {
+    setDays({ ...days, [name]: event.target.checked })
+  }
+
   return (
     <>
       <StyledSpacer height="54px" />
-      <StyledCard flexDirection="column" roundedTop width="400px">
+      <StyledCard flexDirection="column" width="400px">
         <StyledBackButton>
           <ArrowBackIosIcon
             onClick={() => cancel()}
@@ -143,6 +179,86 @@ export const CreateEventsForm = ({
           color="#FBB13C"
         />
 
+        <StyledSpacer height="40px" />
+        <div style={{ width: '100%', display: 'flex', alignItems: 'start' }}>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Days of the Week</FormLabel>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={sunday}
+                    onChange={handleChangeCheckbox('sunday')}
+                    value="sunday"
+                  />
+                }
+                label="Sunday"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={monday}
+                    onChange={handleChangeCheckbox('monday')}
+                    value="monday"
+                  />
+                }
+                label="Monday"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={tuesday}
+                    onChange={handleChangeCheckbox('tuesday')}
+                    value="tuesday"
+                  />
+                }
+                label="Tuesday"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={wednesday}
+                    onChange={handleChangeCheckbox('wednesday')}
+                    value="wednesday"
+                  />
+                }
+                label="Wednesday"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={thursday}
+                    onChange={handleChangeCheckbox('thursday')}
+                    value="thursday"
+                  />
+                }
+                label="Thursday"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={friday}
+                    onChange={handleChangeCheckbox('friday')}
+                    value="friday"
+                  />
+                }
+                label="Friday"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={saturday}
+                    onChange={handleChangeCheckbox('Saturday')}
+                    value="Saturday"
+                  />
+                }
+                label="Saturday"
+              />
+            </FormGroup>
+            {/* <FormHelperText>Be careful</FormHelperText> */}
+          </FormControl>
+        </div>
+
         {!error && <StyledSpacer height="40px" />}
         {error && (
           <>
@@ -171,6 +287,7 @@ export const CreateEventsForm = ({
           {(edit && 'Update') || 'Create'}
         </ButtonComponent>
       </StyledCard>
+      <StyledSpacer height="60px" />
     </>
   )
 }
