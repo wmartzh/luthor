@@ -30,7 +30,7 @@ export const CreatePenaltiesForm = ({
   const [students, setStudents] = useState([])
 
   const inputLabel = useRef(null)
-  const [labelWidth, setLabelWidth] = React.useState(0)
+  const [labelWidth, setLabelWidth] = useState(0)
 
   const fetchData = async () => {
     try {
@@ -53,6 +53,10 @@ export const CreatePenaltiesForm = ({
       setConclusion('')
     }
   }, [edit])
+
+  useEffect(() => {
+    setLabelWidth(inputLabel.current.offsetWidth)
+  }, [])
 
   useEffect(() => {
     fetchData()

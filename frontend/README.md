@@ -1,7 +1,17 @@
 # Project Luthor
 
 # Futures changes 
-* add new color tu the status user
+* the state of the permission chage with
+* panel de permissio especial para preceptor
+  - lo mismo, codigo de usuario.
+* panel para usuario inactivos.
+* eventstake 
+* repeticio
+  - events page
+* permission update status
+* get permission
+* penalties btn change disable permission
+
 
 # TODO
 * validate user register

@@ -54,7 +54,7 @@ export const BigButtonComponent = ({
       <div className="label">{label}</div>
       <div className="bg-content">
         <div className="label">
-          <span>{content}</span>
+          <span>{content || '0'}</span>
         </div>
       </div>
     </StyledBigButtonComponent>

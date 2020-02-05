@@ -27,49 +27,25 @@ import { StyledStatusBar } from '../../styles/StyledStatusBar'
 import { StyledBackButton } from '../../styles/StyledBackButton'
 import { StyledTypography } from '../../styles/StyledTypography'
 
-export const GetPermission = () => {
+export const SpecialPermission = () => {
   const history = useHistory()
   const { user, setUser } = useUserValues()
-  const { status, intership, role } = user
+  const { status, intership } = user
 
   const [error, setError] = useState(false)
   const [type, setType] = useState('')
   const [place, setPlace] = useState('')
   const [entry, setEntry] = useState('') // 2020-01-10 21:57:19
   const [out, setOut] = useState('') // 2020-01-10 21:57:19
-  const [googleLocation, setGoogleLocation] = useState('')
-  const [students, setStudents] = useState([])
-  const [userCode, setUserCode] = useState('')
+  const [googleLocation, setGoogleLocation] = useState('test location')
   const [dislableAll, setDislableAll] = useState(false)
 
   const inputLabel = useRef(null)
   const [labelWidth, setLabelWidth] = useState(0)
 
-  const fetchStudents = async () => {
-    try {
-      const response = await axios({
-        method: API_ROUTES.getFilter.method,
-        url: `${API_ROUTES.getFilter.url}/studentCodeName`
-      })
-      setStudents(response.data.data)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   useEffect(() => {
     setLabelWidth(inputLabel.current.offsetWidth)
   }, [])
-
-  useEffect(() => {
-    if (role === '4' || role === '6') {
-      fetchStudents()
-    }
-    return () => {
-      setStudents([])
-      setUserCode('')
-    }
-  }, [role])
 
   const axiosQuery = async (method, url, data) => {
     try {
@@ -84,11 +60,8 @@ export const GetPermission = () => {
         request.data.message === 'User already has a request in process'
       ) {
         setError('You already have a permission')
-      } else if (request.data.response === 'Time not permitted') {
-        setDislableAll(true)
-        setError('Time not permitted')
       } else {
-        history.push(role === '2' || role === '3' ? '/my-permissions' : '/')
+        history.push('/my-permissions')
       }
     } catch (error) {
       const {
@@ -105,7 +78,7 @@ export const GetPermission = () => {
         } else if (message === 'The given data was invalid.') {
           setError('Missing fields.')
         } else {
-          setError('Bad request, try later or call 911 (BETA)')
+          setError('Another Error')
         }
       }
     }
@@ -117,7 +90,6 @@ export const GetPermission = () => {
         API_ROUTES.requestPermission.method,
         API_ROUTES.requestPermission.url,
         {
-          code_user: userCode,
           place,
           intership,
           date: moment().format('YYYY/MM/DD'),
@@ -129,7 +101,6 @@ export const GetPermission = () => {
         API_ROUTES.requestWeekendsPermission.method,
         API_ROUTES.requestWeekendsPermission.url,
         {
-          user_code: userCode,
           intership,
           in_date_time: entry.replace('T', ' '),
           out_date_time: out.replace('T', ' '),
@@ -165,62 +136,26 @@ export const GetPermission = () => {
           color="#12B6C6"
           style={{ margin: '0 0 8px 0' }}
         >
-          {role === '2' || role === '3'
-            ? 'Get my permission'
-            : role === '4' || role === '6'
-            ? 'Special Permission'
-            : 'error'}
+          Special Permission
         </StyledH1>
 
         <StyledSpacer height="20px" />
-        {(role === '4' || role === '6') && (
-          <FormControl fullWidth variant="outlined">
-            <InputLabel ref={inputLabel} id="userCode">
-              Student
-            </InputLabel>
-            <Select
-              labelId="userCode"
-              id="userCode"
-              labelWidth={labelWidth}
-              onChange={e => setUserCode(e.target.value)}
-              value={userCode}
-              disabled={dislableAll}
-            >
-              {students.map(
-                ({ code, first_name: firstName, last_name: lastName }) => (
-                  <MenuItem key={code} value={code}>
-                    {code} / {firstName} {lastName}
-                  </MenuItem>
-                )
-              )}
-            </Select>
-          </FormControl>
-        )}
-
-        {(userCode || role === '2' || role === '3') && (
-          <>
-            <StyledSpacer height="20px" />
-            <FormControl fullWidth variant="outlined">
-              <InputLabel
-                ref={inputLabel}
-                id="demo-simple-select-outlined-label"
-              >
-                Type
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                labelWidth={labelWidth}
-                onChange={e => setType(e.target.value)}
-                value={type}
-                disabled={dislableAll}
-              >
-                <MenuItem value={'normal'}>Normal</MenuItem>
-                <MenuItem value={'weekends'}>Weekends</MenuItem>
-              </Select>
-            </FormControl>
-          </>
-        )}
+        <FormControl fullWidth variant="outlined">
+          <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+            Type
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            labelWidth={labelWidth}
+            onChange={e => setType(e.target.value)}
+            value={type}
+            disabled={dislableAll}
+          >
+            <MenuItem value={'normal'}>Normal</MenuItem>
+            <MenuItem value={'weekends'}>Weekends</MenuItem>
+          </Select>
+        </FormControl>
 
         {type === 'normal' && (
           <TextField
@@ -267,6 +202,16 @@ export const GetPermission = () => {
                 shrink: true
               }}
             />
+            {/* <KeyboardTimePicker
+              margin="normal"
+              id="time-picker"
+              label="Time picker"
+              value={entry}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                'aria-label': 'change time'
+              }}
+            /> */}
             <TextField
               variant="outlined"
               label="Location"
