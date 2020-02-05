@@ -55,7 +55,7 @@ export const MyAssitance = () => {
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#B0A3CC'
+      color: '#7ccc5b'
     },
     {
       size: '330px',
@@ -63,7 +63,7 @@ export const MyAssitance = () => {
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#B0A3CC'
+      color: '#7ccc5b'
     },
     {
       size: '200px',
@@ -71,7 +71,7 @@ export const MyAssitance = () => {
       display: true,
       displayMd: false,
       displaySm: false,
-      color: '#B0A3CC'
+      color: '#7ccc5b'
     },
     {
       size: '150px',
@@ -79,7 +79,7 @@ export const MyAssitance = () => {
       display: true,
       displayMd: true,
       displaySm: false,
-      color: '#B0A3CC'
+      color: '#7ccc5b'
     }
   ]
 
@@ -99,7 +99,7 @@ export const MyAssitance = () => {
         displayMd={tableheader[1].displayMd ? 'block' : 'none'}
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#4F3C75">
+        <StyledH2 fontWeigth="600" color="#64c33d">
           {title}
         </StyledH2>
       </StyledTableItem>
@@ -109,7 +109,7 @@ export const MyAssitance = () => {
         displayMd={tableheader[2].displayMd ? 'block' : 'none'}
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#4F3C75">
+        <StyledH2 fontWeigth="600" color="#64c33d">
           {monitor}
         </StyledH2>
       </StyledTableItem>
@@ -119,7 +119,7 @@ export const MyAssitance = () => {
         displayMd={tableheader[3].displayMd ? 'block' : 'none'}
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#64c33d">
           {moment(date).format('DD-MMM-YYYY')}, {time}
         </StyledSpan>
       </StyledTableItem>
@@ -142,19 +142,19 @@ export const MyAssitance = () => {
     expanded && (
       <StyledTableItemExpand paddingLerft={tableheader[0].size}>
         <StyledTableItem displayMd="none" displaySm="flex">
-          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#7ccc5b">
             {tableheader[3].title}
           </StyledSpan>
-          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#64c33d">
             {moment(date).format('DD-MMM-YYYY')}, {time}
           </StyledSpan>
 
           <StyledSpacer height="28px" />
         </StyledTableItem>
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#7ccc5b">
           {tableheader[2].title}
         </StyledSpan>
-        <StyledH2 fontWeigth="600" color="#4F3C75">
+        <StyledH2 fontWeigth="600" color="#64c33d">
           {monitor}
         </StyledH2>
       </StyledTableItemExpand>
@@ -165,10 +165,10 @@ export const MyAssitance = () => {
       <Navigation />
       <TableComponent
         title="My Assistance"
-        titleColor="#4F3C75"
+        titleColor="#64c33d"
         tableheader={tableheader}
       >
-        {loading && <LoadingComponent color="#4F3C75" />}
+        {loading && <LoadingComponent color="#64c33d" />}
         {/* TODO: fix no data! */}
         {(assistance.length !== 0 &&
           assistance.map(
@@ -192,7 +192,7 @@ export const MyAssitance = () => {
               </StyledCard>
             )
           )) ||
-          (!loading && <NoDataComponent color="#4F3C75" />)}
+          (!loading && <NoDataComponent color="#64c33d" />)}
       </TableComponent>
     </StyledContainer>
   )

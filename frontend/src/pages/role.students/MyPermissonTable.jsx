@@ -35,7 +35,7 @@ export const MyPermissionTable = ({
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#ff9e7a'
+      color: '#B0A3CC'
     },
     {
       size: '300px',
@@ -43,7 +43,7 @@ export const MyPermissionTable = ({
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#ff9e7a'
+      color: '#B0A3CC'
     },
     {
       size: '140px',
@@ -51,7 +51,7 @@ export const MyPermissionTable = ({
       display: true,
       displayMd: true,
       displaySm: false,
-      color: '#ff9e7a'
+      color: '#B0A3CC'
     },
     {
       size: '220px',
@@ -59,7 +59,7 @@ export const MyPermissionTable = ({
       display: true,
       displayMd: false,
       displaySm: false,
-      color: '#ff9e7a'
+      color: '#B0A3CC'
     }
   ]
 
@@ -70,7 +70,7 @@ export const MyPermissionTable = ({
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#ff9e7a'
+      color: '#B0A3CC'
     },
     {
       size: '260px',
@@ -78,7 +78,7 @@ export const MyPermissionTable = ({
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#ff9e7a'
+      color: '#B0A3CC'
     },
     {
       size: '180px',
@@ -86,7 +86,7 @@ export const MyPermissionTable = ({
       display: true,
       displayMd: true,
       displaySm: false,
-      color: '#ff9e7a'
+      color: '#B0A3CC'
     },
     {
       size: '220px',
@@ -94,7 +94,7 @@ export const MyPermissionTable = ({
       display: true,
       displayMd: false,
       displaySm: false,
-      color: '#ff9e7a'
+      color: '#B0A3CC'
     }
   ]
 
@@ -106,7 +106,7 @@ export const MyPermissionTable = ({
         displayMd={tableheaderNormal[0].displayMd ? 'block' : 'none'}
         displaySm={tableheaderNormal[0].displaySm ? 'block' : 'none'}
       >
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
           {status.charAt(0).toUpperCase() + status.slice(1)}
         </StyledSpan>
       </StyledTableItem>
@@ -116,7 +116,7 @@ export const MyPermissionTable = ({
         displayMd={tableheaderNormal[1].displayMd ? 'block' : 'none'}
         displaySm={tableheaderNormal[1].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#FB7140">
+        <StyledH2 fontWeigth="600" color="#4F3C75">
           {place}
         </StyledH2>
       </StyledTableItem>
@@ -130,7 +130,7 @@ export const MyPermissionTable = ({
           fontSize="14px"
           fontFamily="Segoe UI"
           fontWeigth="600"
-          color="#FB7140"
+          color="#4F3C75"
         >
           {moment(date).format('DD-MMM-YYYY')}
         </StyledTypography>
@@ -145,7 +145,7 @@ export const MyPermissionTable = ({
           fontSize="14px"
           fontFamily="Segoe UI"
           fontWeigth="600"
-          color="#FB7140"
+          color="#4F3C75"
         >
           {`${out ? out.substr(0, out.length - 3) : '--'} / ${
             entry ? entry.substr(0, entry.length - 3) : '--'
@@ -175,27 +175,27 @@ export const MyPermissionTable = ({
           displayMd="none"
           displaySm="flex"
         >
-          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
             {tableheaderNormal[2].title}
           </StyledSpan>
-          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+          <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
             {moment(date).format('DD-MMM-YYYY')}
           </StyledSpan>
         </StyledTableItem>
 
         <StyledSpacer height="28px" />
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
           Out
         </StyledSpan>
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
           {out ? moment(out).format('DD-MMM-YYYY, h:mm:ss a') : '--'}
         </StyledSpan>
 
         <StyledSpacer height="28px" />
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
           Entry
         </StyledSpan>
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#FB7140">
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
           {entry ? moment(entry).format('DD-MMM-YYYY, h:mm:ss a') : '--'}
         </StyledSpan>
       </StyledTableItemExpand>
@@ -216,7 +216,7 @@ export const MyPermissionTable = ({
         displayMd={tableheaderWeekend[0].displayMd ? 'block' : 'none'}
         displaySm={tableheaderWeekend[0].displaySm ? 'block' : 'none'}
       >
-        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#ff9e7a">
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#B0A3CC">
           {state.charAt(0).toUpperCase() + state.slice(1)}
         </StyledSpan>
       </StyledTableItem>
@@ -226,7 +226,7 @@ export const MyPermissionTable = ({
         displayMd={tableheaderWeekend[1].displayMd ? 'block' : 'none'}
         displaySm={tableheaderWeekend[1].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color="#FB7140">
+        <StyledH2 fontWeigth="600" color="#4F3C75">
           {location}
         </StyledH2>
       </StyledTableItem>
@@ -240,7 +240,7 @@ export const MyPermissionTable = ({
           fontSize="14px"
           fontFamily="Segoe UI"
           fontWeigth="600"
-          color="#FB7140"
+          color="#4F3C75"
         >
           {`Preceptor: ${preceptor}`}
           <br />
@@ -258,7 +258,7 @@ export const MyPermissionTable = ({
           fontSize="14px"
           fontFamily="Segoe UI"
           fontWeigth="600"
-          color="#FB7140"
+          color="#4F3C75"
         >
           {`Out: ${
             outDay ? moment(outDay).format('DD-MMM-YYYY, H:mm a') : '--'
@@ -287,7 +287,7 @@ export const MyPermissionTable = ({
 
   const normalDisplayContent = () => (
     <>
-      {loading && <LoadingComponent color="#FB7140" />}
+      {loading && <LoadingComponent color="#4F3C75" />}
       {(permission.length !== 0 &&
         permission.map(
           ({ id, place, date, status, output_date_time, entry_date_time }) => (
@@ -309,13 +309,13 @@ export const MyPermissionTable = ({
             </StyledCard>
           )
         )) ||
-        (!loading && <NoDataComponent color="#FB7140" />)}
+        (!loading && <NoDataComponent color="#4F3C75" />)}
     </>
   )
 
   const weekendDisplayContent = () => (
     <>
-      {loading && <LoadingComponent color="#FB7140" />}
+      {loading && <LoadingComponent color="#4F3C75" />}
       {(weekends.length !== 0 &&
         weekends.map(
           ({
@@ -346,7 +346,7 @@ export const MyPermissionTable = ({
             </StyledCard>
           )
         )) ||
-        (!loading && <NoDataComponent color="#FB7140" />)}
+        (!loading && <NoDataComponent color="#4F3C75" />)}
     </>
   )
 
@@ -356,7 +356,7 @@ export const MyPermissionTable = ({
       subtitle={
         <>
           <ButtonComponent
-            background="#FB7140"
+            background="#4F3C75"
             color="#fff"
             width="100px"
             height="40px"
@@ -367,7 +367,7 @@ export const MyPermissionTable = ({
           </ButtonComponent>
         </>
       }
-      titleColor="#FB7140"
+      titleColor="#4F3C75"
       tableheader={change ? tableheaderWeekend : tableheaderNormal}
     >
       {change ? weekendDisplayContent() : normalDisplayContent()}
