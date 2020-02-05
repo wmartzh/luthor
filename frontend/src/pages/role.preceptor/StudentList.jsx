@@ -342,7 +342,7 @@ export const StudentList = () => {
           }
         >
           {loading && <LoadingComponent color="#007991" />}
-          {(students &&
+          {(students.length &&
             students.map(
               ({
                 code,
