@@ -20,7 +20,7 @@ export const DashboardButtonsComponent = ({ role, status }) => {
           </ButtonComponent>
           <ButtonComponent
             to={studentRoute[1].path}
-            background="#69C743"
+            background="#A1C010"
             width="300px"
           >
             My Assistance
