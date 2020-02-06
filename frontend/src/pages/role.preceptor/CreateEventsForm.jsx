@@ -29,6 +29,7 @@ export const CreateEventsForm = ({
   title,
   setTitle,
   time,
+  weeks,
   setTime,
   tolerancePrecent,
   setTolerancePrecent,
@@ -36,15 +37,17 @@ export const CreateEventsForm = ({
   setToleranceLate,
   fetchData
 }) => {
-  const [days, setDays] = useState({
-    sunday: false,
-    monday: false,
-    tuesday: false,
-    wednesday: false,
-    thursday: false,
-    friday: false,
-    saturday: false
-  })
+  const [days, setDays] = useState(
+    weeks || {
+      sunday: false,
+      monday: false,
+      tuesday: false,
+      wednesday: false,
+      thursday: false,
+      friday: false,
+      saturday: false
+    }
+  )
 
   const {
     sunday,

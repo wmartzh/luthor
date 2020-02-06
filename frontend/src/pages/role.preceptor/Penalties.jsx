@@ -95,7 +95,8 @@ export const Penalties = () => {
     lastName,
     conclusion,
     reason,
-    created
+    created,
+    active
   ) => (
     <StyledTableBody>
       <StyledTableItem
@@ -140,6 +141,7 @@ export const Penalties = () => {
           width="90px"
           height="40px"
           margin="0"
+          disable={active === 0}
           click={() =>
             setDetailUser({
               code,
@@ -151,7 +153,7 @@ export const Penalties = () => {
             })
           }
         >
-          More
+          {active === 0 ? 'Deprecated' : 'More'}
         </ButtonComponent>
       </StyledTableItem>
     </StyledTableBody>
@@ -298,7 +300,8 @@ export const Penalties = () => {
                     lastName,
                     conclusion,
                     reason,
-                    created
+                    created,
+                    active
                   )}
                 </StyledCard>
               )

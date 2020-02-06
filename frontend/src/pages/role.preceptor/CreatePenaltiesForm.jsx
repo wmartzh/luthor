@@ -55,10 +55,6 @@ export const CreatePenaltiesForm = ({
   }, [edit])
 
   useEffect(() => {
-    setLabelWidth(inputLabel.current.offsetWidth)
-  }, [])
-
-  useEffect(() => {
     fetchData()
     return () => {
       setStudents([])
@@ -198,7 +194,7 @@ export const CreatePenaltiesForm = ({
         )}
         {edit && (
           <ButtonComponent
-            click={deleteHandler}
+            click={submitHandler}
             background={defaultColors.red}
             width="360px"
             disable={isEmpty}
@@ -206,14 +202,16 @@ export const CreatePenaltiesForm = ({
             Disable
           </ButtonComponent>
         )}
-        <ButtonComponent
-          click={submitHandler}
-          background={edit ? defaultColors.green : '#FBB13C'}
-          width="360px"
-          disable={isEmpty}
-        >
-          {edit ? 'Update' : 'Create'}
-        </ButtonComponent>
+        {!edit && (
+          <ButtonComponent
+            click={submitHandler}
+            background={edit ? defaultColors.green : '#FBB13C'}
+            width="360px"
+            disable={isEmpty}
+          >
+            {edit ? 'Update' : 'Create'}
+          </ButtonComponent>
+        )}
       </StyledCard>
     </>
   )
