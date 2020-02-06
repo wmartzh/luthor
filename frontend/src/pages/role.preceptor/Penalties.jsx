@@ -41,8 +41,8 @@ export const Penalties = () => {
   const fetchData = async () => {
     setLoading(true)
     const request = await axios({
-      method: API_ROUTES.getPenalties.method,
-      url: API_ROUTES.getPenalties.url
+      method: API_ROUTES.getPenaltiesActive.method,
+      url: API_ROUTES.getPenaltiesActive.url
     })
     if (request.status === 200) {
       setPenalties(request.data.data)
