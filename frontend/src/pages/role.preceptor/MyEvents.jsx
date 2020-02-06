@@ -34,6 +34,7 @@ export const MyEvents = () => {
     h: '00',
     m: '10'
   })
+  const [weeks, setWeeks] = useState([])
   const [create, setCreate] = useState(false)
   const [edit, setEdit] = useState(false)
 
@@ -58,8 +59,16 @@ export const MyEvents = () => {
 
   const tableheader = [
     {
-      size: '400px',
+      size: '230px',
       title: 'Title event',
+      display: true,
+      displayMd: true,
+      displaySm: true,
+      color: '#FBB84D'
+    },
+    {
+      size: '170px',
+      title: 'Days',
       display: true,
       displayMd: true,
       displaySm: true,
@@ -83,7 +92,20 @@ export const MyEvents = () => {
     }
   ]
 
-  const editHandler = (id, title, time, present, late) => {
+  const editHandler = (
+    id,
+    title,
+    time,
+    present,
+    late,
+    sunday,
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday
+  ) => {
     setId(id)
     setTitle(title)
     setTime(time)
@@ -95,13 +117,50 @@ export const MyEvents = () => {
       h: late.substr(0, late.length - 6),
       m: late.substr(3, late.length - 6)
     })
+    setWeeks({
+      sunday: sunday === 1 ? true : false,
+      monday: monday === 1 ? true : false,
+      tuesday: tuesday === 1 ? true : false,
+      wednesday: wednesday === 1 ? true : false,
+      thursday: thursday === 1 ? true : false,
+      friday: friday === 1 ? true : false,
+      saturday: saturday === 1 ? true : false
+    })
     setCreate(true)
     setEdit(true)
   }
 
-  const tableContent = (id, title, time, present, late) => (
+  const tableContent = (
+    id,
+    title,
+    time,
+    present,
+    late,
+    sunday,
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday
+  ) => (
     <StyledTableBody
-      onClick={() => editHandler(id, title, time, present, late)}
+      onClick={() =>
+        editHandler(
+          id,
+          title,
+          time,
+          present,
+          late,
+          sunday,
+          monday,
+          tuesday,
+          wednesday,
+          thursday,
+          friday,
+          saturday
+        )
+      }
     >
       <StyledTableItem
         width={tableheader[0].size}
@@ -130,7 +189,19 @@ export const MyEvents = () => {
           fontWeigth="600"
           color="#FBB13C"
         >
-          {time}
+          {sunday === 1 ? 'Sunday' : null}
+          {sunday === 1 ? <br /> : null}
+          {monday === 1 ? 'Monday' : null}
+          {monday === 1 ? <br /> : null}
+          {tuesday === 1 ? 'Tuesday' : null}
+          {tuesday === 1 ? <br /> : null}
+          {wednesday === 1 ? 'Wednesday' : null}
+          {wednesday === 1 ? <br /> : null}
+          {thursday === 1 ? 'Thursday' : null}
+          {thursday === 1 ? <br /> : null}
+          {friday === 1 ? 'Friday' : null}
+          {friday === 1 ? <br /> : null}
+          {saturday === 1 ? 'Saturday' : null}
         </StyledTypography>
       </StyledTableItem>
       <StyledTableItem
@@ -138,6 +209,21 @@ export const MyEvents = () => {
         display={tableheader[2].display ? 'block' : 'none'}
         displayMd={tableheader[2].displayMd ? 'block' : 'none'}
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
+      >
+        <StyledTypography
+          fontSize="16px"
+          fontFamily="Segoe UI"
+          fontWeigth="600"
+          color="#FBB13C"
+        >
+          {time}
+        </StyledTypography>
+      </StyledTableItem>
+      <StyledTableItem
+        width={tableheader[3].size}
+        display={tableheader[3].display ? 'block' : 'none'}
+        displayMd={tableheader[3].displayMd ? 'block' : 'none'}
+        displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
         <StyledTypography
           fontSize="16px"
@@ -226,11 +312,20 @@ export const MyEvents = () => {
           {(events.length &&
             events.map(
               ({
-                id,
-                title,
-                start_time: time,
-                tolerance_present: present,
-                tolerance_late: late
+                sunday,
+                monday,
+                tuesday,
+                wednesday,
+                thursday,
+                friday,
+                saturday,
+                event: {
+                  id,
+                  title,
+                  start_time: time,
+                  tolerance_present: present,
+                  tolerance_late: late
+                }
               }) => (
                 <StyledCard
                   width="100%"
@@ -240,7 +335,20 @@ export const MyEvents = () => {
                   key={id}
                   style={{ cursor: 'pointer' }}
                 >
-                  {tableContent(id, title, time, present, late)}
+                  {tableContent(
+                    id,
+                    title,
+                    time,
+                    present,
+                    late,
+                    sunday,
+                    monday,
+                    tuesday,
+                    wednesday,
+                    thursday,
+                    friday,
+                    saturday
+                  )}
                   {tableExpand(time, present, late)}
                 </StyledCard>
               )
@@ -259,6 +367,7 @@ export const MyEvents = () => {
           title={title}
           setTitle={setTitle}
           time={time}
+          weeks={weeks}
           setTime={setTime}
           tolerancePrecent={tolerancePrecent}
           setTolerancePrecent={setTolerancePrecent}
