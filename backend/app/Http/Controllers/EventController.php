@@ -47,7 +47,7 @@ class EventController extends Controller
 
                 }
                 case 6:{
-                    
+
                     $data = \App\Week::select(
                         'event_id',
                         'sunday',
@@ -230,14 +230,24 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
         $request->validate([
-            'title'=> 'required',
-            'start_time' => 'required',
-            'tolerance_present' => 'required',
-            'tolerance_late' => 'required',
+
+            'event_id' => 'nullable',
+            'sunday' => 'nullable',
+            'monday' => 'nullable',
+            'tuesday' => 'nullable',
+            'wednesday' => 'nullable',
+            'thursday' => 'nullable',
+            'friday' => 'nullable',
+            'saturday' => 'nullable',
+
         ]);
 
 
         try{
+
+            $w_id = \App\Week::select('id')->where('event_id',$event->id)->get()->first();
+
+            $week = \App\Week::findOrFail($w_id['id']);
 
             $event->update([
                 'title' => $request->title,
@@ -245,7 +255,8 @@ class EventController extends Controller
                 'tolerance_present' => $request->tolerance_present,
                 'tolerance_late' => $request->tolerance_late,
             ]);
-            return response()->json(['message'=> $event],$status = 200);
+            $week->update($data);
+            return ResponsesHelper::messageResponse('Updated');
 
         }catch(Exception $e){
             return response()->json(['message'=>'something was wrong'],$status=400);
