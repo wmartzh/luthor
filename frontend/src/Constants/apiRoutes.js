@@ -77,6 +77,10 @@ export const API_ROUTES = {
       female: '/students/female'
     }
   },
+  getPenaltiesActive: {
+    method: 'GET',
+    url: '/active-penalties'
+  },
   getPenalties: {
     method: 'GET',
     url: '/penalties'
