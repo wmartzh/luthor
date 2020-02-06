@@ -79,7 +79,7 @@ class UserController extends Controller
                     return response(['data'=>$data],200);
                 }
                 case 'inactives':{
-                    $data  = \App\User::select('code','status','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',false]])
+                    $data  = \App\User::select('code','status','profile_image','first_name','last_name','phone_number')->where([['intership',$auth_user->intership],['rol_id',2],['is_active',false]])
                     ->orWhere([['intership',$auth_user->intership],['rol_id',3],['is_active',false]])
                     ->get();
                     return response(['data'=>$data],200);
