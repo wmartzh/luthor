@@ -146,11 +146,24 @@ export const DashboardAdmin = () => {
           />
         </div>
         <div>
-          <StyledCard>
-            <StyledTypography fontSize="14px" color="#1f1f1f">
-              Todo
-            </StyledTypography>
-          </StyledCard>
+          <IcoButtonComponent
+            label="Special Permission"
+            color="#FBB13C"
+            svg={plusCircleIcon}
+            to={preceptorRoutes[6].path}
+          />
+          <IcoButtonComponent
+            label="Ativate Students"
+            color="#007991"
+            svg={usersIcon}
+            to={preceptorRoutes[4].path}
+          />
+          {/* <IcoButtonComponent
+            label="Validate Permissions"
+            color="#A1C010"
+            svg={checkCircleIcon}
+            to={preceptorRoutes[5].path}
+          /> */}
         </div>
       </StyledSectionSectionMore>
     </StyledContainer>

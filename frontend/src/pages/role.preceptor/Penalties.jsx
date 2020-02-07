@@ -24,8 +24,12 @@ import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledBackButton } from '../../styles/StyledBackButton'
 import { StyledTypography } from '../../styles/StyledTypography'
 import { TextLabelContent } from '../../components/TextLabelContent'
+import { useUserValues } from '../../context/UserContext'
 
 export const Penalties = () => {
+  const { user } = useUserValues()
+  const { role } = user
+
   const [create, setCreate] = useState(false)
   const [edit, setEdit] = useState(false)
   const [detailUser, setDetailUser] = useState(false)
@@ -37,8 +41,8 @@ export const Penalties = () => {
   const fetchData = async () => {
     setLoading(true)
     const request = await axios({
-      method: API_ROUTES.getPenalties.method,
-      url: API_ROUTES.getPenalties.url
+      method: API_ROUTES.getPenaltiesActive.method,
+      url: API_ROUTES.getPenaltiesActive.url
     })
     if (request.status === 200) {
       setPenalties(request.data.data)
@@ -61,7 +65,7 @@ export const Penalties = () => {
     },
     {
       size: '320px',
-      title: 'Name',
+      title: role === '4' || role === '6' ? 'Name' : 'Reazon',
       display: true,
       displayMd: true,
       displaySm: true,
@@ -91,7 +95,8 @@ export const Penalties = () => {
     lastName,
     conclusion,
     reason,
-    created
+    created,
+    active
   ) => (
     <StyledTableBody>
       <StyledTableItem
@@ -100,7 +105,7 @@ export const Penalties = () => {
         displayMd={tableheader[0].displayMd ? 'block' : 'none'}
         displaySm={tableheader[0].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color={!weekends ? '#FF004C' : '#A1C010'}>
+        <StyledH2 fontWeigth="600" color={!weekends ? '#E0425D' : '#A1C010'}>
           {code}
         </StyledH2>
       </StyledTableItem>
@@ -110,7 +115,7 @@ export const Penalties = () => {
         displayMd={tableheader[1].displayMd ? 'block' : 'none'}
         displaySm={tableheader[1].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color={!weekends ? '#FF004C' : '#A1C010'}>
+        <StyledH2 fontWeigth="600" color={!weekends ? '#E0425D' : '#A1C010'}>
           {firstName} {lastName}
         </StyledH2>
       </StyledTableItem>
@@ -120,7 +125,7 @@ export const Penalties = () => {
         displayMd={tableheader[2].displayMd ? 'block' : 'none'}
         displaySm={tableheader[2].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color={!weekends ? '#FF004C' : '#A1C010'}>
+        <StyledH2 fontWeigth="600" color={!weekends ? '#E0425D' : '#A1C010'}>
           {moment(conclusion).format('DD/MMM/YYYY')}
         </StyledH2>
       </StyledTableItem>
@@ -132,10 +137,11 @@ export const Penalties = () => {
         displaySm={tableheader[3].displaySm ? 'block' : 'none'}
       >
         <ButtonComponent
-          background={!weekends ? '#FF004C' : '#A1C010'}
-          width="100px"
+          background={!weekends ? '#E0425D' : '#A1C010'}
+          width="90px"
           height="40px"
           margin="0"
+          disable={active === 0}
           click={() =>
             setDetailUser({
               code,
@@ -147,7 +153,7 @@ export const Penalties = () => {
             })
           }
         >
-          More
+          {active === 0 ? 'Deprecated' : 'More'}
         </ButtonComponent>
       </StyledTableItem>
     </StyledTableBody>
@@ -171,7 +177,7 @@ export const Penalties = () => {
           fontSize="24px"
           fontWeigth="600"
           fontFamily="Segoe UI"
-          color="#FF004C"
+          color="#E0425D"
           style={{ margin: '0 0 8px 0' }}
         >
           Details of {detailUser.firstName}
@@ -187,31 +193,31 @@ export const Penalties = () => {
           <TextLabelContent
             label="Code"
             content={detailUser.code}
-            colorLabel="#FF004C"
+            colorLabel="#E0425D"
           />
 
           <TextLabelContent
             label="Complete name:"
             content={`${detailUser.firstName} ${detailUser.lastName}`}
-            colorLabel="#FF004C"
+            colorLabel="#E0425D"
           />
           <TextLabelContent
             label="Reason:"
             content={detailUser.reason}
-            colorLabel="#FF004C"
+            colorLabel="#E0425D"
           />
 
           <TextLabelContent
             label="Penaltie end:"
             content={moment(detailUser.conclusion).format('DD/MMM/YYYY')}
-            colorLabel="#FF004C"
+            colorLabel="#E0425D"
           />
 
           <StyledSpacer height="10px" />
           <TextLabelContent
             label="Created:"
             content={moment(detailUser.created).format('DD/MMM/YYYY')}
-            colorLabel="#FF004C"
+            colorLabel="#E0425D"
           />
 
           <StyledSpacer height="40px" />
@@ -252,21 +258,25 @@ export const Penalties = () => {
         <TableComponent
           title="Penalties"
           subtitle={
-            <ButtonComponent
-              background={defaultColors.green}
-              color="#fff"
-              width="90px"
-              height="40px"
-              margin="0"
-              click={() => setCreate(prev => !prev)}
-            >
-              Create
-            </ButtonComponent>
+            role === '4' || role === '6' ? (
+              <ButtonComponent
+                background={defaultColors.green}
+                color="#fff"
+                width="90px"
+                height="40px"
+                margin="0"
+                click={() => setCreate(prev => !prev)}
+              >
+                Create
+              </ButtonComponent>
+            ) : (
+              `Total: ${penalties.length}`
+            )
           }
-          titleColor="#FF004C"
+          titleColor="#E0425D"
           tableheader={tableheader}
         >
-          {loading && <LoadingComponent color="#FF004C" />}
+          {loading && <LoadingComponent color="#E0425D" />}
           {(penalties.length &&
             penalties.map(
               ({
@@ -290,12 +300,13 @@ export const Penalties = () => {
                     lastName,
                     conclusion,
                     reason,
-                    created
+                    created,
+                    active
                   )}
                 </StyledCard>
               )
             )) ||
-            (!loading && <NoDataComponent color="#FF004C" />)}
+            (!loading && <NoDataComponent color="#E0425D" />)}
         </TableComponent>
       )}
       {create && (

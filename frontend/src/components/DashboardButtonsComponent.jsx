@@ -20,17 +20,24 @@ export const DashboardButtonsComponent = ({ role, status }) => {
           </ButtonComponent>
           <ButtonComponent
             to={studentRoute[1].path}
-            background="#4F3C75"
+            background="#A1C010"
             width="300px"
           >
             My Assistance
           </ButtonComponent>
           <ButtonComponent
             to={studentRoute[2].path}
-            background="#FB7140"
+            background="#4F3C75"
             width="300px"
           >
             My Permissions
+          </ButtonComponent>
+          <ButtonComponent
+            to={studentRoute[3].path}
+            background="#E0425D"
+            width="300px"
+          >
+            My Penalizations
           </ButtonComponent>
         </>
       )}

@@ -14,10 +14,13 @@ class DataStateServiceController extends Controller
 
     private function updateWeekendStatus($auth_user){
 
-        $exist = \App\Weekend::select()->where([['user_code',$auth_user->code,['state','in process']]])->exists();
-        $weekendModel = \App\Weekend::select()->where([['user_code',$auth_user->code,['state','in process']]])->get()->first();
+        $exist = \App\Weekend::select()->where([['user_code',$auth_user->code],['state','in process']])->exists();
+        $weekendModel = \App\Weekend::select()->where([['user_code',$auth_user->code],['state','in process']])->get()->first();
+
+
         if($exist){
             $mdl = \App\Weekend::findOrFail($weekendModel['id']);
+           
             if($weekendModel['state'] == 'in process'){
 
                 if($weekendModel['vicerector']=='approved' && $weekendModel['preceptor']=='approved'){ //Check requirements
@@ -25,8 +28,8 @@ class DataStateServiceController extends Controller
                     $mdl->update($data);
                 }
                 else if( $weekendModel['vicerector']=='rejected' && $weekendModel['preceptor']='rejected' ){
-                        $data['state'] = 'rejected';
-                        $mdl->update($data);
+                    $data['state'] = 'rejected';
+                    $mdl->update($data);
                 }
             }
         }
@@ -134,7 +137,7 @@ class DataStateServiceController extends Controller
             $p_mdl = \App\Penalty::findOrFail($active['id']);
 
             if(date('Y-m-d')==$active->conclusion){
-               
+
                 $p_mdl->update(['active'=>false]);
                 $u_mdl->update(['status'=>'in']);
             }

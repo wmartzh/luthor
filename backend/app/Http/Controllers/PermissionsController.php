@@ -99,7 +99,7 @@ class PermissionsController extends Controller
                         $query->select('code','first_name','last_name',);
 
                     }])
-                    //->where('out_date_time',date('Y-m-d'))
+                    ->where('out_date_time',date('Y-m-d'))
                     ->get();
 
                     return response(['data'=> ['normal'=> $normal,'weekend'=> $weekend]]);

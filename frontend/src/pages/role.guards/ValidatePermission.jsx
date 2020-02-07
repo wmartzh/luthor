@@ -165,8 +165,7 @@ export const ValidatePermission = () => {
                 state !== 'rejected' &&
                 state !== 'deprecated' &&
                 state !== 'in process' &&
-                status !== 'deprecated' &&
-                status !== 'rejected' ? (
+                status !== 'deprecated' ? (
                 <StyledCard
                   width="100%"
                   flexDirection="column"

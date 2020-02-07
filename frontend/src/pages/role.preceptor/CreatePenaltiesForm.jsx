@@ -30,7 +30,7 @@ export const CreatePenaltiesForm = ({
   const [students, setStudents] = useState([])
 
   const inputLabel = useRef(null)
-  const [labelWidth, setLabelWidth] = React.useState(0)
+  const [labelWidth, setLabelWidth] = useState(0)
 
   const fetchData = async () => {
     try {
@@ -194,7 +194,7 @@ export const CreatePenaltiesForm = ({
         )}
         {edit && (
           <ButtonComponent
-            click={deleteHandler}
+            click={submitHandler}
             background={defaultColors.red}
             width="360px"
             disable={isEmpty}
@@ -202,14 +202,16 @@ export const CreatePenaltiesForm = ({
             Disable
           </ButtonComponent>
         )}
-        <ButtonComponent
-          click={submitHandler}
-          background={edit ? defaultColors.green : '#FBB13C'}
-          width="360px"
-          disable={isEmpty}
-        >
-          {edit ? 'Update' : 'Create'}
-        </ButtonComponent>
+        {!edit && (
+          <ButtonComponent
+            click={submitHandler}
+            background={edit ? defaultColors.green : '#FBB13C'}
+            width="360px"
+            disable={isEmpty}
+          >
+            {edit ? 'Update' : 'Create'}
+          </ButtonComponent>
+        )}
       </StyledCard>
     </>
   )
