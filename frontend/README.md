@@ -1,17 +1,7 @@
 # Project Luthor
 
 # Futures changes 
-* the state of the permission chage with
-* panel de permissio especial para preceptor
-  - lo mismo, codigo de usuario.
-* panel para usuario inactivos.
-* eventstake 
-* repeticio
-  - events page
-* permission update status
-* get permission
-* penalties btn change disable permission
-
+- assistance/filter/event/:eventId
 
 # TODO
 * validate user register

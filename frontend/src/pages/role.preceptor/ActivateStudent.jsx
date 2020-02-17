@@ -22,62 +22,25 @@ import { defaultColors } from '../../constants/statusColor'
 import { NoDataComponent } from '../../components/NoDataComponent'
 import { LoadingComponent } from '../../components/LoadingComponent'
 import { ButtonComponent } from '../../components/ButtonComponent'
-import { axios } from '../../plugins/axios'
 import { StyledBackButton } from '../../styles/StyledBackButton'
 import { StyledTypography } from '../../styles/StyledTypography'
 import { TextLabelContent } from '../../components/TextLabelContent'
 
-export const StudentList = () => {
-  const [blockAll, setBlockAll] = useState(false)
-
+export const ActivateStudent = () => {
   const [expanded, setExpanded] = useState(false)
   const [students, setStudents] = useState([])
   const [selected, setSelected] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  const test = useCallback(() => {
-    let block = []
-    let result
-    students.map(student => {
-      student['status'] === 'penalized' ? block.push(true) : block.push(false)
-    })
-    for (var i in block) {
-      if (block[i] === true) {
-        result = true
-        break
-      } else {
-        result = false
-        break
-      }
-    }
-    return result
-  }, [students])
-
   const fetchData = () => {
     requestService(
-      API_ROUTES.getStudents.method,
-      API_ROUTES.getStudents.url.base,
+      API_ROUTES.getFilter.method,
+      API_ROUTES.getFilter.url + API_ROUTES.getFilter.params.inactives,
       setStudents,
       setLoading,
       setError
     )
-  }
-
-  // TODO:
-  const penalizedHandler = () => {
-    try {
-      const response = axios({
-        method: API_ROUTES.penalizeUser.method,
-        url: API_ROUTES.penalizeUser.url,
-        data: {}
-      })
-      const { status } = response
-      if (status === 201 || status === 200) {
-      }
-    } catch (err) {
-      console.log(`student list Ln 76 = ${err}`)
-    }
   }
 
   useEffect(() => {
@@ -88,13 +51,6 @@ export const StudentList = () => {
       setError(false)
     }
   }, [])
-
-  useEffect(() => {
-    setBlockAll(test())
-    return () => {
-      setBlockAll(false)
-    }
-  }, [test])
 
   const tableheader = [
     {
@@ -172,13 +128,6 @@ export const StudentList = () => {
             label="Status:"
             content={selected.status}
             colorLabel="#007991"
-            // colorContent={
-            //   selected.status === 'penalized'
-            //     ? defaultColors.red
-            //     : selected.status === 'in'
-            //     ? '#007991'
-            //     : defaultColors.green
-            // }
           />
 
           <TextLabelContent
@@ -199,36 +148,9 @@ export const StudentList = () => {
             colorLabel="#007991"
           />
         </div>
-        {/* TODO: */}
-        {/* <StyledSpacer height="40px" /> */}
-        {/* <ButtonComponent
-          background={defaultColors.red}
-          width="360px"
-          height="40px"
-          margin="0"
-          click={() => penalizedHandler()}
-        >
-          Penalize
-        </ButtonComponent> */}
       </StyledCard>
     </>
   )
-
-  const blockerHandler = async () => {
-    try {
-      const response = await axios({
-        method: API_ROUTES.blockAll.method,
-        url: API_ROUTES.blockAll.url,
-        data: { block: blockAll ? '0' : '1' }
-      })
-      // console.log(response)
-      fetchData()
-      // setBlockAll(test())
-    } catch (err) {
-      console.log(err)
-    }
-    setBlockAll(test())
-  }
 
   const tableContent = (code, firstName, lastName, phone, status) => (
     <StyledTableBody>
@@ -324,21 +246,10 @@ export const StudentList = () => {
       <Navigation />
       {!selected && (
         <TableComponent
-          title="Students"
+          title="Inactive Students"
           titleColor="#007991"
           tableheader={tableheader}
-          subtitle={
-            <ButtonComponent
-              background={blockAll ? defaultColors.green : defaultColors.red}
-              color="#fff"
-              width="90px"
-              height="40px"
-              margin="0"
-              click={() => blockerHandler()}
-            >
-              {blockAll ? 'Unlock' : 'Block'}
-            </ButtonComponent>
-          }
+          subtitle={`Total: ${students.length}`}
         >
           {loading && <LoadingComponent color="#007991" />}
           {(students.length &&

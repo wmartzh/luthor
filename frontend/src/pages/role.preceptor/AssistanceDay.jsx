@@ -10,14 +10,12 @@ import {
   StyledTableBody
 } from '../../components/TableComponent'
 import { StyledH2 } from '../../styles/StyledH2'
-import { ButtonComponent } from '../../components/ButtonComponent'
 import { StyledTypography } from '../../styles/StyledTypography'
 import { requestService } from '../../services/requestService'
 import { API_ROUTES } from '../../constants/apiRoutes'
 import { LoadingComponent } from '../../components/LoadingComponent'
 import { StyledCard } from '../../styles/StyledCard'
 import { StyledSpacer } from '../../styles/StyledSpacer'
-import { StyledH1 } from '../../styles/StyledH1'
 import { StyledBackButton } from '../../styles/StyledBackButton'
 import { LinkComponent } from '../../components/LinkComponent'
 import { NoDataComponent } from '../../components/NoDataComponent'
@@ -26,7 +24,6 @@ import { AssistanceButton } from '../../components/AssistenceButton'
 export const AssistanceDay = () => {
   const [expanded, setExpanded] = useState(false)
   const [weekends, setWeekends] = useState(false)
-  const [startPanel, setStartPanel] = useState(true)
   const [assistance, setAssistance] = useState([])
   const [students, setStudents] = useState([])
   const [selectedEvent, setSelectedEvent] = useState('')
