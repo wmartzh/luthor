@@ -1,4 +1,4 @@
-export const devModeStatus = true //? chage to true or false
+export const devModeStatus = false //? chage to true or false
 
 const devModeTokens = {
   studentMale:

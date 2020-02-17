@@ -13,8 +13,7 @@ class AssistanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         try {
 
             $auth_user = Auth::user();
@@ -125,6 +124,71 @@ class AssistanceController extends Controller
         } catch(Exception $e){
             return response(['message'=>'something was wrong'],500);
         }
+    }
+
+    public function filter($param){
+
+        $user_auth = Auth::user();
+
+        switch($param){
+
+            case "today":{
+
+                switch($user_auth->rol_id){
+
+                    case 4:{
+
+                        $data = \App\Assistance::select('id','monitor_id','event_id','status','date','time')
+                        ->where([['intership', $user_auth->intership],['date',date('Y-m-d')]])
+                        ->with(['event'=> function($query){
+                            $query->select('id','title');
+                        }])
+                        ->with(['monitor' => function($query){
+                            $query->select('id','first_name','last_name');
+                        }])
+                        ->orderBy('id','desc')->get();
+
+                        return ResponsesHelper::dataResponse($data);
+
+                    }
+                    case 6:{
+                        $boys = \App\Assistance::select('id','monitor_id','event_id','status','date','time')
+                        ->where([['intership', 'boys'],['date',date('Y-m-d')]])
+                        ->with(['event'=> function($query){
+                            $query->select('id','title');
+                        }])
+                        ->with(['monitor' => function($query){
+                            $query->select('id','first_name','last_name');
+                        }])
+                        ->orderBy('id','desc')->get();
+                        $girls = \App\Assistance::select('id','monitor_id','event_id','status','date','time')
+                        ->where([['intership', 'girls'],['date',date('Y-m-d')]])
+                        ->with(['event'=> function($query){
+                            $query->select('id','title');
+                        }])
+                        ->with(['monitor' => function($query){
+                            $query->select('id','first_name','last_name');
+                        }])
+                        ->orderBy('id','desc')->get();
+
+                        $data =[ $boys,$girls];
+
+                        return ResponsesHelper::dataResponse($data);
+
+                    }
+
+                    default:{
+                        return ResponsesHelper::authError();
+                    }
+                }
+
+            }
+
+            default:{
+                return ResponsesHelper::errorMessage('Parameter not defined');
+            }
+        }
+
     }
 
     public function getByEvent($event){
@@ -333,6 +397,8 @@ class AssistanceController extends Controller
         }
 
     }
+
+
 
     /**
      * Display the specified resource.
