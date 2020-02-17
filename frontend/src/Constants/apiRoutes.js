@@ -11,7 +11,14 @@ export const API_ROUTES = {
   },
   getFilter: {
     method: 'GET',
-    url: '/students/filter'
+    url: '/students/filter',
+    params: {
+      active: '/active',
+      inactives: '/inactives',
+      penalized: '/penalized',
+      out: '/out',
+      indicators: '/indicators'
+    }
   },
   getActualEvent: {
     method: 'GET',
