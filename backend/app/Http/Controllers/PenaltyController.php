@@ -81,6 +81,25 @@ class PenaltyController extends Controller
 
             switch($auth_user->rol_id){
 
+                case 2:{
+
+                    if($auth_user->is_active){
+                        $data  = \App\Penalty::select('user_code','active','reason','created_at','updated_at')->where('user_code',$auth_user->code)->get();
+                        return response(['data'=>$data],200);
+                    }else{
+                        return response(['message'=>'user is not active'],401);
+                    }
+                }
+                case 3:{
+
+                    if($auth_user->is_active){
+                        $data  = \App\Penalty::select('user_code','active','reason','created_at','updated_at')->where('user_code',$auth_user->code)->get();
+                        return response(['data'=>$data],200);
+                    }else{
+                        return response(['message'=>'user is not active'],401);
+                    }
+                }
+
                 case 4:{ //preceptor
                     $data  = \App\Penalty::select('user_code','active','reason','created_at')
                     ->with(['user'=>function($query){

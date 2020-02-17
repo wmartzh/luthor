@@ -352,7 +352,7 @@ export const MyPermissionTable = ({
 
   return (
     <TableComponent
-      title={`My ${change ? 'Weekends' : 'Normal'} Permissions`}
+      title={`My ${change ? 'Weekends' : ''} Permissions`}
       subtitle={
         <>
           <ButtonComponent
