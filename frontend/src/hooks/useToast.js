@@ -10,7 +10,7 @@ export const useToast = () => {
   useEffect(() => {
     if (!toastDisplay) setToastMessage('')
     return () => {
-      setToastMessage('')
+      // setToastMessage('')
     }
   }, [toastDisplay])
 

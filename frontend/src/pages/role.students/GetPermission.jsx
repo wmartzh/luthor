@@ -33,7 +33,7 @@ export const GetPermission = () => {
   const { user, setUser } = useUserValues()
   const { status, intership, role } = user
 
-  const { setMessageToast, setToastDisplay } = useToastValues()
+  const { setToastMessage, setToastDisplay } = useToastValues()
 
   const [error, setError] = useState(false)
   const [type, setType] = useState('')
@@ -83,7 +83,6 @@ export const GetPermission = () => {
         url: url,
         data: data
       })
-      // console.log(request.status)
       if (
         request.data.message === 'User has already permission request' ||
         request.data.message === 'User already has a request in process'
@@ -93,15 +92,15 @@ export const GetPermission = () => {
         setDislableAll(true)
         setError('Time not permitted')
       } else {
-        setMessageToast('Permission created successfully.')
+        setToastMessage('Permission created successfully.')
         setToastDisplay(true)
         history.push(role === '2' || role === '3' ? '/my-permissions' : '/')
       }
-    } catch (error) {
+    } catch (e) {
       const {
         data: { message },
         status
-      } = error.response
+      } = e.response
       if (status === 400 || status === 422 || status === 500) {
         if (
           message === 'User has already permission request' ||
