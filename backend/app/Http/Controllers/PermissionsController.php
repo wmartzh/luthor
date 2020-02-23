@@ -179,15 +179,15 @@ class PermissionsController extends Controller
 
                             //create reg
 
-                            if(strtotime($data['output_date_time'])<strtotime('17:30:00')){
+                            //if(strtotime($data['output_date_time'])>strtotime('17:30:00')){
                                 $data['status'] = 'active';
                                 $data['output_date_time'] = null;
                                 \App\Permissions::create($data);
                                 return response(['response'=> 'Authorized']);
-                            }
-                            else{
-                                return response(['response'=> 'Time not permitted']);
-                            }
+                            // }
+                            // else{
+                            //     return response(['response'=> 'Time not permitted']);
+                            // }
                         }
                         else{
                             return response(['response'=> 'user has already a request']);
