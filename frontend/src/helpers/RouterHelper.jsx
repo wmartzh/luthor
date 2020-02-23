@@ -15,17 +15,30 @@ import { useUserValues } from '../context/UserContext'
 import { rectorRoutes } from '../routes/rectorRoutes'
 import { ToTest } from '../layout/ToTEst'
 import { Register } from '../pages/Register'
+import { ToastComponents } from '../components/ToastComponent'
+import { useToastValues } from '../context/ToastContext'
 
 export const RouterHelper = () => {
   const { user } = useUserValues()
-
-  // useEffect(() => {
-  //   console.log(token)
-  //   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-  // }, [token])
+  const {
+    toastDisplay,
+    setToastDisplay,
+    toastMessage,
+    toastStatus,
+    toastSize
+  } = useToastValues()
 
   return (
     <>
+      {toastDisplay && (
+        <ToastComponents
+          display={setToastDisplay}
+          status={toastStatus}
+          size={toastSize}
+        >
+          {toastMessage}
+        </ToastComponents>
+      )}
       <Route exact path="/login" component={Login} />
       <Route exact path="/register" component={Register} />
       <Route exact path="/test" component={ToTest} />

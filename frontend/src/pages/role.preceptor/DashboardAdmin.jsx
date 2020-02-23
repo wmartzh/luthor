@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 
 import usersIcon from '../../assets/svg/users.svg'
+import archiveIcon from '../../assets/svg/archive.svg'
+import activityIcon from '../../assets/svg/activity.svg'
+import fileTextIcon from '../../assets/svg/file-text.svg'
 import plusCircleIcon from '../../assets/svg/plus-circle.svg'
+import creditCardIcon from '../../assets/svg/credit-card.svg'
 import checkCircleIcon from '../../assets/svg/check-circle.svg'
 
 import userPhoto from '../../assets/img/person_image.jpg'
-import { StyledCard } from '../../styles/StyledCard'
+
 import { StyledSpacer } from '../../styles/StyledSpacer'
 import { StyledAvatar } from '../../styles/StyledAvatar'
 import { StyledContainer } from '../../styles/StyledContainer'
@@ -147,16 +151,28 @@ export const DashboardAdmin = () => {
         </div>
         <div>
           <IcoButtonComponent
+            label="Take Assistance"
+            color="#12B6C6"
+            svg={fileTextIcon}
+            to={preceptorRoutes[6].path}
+          />
+          <IcoButtonComponent
             label="Special Permission"
             color="#FBB13C"
-            svg={plusCircleIcon}
-            to={preceptorRoutes[6].path}
+            svg={creditCardIcon}
+            to={preceptorRoutes[7].path}
           />
           <IcoButtonComponent
             label="Ativate Students"
             color="#007991"
-            svg={usersIcon}
-            to={preceptorRoutes[4].path}
+            svg={activityIcon}
+            to={preceptorRoutes[8].path}
+          />
+          <IcoButtonComponent
+            label="History"
+            color="#A1C010"
+            svg={archiveIcon}
+            to={preceptorRoutes[8].path}
           />
           {/* <IcoButtonComponent
             label="Validate Permissions"

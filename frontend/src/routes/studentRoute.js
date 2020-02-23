@@ -1,7 +1,7 @@
 import { GetPermission } from '../pages/role.students/GetPermission'
 import { MyAssitance } from '../pages/role.students/MyAssistance'
 import { MyPermissions } from '../pages/role.students/MyPermissions'
-import { Penalties } from '../pages/role.preceptor/Penalties'
+import { MyPenalties } from '../pages/role.students/MyPenalties'
 
 export const studentRoute = [
   {
@@ -18,6 +18,6 @@ export const studentRoute = [
   },
   {
     path: '/my-penalizations',
-    component: Penalties
+    component: MyPenalties
   }
 ]

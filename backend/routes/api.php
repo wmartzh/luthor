@@ -71,6 +71,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
         Route::post('/','AssistanceController@store');
         Route::get('/','AssistanceController@index');
         Route::get('/{intership}','AssistanceController@show');
+        Route::get('/filter/{param}','AssistanceController@filter');
         Route::get('/filter/event/{event}','AssistanceController@getByEvent');
 
     });

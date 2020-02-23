@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 
 import ExpandMore from '@material-ui/icons/ExpandMore'
@@ -27,6 +27,7 @@ export const MyPermissionTable = ({
   error
 }) => {
   const [expanded, setExpanded] = useState(false)
+  const [search, setSearch] = useState('')
 
   const tableheaderNormal = [
     {
@@ -97,6 +98,67 @@ export const MyPermissionTable = ({
       color: '#B0A3CC'
     }
   ]
+
+  const searchResult = item => {
+    let result = permission.filter(data => {
+      return data[item].toLowerCase().indexOf(search.toLowerCase()) !== -1
+    })
+    console.log(result)
+    return result ? (
+      <>
+        {(result.length &&
+          result.map(
+            ({
+              id,
+              place,
+              date,
+              status,
+              output_date_time,
+              entry_date_time
+            }) => (
+              <StyledCard
+                width="100%"
+                flexDirection="column"
+                alignItems="start"
+                margin="0 0 16px 0"
+                key={id}
+              >
+                {tableContent(
+                  status,
+                  place,
+                  date,
+                  output_date_time,
+                  entry_date_time
+                )}
+                {tableExpand(date, output_date_time, entry_date_time)}
+              </StyledCard>
+            )
+          )) || (
+          <StyledCard width="100%" flexDirection="column" alignItems="center">
+            <StyledTypography
+              fontSize="14px"
+              fontFamily="Segoe UI"
+              fontWeigth="600"
+              color="#4F3C75"
+            >
+              No found
+            </StyledTypography>
+          </StyledCard>
+        )}
+      </>
+    ) : (
+      <StyledCard width="100%" flexDirection="column" alignItems="center">
+        <StyledTypography
+          fontSize="14px"
+          fontFamily="Segoe UI"
+          fontWeigth="600"
+          color="#4F3C75"
+        >
+          Searching...
+        </StyledTypography>
+      </StyledCard>
+    )
+  }
 
   const tableContent = (status, place, date, out, entry) => (
     <StyledTableBody>
@@ -352,7 +414,9 @@ export const MyPermissionTable = ({
 
   return (
     <TableComponent
-      title={`My ${change ? 'Weekends' : 'Normal'} Permissions`}
+      title={`My ${change ? 'Weekends' : ''} Permissions`}
+      search={setSearch}
+      searchTitle="place"
       subtitle={
         <>
           <ButtonComponent
@@ -370,7 +434,12 @@ export const MyPermissionTable = ({
       titleColor="#4F3C75"
       tableheader={change ? tableheaderWeekend : tableheaderNormal}
     >
-      {change ? weekendDisplayContent() : normalDisplayContent()}
+      {search
+        ? searchResult('place')
+        : change
+        ? weekendDisplayContent()
+        : normalDisplayContent()}
+      {/* {change ? weekendDisplayContent() : normalDisplayContent()} */}
     </TableComponent>
   )
 }

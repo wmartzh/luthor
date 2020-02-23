@@ -13,9 +13,11 @@ import { DashboardButtonsComponent } from '../components/DashboardButtonsCompone
 import { useUserValues } from '../context/UserContext'
 import { statusService } from '../services/statusService'
 import { StyledTypography } from '../styles/StyledTypography'
+import { useToastValues } from '../context/ToastContext'
 
 export const Dashboard = () => {
   const { user, setUser } = useUserValues()
+  const { setToastDisplay, setToastMessage } = useToastValues()
   const { username, role, status, code } = user
 
   return (
@@ -43,10 +45,15 @@ export const Dashboard = () => {
 
         <StyledSpacer height="40px" />
         <ButtonComponent
-          to="/settings"
+          // to="/settings"
           background="#F0F2F0"
           color="#000"
           width="300px"
+          click={() => {
+            console.log('h')
+            setToastDisplay(true)
+            setToastMessage('message!!')
+          }}
         >
           Settings
         </ButtonComponent>

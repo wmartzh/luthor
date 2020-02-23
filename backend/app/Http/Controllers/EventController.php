@@ -229,7 +229,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        $request->validate([
+        $data = $request->validate([
 
             'event_id' => 'nullable',
             'sunday' => 'nullable',

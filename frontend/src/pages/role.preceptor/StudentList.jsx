@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import ExpandMore from '@material-ui/icons/ExpandMore'
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
