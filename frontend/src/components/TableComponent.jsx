@@ -60,7 +60,8 @@ export const TableComponent = ({
   tableheader,
   tableContent,
   search,
-  searchTitle = ''
+  searchTitle = '',
+  displaySearch: searchDisplay = true
 }) => {
   const [displaySearch, setDisplaySearch] = useState(false)
   const StyledTableHeader = styled.div`
@@ -98,13 +99,15 @@ export const TableComponent = ({
           </StyledBackButton>
           {title}
           <StyledSpacer width="12px" />
-          <StyledImageContainer
-            image={searchIcon}
-            height="1.4rem"
-            width="1.4rem"
-            style={{ marginTop: '8px', cursor: 'pointer' }}
-            onClick={() => setDisplaySearch(prev => !prev)}
-          />
+          {searchDisplay && (
+            <StyledImageContainer
+              image={searchIcon}
+              height="1.4rem"
+              width="1.4rem"
+              style={{ marginTop: '8px', cursor: 'pointer' }}
+              onClick={() => setDisplaySearch(prev => !prev)}
+            />
+          )}
         </StyledH1>
         {subtitle && (
           <StyledTypography fontSize="16px" color={titleColor}>
