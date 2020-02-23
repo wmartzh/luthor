@@ -18,4 +18,4 @@ const devModeTokens = {
 }
 
 // ? change the userToken here!
-export const devModeCurrentToken = devModeTokens.preceptorMale
+export const devModeCurrentToken = devModeTokens.studentMale
