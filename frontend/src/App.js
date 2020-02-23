@@ -4,6 +4,7 @@ import { ThemeProvider } from './context/themeColor'
 import { GlobalStyle } from './styles/GlobalStyle'
 import { UserProvider } from './context/UserContext'
 import { RouterHelper } from './helpers/RouterHelper'
+import { ToastProvider } from './context/ToastContext'
 
 export const App = () => {
   return (
@@ -11,7 +12,9 @@ export const App = () => {
       <ThemeProvider>
         <Router>
           <Switch>
-            <RouterHelper />
+            <ToastProvider>
+              <RouterHelper />
+            </ToastProvider>
           </Switch>
         </Router>
         <GlobalStyle />

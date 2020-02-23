@@ -5,4 +5,6 @@ export const StyledImageContainer = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  height: ${props => props.height};
+  width: ${props => props.width};
 `

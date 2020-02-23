@@ -25,14 +25,14 @@ import { LoadingComponent } from '../../components/LoadingComponent'
 import { NoDataComponent } from '../../components/NoDataComponent'
 import { requestService } from '../../services/requestService'
 import { getCurrentToken } from '../../helpers/getCurrentLocalStorage'
+import { StyledTypography } from '../../styles/StyledTypography'
 
 export const MyAssitance = () => {
   const [expanded, setExpanded] = useState(false)
   const [assistance, setAssistance] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-
-  // TODO: memory leak when the page is reloaded
+  const [search, setSearch] = useState('')
 
   const fetchData = () => {
     requestService(
@@ -82,6 +82,62 @@ export const MyAssitance = () => {
       color: '#7ccc5b'
     }
   ]
+
+  const searchResult = item => {
+    let result = assistance.filter(data => {
+      return data[item].title.toLowerCase().indexOf(search.toLowerCase()) !== -1
+    })
+    console.log(result)
+    return result ? (
+      <>
+        {(result.length &&
+          result.map(
+            ({
+              id,
+              time,
+              date,
+              status,
+              event: { title },
+              monitor: { first_name: monitor }
+            }) => (
+              <StyledCard
+                width="100%"
+                flexDirection="column"
+                alignItems="start"
+                margin="0 0 16px 0"
+                key={id}
+              >
+                {tableContent(status, date, title, monitor, time)}
+                {tableExpand(date, monitor, time)}
+              </StyledCard>
+            )
+          )) ||
+          (!loading && (
+            <StyledCard width="100%" flexDirection="column" alignItems="center">
+              <StyledTypography
+                fontSize="14px"
+                fontFamily="Segoe UI"
+                fontWeigth="600"
+                color="#4F3C75"
+              >
+                No found
+              </StyledTypography>
+            </StyledCard>
+          ))}
+      </>
+    ) : (
+      <StyledCard width="100%" flexDirection="column" alignItems="center">
+        <StyledTypography
+          fontSize="14px"
+          fontFamily="Segoe UI"
+          fontWeigth="600"
+          color="#4F3C75"
+        >
+          Searching...
+        </StyledTypography>
+      </StyledCard>
+    )
+  }
 
   const tableContent = (status, date, title, monitor, time) => (
     <StyledTableBody>
@@ -160,39 +216,47 @@ export const MyAssitance = () => {
       </StyledTableItemExpand>
     )
 
+  const displayTable = (
+    <>
+      {(assistance.length !== 0 &&
+        assistance.map(
+          ({
+            id,
+            time,
+            date,
+            status,
+            event: { title },
+            monitor: { first_name: monitor }
+          }) => (
+            <StyledCard
+              width="100%"
+              flexDirection="column"
+              alignItems="start"
+              margin="0 0 16px 0"
+              key={id}
+            >
+              {tableContent(status, date, title, monitor, time)}
+              {tableExpand(date, monitor, time)}
+            </StyledCard>
+          )
+        )) ||
+        (!loading && <NoDataComponent color="#A1C010" />)}
+    </>
+  )
   return (
     <StyledContainer>
       <Navigation />
       <TableComponent
         title="My Assistance"
+        search={setSearch}
+        searchTitle="assistance"
         titleColor="#A1C010"
         tableheader={tableheader}
       >
         {loading && <LoadingComponent color="#A1C010" />}
         {/* TODO: fix no data! */}
-        {(assistance.length !== 0 &&
-          assistance.map(
-            ({
-              id,
-              time,
-              date,
-              status,
-              event: { title },
-              monitor: { first_name: monitor }
-            }) => (
-              <StyledCard
-                width="100%"
-                flexDirection="column"
-                alignItems="start"
-                margin="0 0 16px 0"
-                key={id}
-              >
-                {tableContent(status, date, title, monitor, time)}
-                {tableExpand(date, monitor, time)}
-              </StyledCard>
-            )
-          )) ||
-          (!loading && <NoDataComponent color="#A1C010" />)}
+
+        {search.length === 0 ? displayTable : searchResult('event')}
       </TableComponent>
     </StyledContainer>
   )
