@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 
 import { Navigation } from '../../layout/Navigation'
 import { StyledContainer } from '../../styles/StyledContainer'
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import {
   StyledTableItem,
   TableComponent,
@@ -10,125 +9,146 @@ import {
   StyledTableBody
 } from '../../components/TableComponent'
 import { StyledH2 } from '../../styles/StyledH2'
+import { ButtonComponent } from '../../components/ButtonComponent'
 import { StyledTypography } from '../../styles/StyledTypography'
 import { requestService } from '../../services/requestService'
 import { API_ROUTES } from '../../constants/apiRoutes'
 import { LoadingComponent } from '../../components/LoadingComponent'
-import { StyledCard } from '../../styles/StyledCard'
-import { StyledSpacer } from '../../styles/StyledSpacer'
-import { StyledBackButton } from '../../styles/StyledBackButton'
-import { LinkComponent } from '../../components/LinkComponent'
 import { NoDataComponent } from '../../components/NoDataComponent'
-import { AssistanceButton } from '../../components/AssistenceButton'
+import { StyledCard } from '../../styles/StyledCard'
+import { StyledSpan } from '../../styles/StyledSpan'
+import { userStatusColor } from '../../constants/statusColor'
 
 export const AssistanceDay = () => {
   const [expanded, setExpanded] = useState(false)
   const [weekends, setWeekends] = useState(false)
-  const [assistance, setAssistance] = useState([])
+
   const [students, setStudents] = useState([])
-  const [selectedEvent, setSelectedEvent] = useState('')
+  const [selected, setSelected] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  useEffect(() => {
+  const fetchData = () => {
     requestService(
-      API_ROUTES.getStudents.method,
-      API_ROUTES.getStudents.url.base,
+      API_ROUTES.getFilter.method,
+      `${API_ROUTES.getFilter.url}/out`,
       setStudents,
       setLoading,
       setError
     )
-    requestService(
-      API_ROUTES.getActualEvent.method,
-      API_ROUTES.getActualEvent.url,
-      setAssistance,
-      setLoading,
-      setError
-    )
+  }
+
+  useEffect(() => {
+    fetchData()
+    // return () => {
+    //   setStudents([])
+    //   setLoading(false)
+    //   setError(false)
+    // }
   }, [])
 
-  const tableheader = [
+  const tableHeader = [
     {
-      size: '160px',
-      title: 'Code',
+      size: '74px',
+      title: 'Status',
       display: true,
       displayMd: true,
       displaySm: true,
-      color: '#77B0C8'
+      color: '#7ccc5b'
     },
     {
-      size: '300px',
-      title: 'Name',
-      display: true,
-      displayMd: true,
-      displaySm: true,
-      color: '#77B0C8'
-    },
-    {
-      size: '140px',
+      size: '330px',
       title: 'Event',
+      display: true,
+      displayMd: true,
+      displaySm: true,
+      color: '#7ccc5b'
+    },
+    {
+      size: '200px',
+      title: 'Monitor',
       display: true,
       displayMd: false,
       displaySm: false,
-      color: '#77B0C8'
+      color: '#7ccc5b'
     },
     {
-      size: '100px',
-      title: '',
+      size: '150px',
+      title: 'Date',
       display: true,
       displayMd: true,
-      displaySm: true,
-      color: '#77B0C8'
+      displaySm: false,
+      color: '#7ccc5b'
     }
   ]
 
   const tableContent = (code, firstName, lastName, phone, status) => (
     <StyledTableBody>
       <StyledTableItem
-        width={tableheader[0].size}
-        display={tableheader[0].display ? 'block' : 'none'}
-        displayMd={tableheader[0].displayMd ? 'block' : 'none'}
-        displaySm={tableheader[0].displaySm ? 'block' : 'none'}
+        width={tableHeader[0].size}
+        display={tableHeader[0].display ? 'block' : 'none'}
+        displayMd={tableHeader[0].displayMd ? 'block' : 'none'}
+        displaySm={tableHeader[0].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color={!weekends ? '#12B6C6' : '#A1C010'}>
+        <StyledSpan
+          fontFamily="Segoe UI"
+          fontWeigth="600"
+          color={userStatusColor(status)}
+        >
           {code}
-        </StyledH2>
+        </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
-        width={tableheader[1].size}
-        display={tableheader[1].display ? 'block' : 'none'}
-        displayMd={tableheader[1].displayMd ? 'block' : 'none'}
-        displaySm={tableheader[1].displaySm ? 'block' : 'none'}
+        width={tableHeader[1].size}
+        display={tableHeader[1].display ? 'block' : 'none'}
+        displayMd={tableHeader[1].displayMd ? 'block' : 'none'}
+        displaySm={tableHeader[1].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color={!weekends ? '#12B6C6' : '#A1C010'}>
+        <StyledH2 fontWeigth="600" color="#4F3C75">
           {firstName} {lastName}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
-        width={tableheader[2].size}
-        display={tableheader[2].display ? 'block' : 'none'}
-        displayMd={tableheader[2].displayMd ? 'block' : 'none'}
-        displaySm={tableheader[2].displaySm ? 'block' : 'none'}
+        width={tableHeader[2].size}
+        display={tableHeader[2].display ? 'block' : 'none'}
+        displayMd={tableHeader[2].displayMd ? 'block' : 'none'}
+        displaySm={tableHeader[2].displaySm ? 'block' : 'none'}
       >
-        <StyledH2 fontWeigth="600" color={!weekends ? '#12B6C6' : '#A1C010'}>
-          {selectedEvent.title}
+        <StyledH2 fontWeigth="600" color="#4F3C75">
+          {phone || 'none'}
         </StyledH2>
       </StyledTableItem>
+
       <StyledTableItem
         className="last-item"
-        width={tableheader[3].size}
-        display={tableheader[3].display ? 'block' : 'none'}
-        displayMd={tableheader[3].displayMd ? 'block' : 'none'}
-        displaySm={tableheader[3].displaySm ? 'block' : 'none'}
+        width={tableHeader[3].size}
+        display={tableHeader[3].display ? 'block' : 'none'}
+        displayMd={tableHeader[3].displayMd ? 'block' : 'none'}
+        displaySm={tableHeader[3].displaySm ? 'block' : 'none'}
       >
-        <AssistanceButton code={code} event={selectedEvent.id} />
+        <ButtonComponent
+          background="#4F3C75"
+          width="90px"
+          height="40px"
+          margin="0"
+          click={() =>
+            setSelected({
+              status: `${status.charAt(0).toUpperCase() + status.slice(1)}`,
+              code,
+              firstName,
+              lastName
+            })
+          }
+        >
+          More
+        </ButtonComponent>
       </StyledTableItem>
     </StyledTableBody>
   )
 
   const tableExpand = expanded && (
     <StyledTableItemExpand
-      paddingLerft={tableheader[0].size}
+      paddingLerft={tableHeader[0].size}
       mediaExpand="block"
     >
       <StyledTableItem displayMd="none" displaySm="flex">
@@ -136,7 +156,7 @@ export const AssistanceDay = () => {
           fontSize="14px"
           fontFamily="Segoe UI"
           fontWeigth="600"
-          color="#77B0C8"
+          color="#B0A3CC"
         >
           Location
         </StyledTypography>
@@ -144,7 +164,7 @@ export const AssistanceDay = () => {
           fontSize="16px"
           fontFamily="Segoe UI"
           fontWeigth="600"
-          color={!weekends ? '#12B6C6' : '#A1C010'}
+          color="#4F3C75"
         >
           Automercado
         </StyledTypography>
@@ -155,96 +175,36 @@ export const AssistanceDay = () => {
   return (
     <StyledContainer>
       <Navigation />
-      {!selectedEvent && (
-        <>
-          <StyledSpacer height="54px" />
-          <StyledCard width="400px" flexDirection="column">
-            <StyledBackButton>
-              <LinkComponent to="/">
-                <ArrowBackIosIcon
-                  fontSize="small"
-                  style={{ marginTop: '5px' }}
-                />
-              </LinkComponent>
-            </StyledBackButton>
-            <StyledTypography
-              fontSize="18px"
-              color="#12B6C6"
-              fontWeigth="400"
-              style={{ margin: '7px 0 6px 0' }}
-            >
-              User Details
-            </StyledTypography>
-          </StyledCard>
-          <StyledSpacer height="20px" />
-        </>
-      )}
-      {selectedEvent && (
-        <TableComponent
-          title="Assistance"
-          subtitle={`Total: ${students.length}`}
-          titleColor="#12B6C6"
-          tableheader={tableheader}
-        >
-          {loading && <LoadingComponent color="#12B6C6" />}
-          {(students.length !== 0 &&
-            students.map(
-              ({
-                code,
-                status,
-                first_name: firstName,
-                last_name: lastName,
-                phone_number: phone
-              }) => (
-                <StyledCard
-                  width="100%"
-                  flexDirection="column"
-                  alignItems="start"
-                  margin="0 0 16px 0"
-                  key={code}
-                >
-                  {tableContent(code, firstName, lastName, phone, status)}
-                </StyledCard>
-              )
-            )) ||
-            (!loading && <NoDataComponent color="#12B6C6" />)}
-        </TableComponent>
-      )}
-      {loading ? (
-        <StyledCard width="400px" flexDirection="column" alignItems="center">
-          <StyledTypography
-            fontSize="14px"
-            fontFamily="Segoe UI"
-            fontWeigth="600"
-            color="#12B6C6"
-          >
-            Loading...
-          </StyledTypography>
-        </StyledCard>
-      ) : null}
-      {!selectedEvent &&
-        assistance.map(({ id, title, start_time: time }) => (
-          <div key={id}>
-            <StyledCard
-              width="400px"
-              flexDirection="column"
-              alignItems="start"
-              style={{ cursor: 'pointer' }}
-              onClick={() => setSelectedEvent({ id, title, time })}
-            >
-              <StyledTypography fontSize="14px" color="#12B6C6">
-                Title
-              </StyledTypography>
-              <StyledTypography fontSize="16px">{title}</StyledTypography>
-              <StyledSpacer height="10px" />
-              <StyledTypography fontSize="14px" color="#12B6C6">
-                Time
-              </StyledTypography>
-              <StyledTypography fontSize="16px">{time}</StyledTypography>
-            </StyledCard>
-            <StyledSpacer height="20px" />
-          </div>
-        ))}
+      <TableComponent
+        title="Assistance"
+        subtitle={`Total out: ${students.length}`}
+        titleColor="#4F3C75"
+        tableheader={tableHeader}
+      >
+        {loading && <LoadingComponent color="#4F3C75" />}
+        {(students.length &&
+          students.map(
+            ({
+              code,
+              status,
+              first_name: firstName,
+              last_name: lastName,
+              phone_number: phone
+            }) => (
+              <StyledCard
+                width="100%"
+                flexDirection="column"
+                alignItems="start"
+                margin="0 0 16px 0"
+                key={code}
+              >
+                {tableContent(code, firstName, lastName, phone, status)}
+                {/* {expanded && tableExpand(lastName, phone)} */}
+              </StyledCard>
+            )
+          )) ||
+          (!loading && <NoDataComponent color="#4F3C75" />)}
+      </TableComponent>
     </StyledContainer>
   )
 }

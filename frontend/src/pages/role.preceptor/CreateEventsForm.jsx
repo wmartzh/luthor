@@ -18,6 +18,7 @@ import { StyledBackButton } from '../../styles/StyledBackButton'
 import { StyledTypography } from '../../styles/StyledTypography'
 import { ButtonComponent } from '../../components/ButtonComponent'
 import { HourMinComponent } from '../../components/HourMinComponent'
+import { useToastValues } from '../../context/ToastContext'
 
 export const CreateEventsForm = ({
   id,
@@ -37,6 +38,8 @@ export const CreateEventsForm = ({
   setToleranceLate,
   fetchData
 }) => {
+  const { setToastDisplay, setToastMessage } = useToastValues()
+
   const [days, setDays] = useState(
     weeks || {
       sunday: false,
@@ -105,7 +108,8 @@ export const CreateEventsForm = ({
     })
     if (response.status === 201 || response.status === 200) {
       cancel()
-      // setToast('Event was created successfully!')
+      setToastDisplay(true)
+      setToastMessage('The event was created successfully!')
       fetchData()
     }
   }
@@ -116,6 +120,8 @@ export const CreateEventsForm = ({
     })
     if (response.status === 200) {
       cancel()
+      setToastDisplay(true)
+      setToastMessage('The event was deleted successfully!')
       fetchData()
     }
   }
