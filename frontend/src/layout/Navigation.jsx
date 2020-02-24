@@ -4,9 +4,6 @@ import styled from 'styled-components'
 
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { LogoLarge } from '../components/LogoLarge'
-import { LinkComponent } from '../components/LinkComponent'
-import { axios } from '../plugins/axios'
-import { API_ROUTES } from '../constants/apiRoutes'
 import { logoutService } from '../services/authService'
 
 export const Navigation = () => {

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
 
 import { TableComponent } from '../../../components/TableComponent'
+import { NoDataComponent } from '../../../components/NoDataComponent'
+import { LoadingComponent } from '../../../components/LoadingComponent'
 
 import { API_ROUTES } from '../../../constants/apiRoutes'
 
-import { StyledCard } from '../../../styles/StyledCard'
 import { Navigation } from '../../../layout/Navigation'
-import { StyledContainer } from '../../../styles/StyledContainer'
-import { LoadingComponent } from '../../../components/LoadingComponent'
-import { NoDataComponent } from '../../../components/NoDataComponent'
+import { StyledCard } from '../../../styles/StyledCard'
 import { requestService } from '../../../services/requestService'
+import { StyledContainer } from '../../../styles/StyledContainer'
 import { StyledTypography } from '../../../styles/StyledTypography'
 
 import { tableHeader } from './tableHeader'
@@ -41,7 +41,6 @@ export const MyAssistance = () => {
     let result = assistance.filter(data => {
       return data[item].title.toLowerCase().indexOf(search.toLowerCase()) !== -1
     })
-    console.log(result)
     return result ? (
       <>
         {(result.length &&
@@ -134,8 +133,6 @@ export const MyAssistance = () => {
         tableheader={tableHeader}
       >
         {loading && <LoadingComponent color="#A1C010" />}
-        {/* TODO: fix no data! */}
-
         {search.length === 0 ? displayTable : searchResult('event')}
       </TableComponent>
     </StyledContainer>
