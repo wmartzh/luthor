@@ -1,5 +1,5 @@
 import { GetPermission } from '../pages/role.students/GetPermission'
-import { MyAssitance } from '../pages/role.students/MyAssistance'
+import { MyAssistance } from '../pages/role.students/MyAssistance'
 import { MyPermissions } from '../pages/role.students/MyPermissions'
 import { AssistanceDay } from '../pages/role.preceptor/AssistanceDay'
 
@@ -10,7 +10,7 @@ export const monitorRoute = [
   },
   {
     path: '/my-assistance',
-    component: MyAssitance
+    component: MyAssistance
   },
   {
     path: '/my-permissions',
@@ -22,6 +22,6 @@ export const monitorRoute = [
   },
   {
     path: '/alert',
-    component: MyAssitance
+    component: MyAssistance
   }
 ]

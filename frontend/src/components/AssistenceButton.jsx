@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { ButtonComponent } from './ButtonComponent'
-import { requestService } from '../services/requestService'
 import { API_ROUTES } from '../constants/apiRoutes'
 import { axios } from '../plugins/axios'
 
@@ -8,7 +7,6 @@ export const AssistanceButton = ({ code, event }) => {
   const [sended, setSended] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  const [data, setData] = useState([])
 
   const submitHandler = async () => {
     setLoading(false)

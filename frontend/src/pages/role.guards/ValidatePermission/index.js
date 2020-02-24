@@ -1,0 +1,1 @@
+export { ValidatePermission } from './ValidatePermission'

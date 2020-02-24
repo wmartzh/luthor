@@ -1,0 +1,1 @@
+export { MyAssistance } from './MyAssistance'
