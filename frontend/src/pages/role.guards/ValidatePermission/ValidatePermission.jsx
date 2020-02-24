@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 
-import ExpandMore from '@material-ui/icons/ExpandMore'
-
 import { TableComponent } from '../../../components/TableComponent'
 
 import { Navigation } from '../../../layout/Navigation'
