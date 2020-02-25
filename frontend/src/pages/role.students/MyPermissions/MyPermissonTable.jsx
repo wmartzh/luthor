@@ -154,6 +154,7 @@ export const MyPermissionTable = ({
       title={`My ${change ? 'Weekends' : ''} Permissions`}
       search={setSearch}
       searchTitle="place"
+      displaySearch={!change}
       subtitle={
         <>
           <ButtonComponent
