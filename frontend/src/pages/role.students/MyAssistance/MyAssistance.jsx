@@ -25,8 +25,8 @@ export const MyAssistance = () => {
 
   const fetchData = () => {
     requestService(
-      API_ROUTES.getAssistance.method,
-      API_ROUTES.getAssistance.url,
+      API_ROUTES.getTodayAssistance.method,
+      API_ROUTES.getTodayAssistance.url,
       setAssistance,
       setLoading,
       setError
