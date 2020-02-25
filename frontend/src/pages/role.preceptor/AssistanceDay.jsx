@@ -30,8 +30,8 @@ export const AssistanceDay = () => {
 
   const fetchData = () => {
     requestService(
-      API_ROUTES.getFilter.method,
-      `${API_ROUTES.getFilter.url}/out`,
+      API_ROUTES.getTodayAssistance.method,
+      API_ROUTES.getTodayAssistance.url,
       setStudents,
       setLoading,
       setError

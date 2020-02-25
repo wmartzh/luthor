@@ -1,11 +1,11 @@
 export const tableHeader = [
   {
-    size: '80px',
+    size: '100px',
     title: 'Code',
     display: true,
     displayMd: true,
     displaySm: true,
-    color: '#77B0C8'
+    color: '#00A7CA'
   },
   {
     size: '320px',
@@ -13,22 +13,22 @@ export const tableHeader = [
     display: true,
     displayMd: true,
     displaySm: true,
-    color: '#77B0C8'
+    color: '#00A7CA'
   },
   {
-    size: '200px',
-    title: 'Event',
+    size: '180px',
+    title: 'Phone',
+    display: true,
+    displayMd: true,
+    displaySm: false,
+    color: '#00A7CA'
+  },
+  {
+    size: '90px',
+    title: '',
     display: true,
     displayMd: false,
     displaySm: false,
-    color: '#77B0C8'
-  },
-  {
-    size: '100px',
-    title: '',
-    display: true,
-    displayMd: true,
-    displaySm: true,
-    color: '#77B0C8'
+    color: '#00A7CA'
   }
 ]
