@@ -2,6 +2,8 @@
 
 # Futures changes 
 - assistance/filter/event/:eventId
+Assistance by day
+- assistance/filter/today
 
 # TODO
 * validate user register

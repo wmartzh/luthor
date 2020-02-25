@@ -36,6 +36,14 @@ export const API_ROUTES = {
     method: 'GET',
     url: '/assistance'
   },
+  getFilterAssistance: {
+    method: 'GET',
+    url: '/assistance/filter/event'
+  },
+  getTodayAssistance: {
+    method: 'GET',
+    url: '/assistance/filter/today'
+  },
   checkAssistance: {
     method: 'POST',
     url: '/assistance'
