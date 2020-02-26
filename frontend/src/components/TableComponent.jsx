@@ -61,7 +61,8 @@ export const TableComponent = ({
   tableContent,
   search,
   searchTitle = '',
-  displaySearch: searchDisplay = true
+  displaySearch: searchDisplay = true,
+  to = '/'
 }) => {
   const [displaySearch, setDisplaySearch] = useState(false)
   const StyledTableHeader = styled.div`
@@ -93,7 +94,7 @@ export const TableComponent = ({
           style={{ marginLeft: '40px', position: 'relative', display: 'flex' }}
         >
           <StyledBackButton top="2.5px" left="-30px">
-            <LinkComponent to="/">
+            <LinkComponent to={to}>
               <ArrowBackIosIcon fontSize="small" />
             </LinkComponent>
           </StyledBackButton>

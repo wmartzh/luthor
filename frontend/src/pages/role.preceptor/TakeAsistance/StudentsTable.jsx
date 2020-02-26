@@ -78,6 +78,7 @@ export const StudentsTable = ({ selectedEvent }) => {
       subtitle={`Total: ${students.length}`}
       titleColor="#12B6C6"
       tableheader={tableHeader}
+      to="take-assistance"
     >
       {loading && <LoadingComponent color="#12B6C6" />}
       {(students.length !== 0 && displayStudent()) ||
