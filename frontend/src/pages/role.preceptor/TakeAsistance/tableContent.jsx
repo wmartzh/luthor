@@ -8,7 +8,7 @@ import { StyledH2 } from '../../../styles/StyledH2'
 import { AssistanceButton } from './AssistenceButton'
 
 export const tableContent = (
-  { code, firstName, lastName, phone, status },
+  { code, firstName, lastName, phone, status, present },
   selectedEvent
 ) => (
   <StyledTableBody>
@@ -49,7 +49,11 @@ export const tableContent = (
       displayMd={tableHeader[3].displayMd ? 'block' : 'none'}
       displaySm={tableHeader[3].displaySm ? 'block' : 'none'}
     >
-      <AssistanceButton code={code} event={selectedEvent.id} />
+      <AssistanceButton
+        code={code}
+        event={selectedEvent.id}
+        disable={present}
+      />
     </StyledTableItem>
   </StyledTableBody>
 )

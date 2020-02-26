@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { ButtonComponent } from '../../../components/ButtonComponent'
 import { API_ROUTES } from '../../../constants/apiRoutes'
 import { axios } from '../../../plugins/axios'
 
-export const AssistanceButton = ({ code, event }) => {
+export const AssistanceButton = ({ code, event, disable }) => {
   const [sended, setSended] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-
-  useEffect(() => {}, [])
 
   const submitHandler = async () => {
     setLoading(true)
@@ -34,7 +32,7 @@ export const AssistanceButton = ({ code, event }) => {
       width="100px"
       height="40px"
       margin="0"
-      disable={sended}
+      disable={disable || sended}
       click={submitHandler}
     >
       {loading ? '...' : !sended ? 'Validate' : error ? 'Error' : ' Valid'}

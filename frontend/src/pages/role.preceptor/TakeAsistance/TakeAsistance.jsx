@@ -3,39 +3,28 @@ import React, { useState, useEffect } from 'react'
 import { Navigation } from '../../../layout/Navigation'
 import { StyledContainer } from '../../../styles/StyledContainer'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
-import { TableComponent } from '../../../components/TableComponent'
 import { StyledTypography } from '../../../styles/StyledTypography'
 import { requestService } from '../../../services/requestService'
 import { API_ROUTES } from '../../../constants/apiRoutes'
-import { LoadingComponent } from '../../../components/LoadingComponent'
 import { StyledCard } from '../../../styles/StyledCard'
 import { StyledSpacer } from '../../../styles/StyledSpacer'
 import { StyledBackButton } from '../../../styles/StyledBackButton'
 import { LinkComponent } from '../../../components/LinkComponent'
-import { NoDataComponent } from '../../../components/NoDataComponent'
 
-import { tableHeader } from './tableHeader'
-import { tableContent } from './tableContent'
+import { StudentsTable } from './StudentsTable'
 
 export const TakeAsistance = () => {
-  const [assistance, setAssistance] = useState([])
-  const [students, setStudents] = useState([])
+  const [event, setEvent] = useState([])
+
   const [selectedEvent, setSelectedEvent] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
   useEffect(() => {
     requestService(
-      API_ROUTES.getStudents.method,
-      API_ROUTES.getStudents.url.base,
-      setStudents,
-      setLoading,
-      setError
-    )
-    requestService(
       API_ROUTES.getActualEvent.method,
       API_ROUTES.getActualEvent.url,
-      setAssistance,
+      setEvent,
       setLoading,
       setError
     )
@@ -68,40 +57,7 @@ export const TakeAsistance = () => {
           <StyledSpacer height="20px" />
         </>
       )}
-      {selectedEvent && (
-        <TableComponent
-          title="Assistance"
-          subtitle={`Total: ${students.length}`}
-          titleColor="#12B6C6"
-          tableheader={tableHeader}
-        >
-          {loading && <LoadingComponent color="#12B6C6" />}
-          {(students.length !== 0 &&
-            students.map(
-              ({
-                code,
-                status,
-                first_name: firstName,
-                last_name: lastName,
-                phone_number: phone
-              }) => (
-                <StyledCard
-                  width="100%"
-                  flexDirection="column"
-                  alignItems="start"
-                  margin="0 0 16px 0"
-                  key={code}
-                >
-                  {tableContent(
-                    { code, firstName, lastName, phone, status },
-                    selectedEvent
-                  )}
-                </StyledCard>
-              )
-            )) ||
-            (!loading && <NoDataComponent color="#12B6C6" />)}
-        </TableComponent>
-      )}
+      {selectedEvent && <StudentsTable selectedEvent={selectedEvent} />}
       {loading ? (
         <StyledCard width="400px" flexDirection="column" alignItems="center">
           <StyledTypography
@@ -115,7 +71,7 @@ export const TakeAsistance = () => {
         </StyledCard>
       ) : null}
       {!selectedEvent &&
-        assistance.map(({ id, title, start_time: time }) => (
+        event.map(({ id, title, start_time: time }) => (
           <div key={id}>
             <StyledCard
               width="400px"
