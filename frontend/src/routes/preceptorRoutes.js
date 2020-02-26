@@ -6,6 +6,7 @@ import { StudentList } from '../pages/role.preceptor/StudentList'
 import { ValidateWeekends } from '../pages/role.preceptor/ValidateWeekends'
 import { GetPermission } from '../pages/role.students/GetPermission'
 import { ActivateStudent } from '../pages/role.preceptor/ActivateStudent'
+import { TakeAsistance } from '../pages/role.preceptor/TakeAsistance'
 
 export const preceptorRoutes = [
   {
@@ -34,7 +35,7 @@ export const preceptorRoutes = [
   },
   {
     path: '/take-assistance',
-    component: AssistanceDay
+    component: TakeAsistance
   },
   {
     path: '/special-permission',

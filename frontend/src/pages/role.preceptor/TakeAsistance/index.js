@@ -1,0 +1,1 @@
+export { TakeAsistance } from './TakeAsistance'
