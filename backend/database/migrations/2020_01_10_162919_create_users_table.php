@@ -29,11 +29,15 @@ class CreateUsersTable extends Migration
             $table->boolean('is_active')->default(false);
             $table->enum('status',['out','in','penalized'])->default('in');
             $table->enum('intership',['boys','girls','no-def'])->default('no-def');
+            $table->boolean('has_job')->default(false);
             $table->timestamps();
+
+
 
             /// Relations
             $table->foreign('rol_id')->references('id')->on('roles')
             ->onDelete('cascade');
+
 
         });
     }
@@ -48,7 +52,8 @@ class CreateUsersTable extends Migration
         Schema::table('users', function(Blueprint  $table){
             $table->dropForeign(['rol_id']);
             $table->dropColumn('rol_id');
-          
+
+
         });
         Schema::dropIfExists('users');
     }

@@ -27,7 +27,7 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
 
     Route::get('status-test','DataStateServiceController@test');
     Route::get('user-status','DataStateServiceController@getStatus');
-
+    Route::put('add-job/{user_id}', 'UserController@addJob');
     ///Students
     Route::group(['prefix'  =>  '/students'], function () { //penalties-actives
         Route::get('/','UserController@index');
