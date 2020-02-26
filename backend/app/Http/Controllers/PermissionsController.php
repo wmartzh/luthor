@@ -36,15 +36,15 @@ class PermissionsController extends Controller
                         'code_user',
                         'status',
                         'output_date_time',
-                        'place',
+                        'place'
                     )
                     ->with(['user'=> function($query){
                         $query->select('code','first_name','last_name','status');
-                    }])
+                        }])
                     ->where('intership',$user_auth->intership)
                     ->orderBy('code_user','asc')
-                    ->get()
-                    ;
+                    ->get();
+
                     return response(['data'=>$data],200);
 
                 }else if($user_auth->rol_id == 6){ // vicerector accesss
@@ -89,14 +89,14 @@ class PermissionsController extends Controller
                         'check_exit'
                     )
                     ->with(['user'=> function($query){
-                        $query->select('code','profile_image','first_name','last_name',);
+                        $query->select('code','profile_image','first_name','last_name');
                     }])
                     ->orderBy('code_user','asc')
                     ->get();
 
                     $weekend= \App\Weekend::select('user_code','state','check_exit')
                     ->with(['user' => function($query){
-                        $query->select('code','first_name','last_name',);
+                        $query->select('code','first_name','last_name');
 
                     }])
                     ->where('out_date_time',date('Y-m-d'))

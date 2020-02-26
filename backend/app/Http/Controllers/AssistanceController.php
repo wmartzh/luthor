@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Assistance;
 use App\Helpers\ResponsesHelper;
+use App\Helpers\TakeAssistanceHelper;
 class AssistanceController extends Controller
 {
     /**
@@ -200,7 +201,7 @@ class AssistanceController extends Controller
                 if($auth_user->is_active){
 
                     $data = \App\Assistance::select('id','monitor_id','event_id','status','date','time')
-                    ->where([['user_code',$auth_user->code],['event',$event]])
+                    ->where([['user_code',$auth_user->code],['event_id',$event]])
                     ->with(['event'=> function($query){
                         $query->select('id','title');
                     }])
@@ -221,7 +222,7 @@ class AssistanceController extends Controller
                 if($auth_user->is_active){
 
                     $data = \App\Assistance::select('id','monitor_id','event_id','status','date','time')
-                    ->where([['user_code',$auth_user->code],['event',$event]])
+                    ->where([['user_code',$auth_user->code],['event_id',$event]])
                     ->with(['event'=> function($query){
                         $query->select('id','title');
                     }])
@@ -242,7 +243,6 @@ class AssistanceController extends Controller
             case 4:{ ##Preceptor
 
                 $data = \App\Assistance::select('user_code','monitor_id','event_id','status','date','time')
-
                 ->with(['user'=>function($query){
                     $query->select('code','first_name','last_name');
                 }])
@@ -255,9 +255,10 @@ class AssistanceController extends Controller
                 ->where([['event_id',$event],['intership',$auth_user->intership]])
                 ->orderBy('date','desc')->get();
 
-                return response(['data'=>$data],200);
+                return ResponsesHelper::dataResponse($data);
 
             }
+
             case 6:{ ## Vicerector
 
                 $boys = \App\Assistance::select('user_code','monitor_id','event_id','status','date','time')
@@ -325,79 +326,97 @@ class AssistanceController extends Controller
         ]);
         try {
 
+            date_default_timezone_set("America/Costa_Rica");
+
             //Check if user can access
             $user = Auth::user();
+            $roles = [
+                'monitor' => 3,
+                'preceptor' => 4
+            ];
+            $event = \App\Event::select()->where('id',$data['event_id'])->get()->first();
+            $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();
+            $present =  TakeAssistanceHelper::setPresentTime($event);
+            $late =  TakeAssistanceHelper::setLateTime($event);
+            $data['monitor_id'] = $user->id;
+            $data['intership'] = $user->intership;
+            $data['time'] =   date('H:i:s');
+            $data['date'] = date("Y-m-d");
 
 
-            if($user->rol_id ==3 || $user->rol_id == 4 ){
+            switch($user->rol_id){
+                case $roles['monitor']:{
 
+                    if( $intership['intership'] == $user->intership){
+                        if(!TakeAssistanceHelper::assistancesExists($data)){
+                            if(strtotime($data['time']) <= $present){
+                                $data['status']='present';
+                                $data['intership'] = $user->intership; //intership control
+                                \App\Assistance::create($data);
+                                return ResponsesHelper::messageResponse('Assistance checked');
 
-                $data['monitor_id']= $user->id; // get user that check the assistance
-
-                date_default_timezone_set("America/Costa_Rica");
-                $data['time'] =   date('H:i:s');
-                 $event = \App\Event::select()->where('id',$data['event_id'])->get()->first();
-
-                $intership = \App\User::select('intership')->where('code',$data['user_code'])->get()->first();
-
-                $present_time = strtotime($event['tolerance_present']); //Get Tolerance time
-                $present = date("i",$present_time) * 60; // get raw value from extra time
-
-                $late_time = strtotime($event['tolerance_late']);
-                $late = date("i",$late_time) * 60;
-
-                $time_check = strtotime($event['start_time'])+$present;
-                $time_check2 = strtotime($event['start_time'])+ $late;
-
-
-                $data['date'] = date("Y-m-d");
-                $data['intership'] = $user->intership; //intership control
-
-                /// use when the user was checked
-                $same_assistance = \App\Assistance::select()->where([['user_code',$data['user_code']],['date',$data['date']],['event_id',$data['event_id']]])->exists();
-
-
-                if($intership['intership'] == $user->intership){ //intership control
-
-                    if($same_assistance == false){ //assistance check
-                        if(strtotime($data['time']) <= $time_check){
-                            $data['status']='present';
-                            $data['intership'] = $user->intership; //intership control
-                            \App\Assistance::create($data);
-                            return ResponsesHelper::messageResponse('Assistance checked');
-
-                        }else if(strtotime($data['time']) > $time_check && strtotime($data['time']) < $time_check2){
-                            $data['status']='late';
-                            $data['intership'] = $user->intership; //intership control
-                            \App\Assistance::create($data);
-                            return ResponsesHelper::messageResponse('Assistance checked');
-                        }else {
-                            $data['status']='absent';
-                            $data['intership'] = $user->intership; //intership control
-                            \App\Assistance::create($data);
-                            return ResponsesHelper::messageResponse('Assistance checked');
+                            }else if(strtotime($data['time']) > $present && strtotime($data['time']) < $late){
+                                $data['status']='late';
+                                $data['intership'] = $user->intership; //intership control
+                                \App\Assistance::create($data);
+                                return ResponsesHelper::messageResponse('Assistance checked');
+                            }else {
+                                $data['status']='absent';
+                                $data['intership'] = $user->intership; //intership control
+                                \App\Assistance::create($data);
+                                return ResponsesHelper::messageResponse('Assistance checked');
+                            }
+                        }
+                        else{
+                            return ResponsesHelper::errorMessage("user is already checked");
                         }
                     }else{
-                        return response(['message'=> 'Bad request',
-                                    'errors'=> ['user_code'=>'user is already checked']],400);
+                        return ResponsesHelper::errorMessage("Intership does not match");
                     }
-                }else{
 
-                    return response(['message' => 'Invalid operation',
-                                    'errors' => ['user_code' => 'wrong intership']],401);
+
+
 
                 }
+                case $roles['preceptor']:{
 
-            }else{
-                return response(['errors'=>['user'=>'user unauthorized']],401);
+                    if( $intership['intership'] == $user->intership){
+
+                        if(!TakeAssistanceHelper::assistancesExists($data)){
+                            if(strtotime($data['time']) <= $present){
+                                $data['status']='present';
+                                \App\Assistance::create($data);
+                                return ResponsesHelper::messageResponse('Assistance checked');
+
+                            }else if(strtotime($data['time']) > $present && strtotime($data['time']) < $late){
+                                $data['status']='late';
+                                \App\Assistance::create($data);
+                                return ResponsesHelper::messageResponse('Assistance checked');
+                            }else {
+                                $data['status']='absent';
+                                \App\Assistance::create($data);
+                                return ResponsesHelper::messageResponse('Assistance checked');
+                            }
+                        }
+                        else{
+                            return ResponsesHelper::errorMessage("user is already checked");
+                        }
+
+                    }else{
+                        return ResponsesHelper::errorMessage("Intership does not match");
+                    }
+                }
+                default:{
+                    return ResponsesHelper::authError();
+                }
             }
+
         } catch (Exception $e) {
 
             return response(['message'=>'something was wrong'],500);
         }
 
     }
-
 
 
     /**
