@@ -17,7 +17,7 @@ export const ToastComponents = ({
 
   const StyledToast = styled.div`
     z-index: 1;
-    position: absolute;
+    position: fixed;
     top: 20px;
     right: 28px;
     min-width: ${size}px;

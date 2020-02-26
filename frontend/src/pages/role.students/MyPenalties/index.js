@@ -1,0 +1,1 @@
+export { MyPenalties } from './MyPenalties'

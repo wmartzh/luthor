@@ -200,7 +200,7 @@ class AssistanceController extends Controller
                 if($auth_user->is_active){
 
                     $data = \App\Assistance::select('id','monitor_id','event_id','status','date','time')
-                    ->where([['user_code',$auth_user->code],['event',$event]])
+                    ->where([['user_code',$auth_user->code],['event_id',$event]])
                     ->with(['event'=> function($query){
                         $query->select('id','title');
                     }])
@@ -221,7 +221,7 @@ class AssistanceController extends Controller
                 if($auth_user->is_active){
 
                     $data = \App\Assistance::select('id','monitor_id','event_id','status','date','time')
-                    ->where([['user_code',$auth_user->code],['event',$event]])
+                    ->where([['user_code',$auth_user->code],['event_id',$event]])
                     ->with(['event'=> function($query){
                         $query->select('id','title');
                     }])
@@ -242,7 +242,7 @@ class AssistanceController extends Controller
             case 4:{ ##Preceptor
 
                 $data = \App\Assistance::select('user_code','monitor_id','event_id','status','date','time')
-                ->where([['intership',$auth_user->intership],])
+
                 ->with(['user'=>function($query){
                     $query->select('code','first_name','last_name');
                 }])
@@ -261,7 +261,7 @@ class AssistanceController extends Controller
             case 6:{ ## Vicerector
 
                 $boys = \App\Assistance::select('user_code','monitor_id','event_id','status','date','time')
-                ->where('intership',$auth_user->intership)
+
                 ->with(['user'=>function($query){
                     $query->select('code','first_name','last_name');
                 }])
@@ -275,7 +275,7 @@ class AssistanceController extends Controller
                 ->orderBy('date','desc')->get();
 
                 $girls = \App\Assistance::select('user_code','monitor_id','event_id','status','date','time')
-                ->where('intership',$auth_user->intership)
+
                 ->with(['user'=>function($query){
                     $query->select('code','first_name','last_name');
                 }])
