@@ -5,12 +5,9 @@ import { StyledContainer } from '../../styles/StyledContainer'
 import {
   StyledTableItem,
   TableComponent,
-  StyledTableItemExpand,
   StyledTableBody
 } from '../../components/TableComponent'
 import { StyledH2 } from '../../styles/StyledH2'
-import { ButtonComponent } from '../../components/ButtonComponent'
-import { StyledTypography } from '../../styles/StyledTypography'
 import { requestService } from '../../services/requestService'
 import { API_ROUTES } from '../../constants/apiRoutes'
 import { LoadingComponent } from '../../components/LoadingComponent'
@@ -20,9 +17,6 @@ import { StyledSpan } from '../../styles/StyledSpan'
 import { userStatusColor } from '../../constants/statusColor'
 
 export const AssistanceDay = () => {
-  const [expanded, setExpanded] = useState(false)
-  const [weekends, setWeekends] = useState(false)
-
   const [students, setStudents] = useState([])
   const [selected, setSelected] = useState('')
   const [loading, setLoading] = useState(false)
@@ -30,8 +24,8 @@ export const AssistanceDay = () => {
 
   const fetchData = () => {
     requestService(
-      API_ROUTES.getFilter.method,
-      `${API_ROUTES.getFilter.url}/out`,
+      API_ROUTES.getTodayAssistance.method,
+      API_ROUTES.getTodayAssistance.url,
       setStudents,
       setLoading,
       setError
@@ -40,11 +34,6 @@ export const AssistanceDay = () => {
 
   useEffect(() => {
     fetchData()
-    // return () => {
-    //   setStudents([])
-    //   setLoading(false)
-    //   setError(false)
-    // }
   }, [])
 
   const tableHeader = [
@@ -66,7 +55,7 @@ export const AssistanceDay = () => {
     },
     {
       size: '200px',
-      title: 'Monitor',
+      title: 'Student',
       display: true,
       displayMd: false,
       displaySm: false,
@@ -74,7 +63,7 @@ export const AssistanceDay = () => {
     },
     {
       size: '150px',
-      title: 'Date',
+      title: 'Time',
       display: true,
       displayMd: true,
       displaySm: false,
@@ -82,7 +71,7 @@ export const AssistanceDay = () => {
     }
   ]
 
-  const tableContent = (code, firstName, lastName, phone, status) => (
+  const tableContent = ({ status, title, name, time }) => (
     <StyledTableBody>
       <StyledTableItem
         width={tableHeader[0].size}
@@ -95,7 +84,7 @@ export const AssistanceDay = () => {
           fontWeigth="600"
           color={userStatusColor(status)}
         >
-          {code}
+          {status}
         </StyledSpan>
       </StyledTableItem>
       <StyledTableItem
@@ -105,7 +94,7 @@ export const AssistanceDay = () => {
         displaySm={tableHeader[1].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#4F3C75">
-          {firstName} {lastName}
+          {title}
         </StyledH2>
       </StyledTableItem>
       <StyledTableItem
@@ -115,7 +104,7 @@ export const AssistanceDay = () => {
         displaySm={tableHeader[2].displaySm ? 'block' : 'none'}
       >
         <StyledH2 fontWeigth="600" color="#4F3C75">
-          {phone || 'none'}
+          {name}
         </StyledH2>
       </StyledTableItem>
 
@@ -126,50 +115,11 @@ export const AssistanceDay = () => {
         displayMd={tableHeader[3].displayMd ? 'block' : 'none'}
         displaySm={tableHeader[3].displaySm ? 'block' : 'none'}
       >
-        <ButtonComponent
-          background="#4F3C75"
-          width="90px"
-          height="40px"
-          margin="0"
-          click={() =>
-            setSelected({
-              status: `${status.charAt(0).toUpperCase() + status.slice(1)}`,
-              code,
-              firstName,
-              lastName
-            })
-          }
-        >
-          More
-        </ButtonComponent>
+        <StyledSpan fontFamily="Segoe UI" fontWeigth="600" color="#4F3C75">
+          {time}
+        </StyledSpan>
       </StyledTableItem>
     </StyledTableBody>
-  )
-
-  const tableExpand = expanded && (
-    <StyledTableItemExpand
-      paddingLerft={tableHeader[0].size}
-      mediaExpand="block"
-    >
-      <StyledTableItem displayMd="none" displaySm="flex">
-        <StyledTypography
-          fontSize="14px"
-          fontFamily="Segoe UI"
-          fontWeigth="600"
-          color="#B0A3CC"
-        >
-          Location
-        </StyledTypography>
-        <StyledTypography
-          fontSize="16px"
-          fontFamily="Segoe UI"
-          fontWeigth="600"
-          color="#4F3C75"
-        >
-          Automercado
-        </StyledTypography>
-      </StyledTableItem>
-    </StyledTableItemExpand>
   )
 
   return (
@@ -185,20 +135,25 @@ export const AssistanceDay = () => {
         {(students.length &&
           students.map(
             ({
-              code,
+              id,
+              event: { title },
+              monitor: { first_name: firstName, last_name: lastName },
               status,
-              first_name: firstName,
-              last_name: lastName,
-              phone_number: phone
+              time
             }) => (
               <StyledCard
                 width="100%"
                 flexDirection="column"
                 alignItems="start"
                 margin="0 0 16px 0"
-                key={code}
+                key={id}
               >
-                {tableContent(code, firstName, lastName, phone, status)}
+                {tableContent({
+                  status,
+                  title,
+                  name: `${firstName || ''} ${lastName || ''}`,
+                  time
+                })}
                 {/* {expanded && tableExpand(lastName, phone)} */}
               </StyledCard>
             )
