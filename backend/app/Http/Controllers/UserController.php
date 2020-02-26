@@ -232,7 +232,7 @@ class UserController extends Controller
 
             $m_user = \App\User::findOrFail($auth_user->id);
 
-            if(array_key_exists('profile_image',$data)){
+        if(array_key_exists('profile_image',$data)){
 
                 if(!$auth_user->profile_image == null){
                     $filename = explode('/',$m_user->profile_image);
