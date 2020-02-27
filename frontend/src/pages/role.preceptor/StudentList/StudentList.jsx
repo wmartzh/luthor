@@ -26,6 +26,8 @@ import { tableExpand } from './tableExpand'
 export const StudentList = () => {
   const [blockAll, setBlockAll] = useState(false)
 
+  const [search, setSearch] = useState('')
+
   const [expanded, setExpanded] = useState(false)
   const [students, setStudents] = useState([])
   const [selected, setSelected] = useState('')
@@ -61,20 +63,20 @@ export const StudentList = () => {
   }
 
   // TODO:
-  const penalizedHandler = code => {
-    try {
-      const response = axios({
-        method: API_ROUTES.penalizeUser.method,
-        url: API_ROUTES.penalizeUser.url,
-        data: {}
-      })
-      const { status } = response
-      if (status === 201 || status === 200) {
-      }
-    } catch (err) {
-      console.log(`student list Ln 76 = ${err}`)
-    }
-  }
+  // const penalizedHandler = code => {
+  //   try {
+  //     const response = axios({
+  //       method: API_ROUTES.penalizeUser.method,
+  //       url: API_ROUTES.penalizeUser.url,
+  //       data: {}
+  //     })
+  //     const { status } = response
+  //     if (status === 201 || status === 200) {
+  //     }
+  //   } catch (err) {
+  //     console.log(`student list Ln 76 = ${err}`)
+  //   }
+  // }
 
   useEffect(() => {
     fetchData()
@@ -184,6 +186,90 @@ export const StudentList = () => {
     setBlockAll(test())
   }
 
+  const searchResult = () => {
+    let result = students.filter(
+      data =>
+        data['first_name'].toLowerCase().indexOf(search.toLowerCase()) !== -1
+    )
+    return result ? (
+      <>
+        {(result.length &&
+          result.map(
+            ({
+              code,
+              status,
+              first_name: firstName,
+              last_name: lastName,
+              phone_number: phone
+            }) => (
+              <StyledCard
+                width="100%"
+                flexDirection="column"
+                alignItems="start"
+                margin="0 0 16px 0"
+                key={code}
+              >
+                {tableContent(
+                  { code, firstName, lastName, phone, status },
+                  setSelected
+                )}
+                {expanded && tableExpand({ lastName, phone })}
+              </StyledCard>
+            )
+          )) || (
+          <StyledCard width="100%" flexDirection="column" alignItems="center">
+            <StyledTypography
+              fontSize="14px"
+              fontFamily="Segoe UI"
+              fontWeigth="600"
+              color="#4F3C75"
+            >
+              No found
+            </StyledTypography>
+          </StyledCard>
+        )}
+      </>
+    ) : (
+      <StyledCard width="100%" flexDirection="column" alignItems="center">
+        <StyledTypography
+          fontSize="14px"
+          fontFamily="Segoe UI"
+          fontWeigth="600"
+          color="#4F3C75"
+        >
+          Searching...
+        </StyledTypography>
+      </StyledCard>
+    )
+  }
+
+  const displayTable =
+    (students.length &&
+      students.map(
+        ({
+          code,
+          status,
+          first_name: firstName,
+          last_name: lastName,
+          phone_number: phone
+        }) => (
+          <StyledCard
+            width="100%"
+            flexDirection="column"
+            alignItems="start"
+            margin="0 0 16px 0"
+            key={code}
+          >
+            {tableContent(
+              { code, firstName, lastName, phone, status },
+              setSelected
+            )}
+            {expanded && tableExpand({ lastName, phone })}
+          </StyledCard>
+        )
+      )) ||
+    (!loading && <NoDataComponent color="#007991" />)
+
   return (
     <StyledContainer>
       <Navigation />
@@ -191,6 +277,8 @@ export const StudentList = () => {
         <TableComponent
           title="Students"
           titleColor="#007991"
+          search={setSearch}
+          searchTitle="name"
           tableheader={tableHeader}
           subtitle={
             <ButtonComponent
@@ -206,31 +294,7 @@ export const StudentList = () => {
           }
         >
           {loading && <LoadingComponent color="#007991" />}
-          {(students.length &&
-            students.map(
-              ({
-                code,
-                status,
-                first_name: firstName,
-                last_name: lastName,
-                phone_number: phone
-              }) => (
-                <StyledCard
-                  width="100%"
-                  flexDirection="column"
-                  alignItems="start"
-                  margin="0 0 16px 0"
-                  key={code}
-                >
-                  {tableContent(
-                    { code, firstName, lastName, phone, status },
-                    setSelected
-                  )}
-                  {expanded && tableExpand({ lastName, phone })}
-                </StyledCard>
-              )
-            )) ||
-            (!loading && <NoDataComponent color="#007991" />)}
+          {search.length === 0 ? displayTable : searchResult()}
         </TableComponent>
       )}
       {selected && studentInfo}
