@@ -1,4 +1,4 @@
-export const devModeStatus = false //? chage to true or false
+export const devModeStatus = true //? chage to true or false
 
 const devModeTokens = {
   studentMale:
@@ -18,4 +18,4 @@ const devModeTokens = {
 }
 
 // ? change the userToken here!
-export const devModeCurrentToken = devModeTokens.preceptorMale
+export const devModeCurrentToken = devModeTokens.studentMale

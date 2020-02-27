@@ -114,8 +114,11 @@ export const MyAssistance = () => {
               margin="0 0 16px 0"
               key={id}
             >
-              {tableContent(status, date, title, monitor, time)}
-              {tableExpand(date, monitor, time)}
+              {tableContent(
+                { status, date, title, monitor, time },
+                setExpanded
+              )}
+              {tableExpand({ date, monitor, time }, expanded)}
             </StyledCard>
           )
         )) ||
