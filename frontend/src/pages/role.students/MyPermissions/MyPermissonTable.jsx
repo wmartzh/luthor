@@ -28,7 +28,7 @@ export const MyPermissionTable = ({
     let result = permission.filter(data => {
       return data[item].toLowerCase().indexOf(search.toLowerCase()) !== -1
     })
-    console.log(result)
+
     return result ? (
       <>
         {(result.length &&

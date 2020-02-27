@@ -5,7 +5,7 @@ import { MyEvents } from '../pages/role.preceptor/MyEvents'
 import { StudentList } from '../pages/role.preceptor/StudentList'
 import { ValidateWeekends } from '../pages/role.preceptor/ValidateWeekends'
 import { GetPermission } from '../pages/role.students/GetPermission'
-import { ActivateStudent } from '../pages/role.preceptor/ActivateStudent'
+import { InactiveStudents } from '../pages/role.preceptor/InactiveStudents'
 import { TakeAsistance } from '../pages/role.preceptor/TakeAsistance'
 
 export const preceptorRoutes = [
@@ -43,6 +43,6 @@ export const preceptorRoutes = [
   },
   {
     path: '/activate-student',
-    component: ActivateStudent
+    component: InactiveStudents
   }
 ]
