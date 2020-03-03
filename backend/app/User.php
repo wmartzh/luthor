@@ -29,7 +29,10 @@ class User extends Authenticatable
         'phone_number',
         'status',
         'intership',
-        'is_active'
+        'is_active',
+        'has_job',
+        'job_name',
+        'event',
     ];
 
     /**
@@ -53,6 +56,9 @@ class User extends Authenticatable
     public function role(){
         return $this->belongsTo(Role::class,'id','rol_id');
     }
-   
+    public function events(){
+        return $this->hasMany('App\Event','id','even');
+    }
+
 
 }

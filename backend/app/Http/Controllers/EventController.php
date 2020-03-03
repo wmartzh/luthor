@@ -173,7 +173,7 @@ class EventController extends Controller
 
             $user_auth = Auth::user();
 
-            if($user_auth->rol_id != 4 || $user_auth->rol_id == 6){
+            if($user_auth->rol_id != 4 || $user_auth->rol_id != 6){
                 return response(['messge'=> 'User Unauthorized'],401);
             }else{
 

@@ -92,6 +92,10 @@ export const API_ROUTES = {
       female: '/students/female'
     }
   },
+  updateStudentActive: {
+    method: 'POST',
+    url: '/students'
+  },
   getPenaltiesActive: {
     method: 'GET',
     url: '/active-penalties'

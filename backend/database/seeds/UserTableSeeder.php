@@ -37,6 +37,20 @@ class UserTableSeeder extends Seeder
             'is_active' => true
         ]);
         \App\User::create([
+            'username' => 'andres',
+            'rol_id' => '2',
+            'first_name' =>'andres',
+            'last_name' => 'Hernandez',
+            'code'=>'160032',
+            'email' => 'adress@mail.com',
+            'password' => bcrypt('secret'),
+            'intership' => 'boys',
+            'is_active' => true,
+            'has_job' => true,
+
+        ]);
+
+        \App\User::create([
             'username' => 'paquita',
             'rol_id' => '2',
             'first_name' =>'Paquita',
