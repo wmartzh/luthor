@@ -26,14 +26,14 @@ import { StyledContainer } from '../../styles/StyledContainer'
 import { StyledStatusBar } from '../../styles/StyledStatusBar'
 import { StyledBackButton } from '../../styles/StyledBackButton'
 import { StyledTypography } from '../../styles/StyledTypography'
-import { useToastValues } from '../../context/ToastContext'
+// import { useToastValues } from '../../context/ToastContext'
 
 export const GetPermission = () => {
   const history = useHistory()
   const { user, setUser } = useUserValues()
   const { status, intership, role } = user
 
-  const { setToastMessage, setToastDisplay } = useToastValues()
+  // const { setToastMessage, setToastDisplay } = useToastValues()
 
   const [error, setError] = useState(false)
   const [type, setType] = useState('')
@@ -92,8 +92,8 @@ export const GetPermission = () => {
         setDislableAll(true)
         setError('Time not permitted')
       } else {
-        setToastMessage('Permission created successfully.')
-        setToastDisplay(true)
+        // setToastMessage('Permission created successfully.')
+        // setToastDisplay(true)
         history.push(role === '2' || role === '3' ? '/my-permissions' : '/')
       }
     } catch (e) {
