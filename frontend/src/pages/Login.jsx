@@ -2,20 +2,24 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { axios } from '../plugins/axios'
 
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import TextField from '@material-ui/core/es/TextField'
 
 import { Copyright } from '../components/Copyright'
-import { StyledStatusBar } from '../styles/StyledStatusBar'
-import { StyledSpacer } from '../styles/StyledSpacer'
+import {
+  StyledStatusBar,
+  StyledSpacer,
+  StyledImageContainer,
+  StyledTypography,
+  StyledCard,
+  StyledContainer
+} from '../styles'
 import { userStatusColor } from '../constants/statusColor'
 import { ButtonComponent } from '../components/ButtonComponent'
-import { StyledTypography } from '../styles/StyledTypography'
-import { StyledAvatar } from '../styles/StyledAvatar'
-import { StyledCard } from '../styles/StyledCard'
-import { StyledContainer } from '../styles/StyledContainer'
+
 import { API_ROUTES } from '../constants/apiRoutes'
 import { useUserValues } from '../context/UserContext'
+
+import unadecaLogo from '../assets/svg/unadecaLogo.svg'
 
 export const Login = ({ location }) => {
   const history = useHistory()
@@ -91,9 +95,8 @@ export const Login = ({ location }) => {
     <StyledContainer maxWidth="390px">
       <StyledSpacer height="80px" />
       <StyledCard flexDirection="column" roundedTop width="340px">
-        <StyledAvatar radius="50%" background="#08B1C5" fill="#fff">
-          <LockOutlinedIcon />
-        </StyledAvatar>
+        <StyledImageContainer height="90px" width="65px" image={unadecaLogo} />
+        <StyledSpacer height="20px" />
         <StyledTypography fontSize="20px">Sign In</StyledTypography>
         {error && (
           <>
@@ -149,14 +152,14 @@ export const Login = ({ location }) => {
           Sign In
         </ButtonComponent>
         <StyledSpacer height="10px" />
-        <ButtonComponent
+        {/* <ButtonComponent
           to="register"
           background="#F0F2F0"
           color="#000"
           width="300px"
         >
           Sign Up
-        </ButtonComponent>
+        </ButtonComponent> */}
         <StyledSpacer height="30px" />
         <Copyright />
         <StyledSpacer height="10px" />

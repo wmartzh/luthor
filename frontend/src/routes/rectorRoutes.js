@@ -4,6 +4,7 @@ import { Penalties } from '../pages/role.preceptor/Penalties'
 import { MyEvents } from '../pages/role.preceptor/MyEvents'
 import { StudentList } from '../pages/role.preceptor/StudentList'
 import { ValidateWeekends } from '../pages/role.preceptor/ValidateWeekends'
+import { InactiveStudents } from '../pages/role.preceptor/InactiveStudents'
 
 export const rectorRoutes = [
   {
@@ -29,5 +30,9 @@ export const rectorRoutes = [
   {
     path: '/validate-weekens',
     component: ValidateWeekends
+  },
+  {
+    path: '/activate-student',
+    component: InactiveStudents
   }
 ]

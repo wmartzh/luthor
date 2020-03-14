@@ -71,6 +71,7 @@ export const CreatePenaltiesForm = ({
   const submitHandler = async () => {
     setLoading(true)
     try {
+      const userSelected = students.filter(student => student.code === code)
       const response = await axios({
         method: edit
           ? API_ROUTES.updatePenalizeUser.method
@@ -78,7 +79,12 @@ export const CreatePenaltiesForm = ({
         url: edit
           ? API_ROUTES.updatePenalizeUser.url
           : API_ROUTES.penalizeUser.url,
-        data: { user_code: code, reason, conclusion }
+        data: {
+          user_code: code,
+          reason,
+          conclusion,
+          intership: userSelected[0].intership
+        }
       })
       const { status } = response
       if (status === 201 || status === 200) {
