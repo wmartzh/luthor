@@ -26,7 +26,7 @@ import { API_ROUTES } from '../../constants/apiRoutes'
 
 export const DashboardAdmin = () => {
   const { user } = useUserValues()
-  const { username, code } = user
+  const { username, code, role } = user
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
@@ -150,12 +150,14 @@ export const DashboardAdmin = () => {
           />
         </div>
         <div>
-          <IcoButtonComponent
-            label="Take Assistance"
-            color="#12B6C6"
-            svg={fileTextIcon}
-            to={preceptorRoutes[6].path}
-          />
+          {role !== '6' && (
+            <IcoButtonComponent
+              label="Take Assistance"
+              color="#12B6C6"
+              svg={fileTextIcon}
+              to={preceptorRoutes[6].path}
+            />
+          )}
           <IcoButtonComponent
             label="Special Permission"
             color="#FBB13C"

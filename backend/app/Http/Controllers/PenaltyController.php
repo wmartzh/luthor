@@ -103,7 +103,7 @@ class PenaltyController extends Controller
                 case 4:{ //preceptor
                     $data  = \App\Penalty::select('user_code','active','reason','created_at')
                     ->with(['user'=>function($query){
-                        $query->select('code','first_name','last_name');
+                        $query->select('code','first_name','last_name', 'intership');
                     }])
                     ->where([['intership',$auth_user->intership],['active',1]])
                     ->orderBy('created_at', 'desc')
@@ -112,23 +112,30 @@ class PenaltyController extends Controller
                     return ResponsesHelper::dataResponse($data);
                 }
                 case 6:{ //vicerector
-                    $boys  = \App\Penalty::select('user_code','active','reason','created_at')
+                    // $boys  = \App\Penalty::select('user_code','active','reason','created_at')
+                    // ->with(['user'=>function($query){
+                    //     $query->select('code','first_name','last_name');
+                    // }])
+                    // ->where([['intership','boys'],['active',1]])
+                    // ->orderBy('created_at', 'desc')
+                    // ->get();
+                    // $girls  = \App\Penalty::select('user_code','active','reason','created_at')
+                    // ->with(['user'=>function($query){
+                    //     $query->select('code','first_name','last_name');
+                    // }])
+                    // ->where([['intership','girls'],['active',1]])
+                    // ->orderBy('created_at', 'desc')
+                    // ->get();
+
+                    $data  = \App\Penalty::select('user_code','active','reason','created_at')
                     ->with(['user'=>function($query){
-                        $query->select('code','first_name','last_name');
+                        $query->select('code','first_name','last_name', 'intership');
                     }])
-                    ->where([['intership','boys'],['active',1]])
-                    ->orderBy('created_at', 'desc')
-                    ->get();
-                    $girls  = \App\Penalty::select('user_code','active','reason','created_at')
-                    ->with(['user'=>function($query){
-                        $query->select('code','first_name','last_name');
-                    }])
-                    ->where([['intership','girls'],['active',1]])
+                    ->where('active',1)
                     ->orderBy('created_at', 'desc')
                     ->get();
 
-
-                    return response(['data'=>['boys'=>$boys,'girls'=>$girls]]);
+                    return response(['data'=>$data]);
                 }
 
                 default:{
@@ -178,7 +185,7 @@ class PenaltyController extends Controller
             'active',
             'reason' => 'required',
             'conclusion' => 'required',
-
+            'intership' => 'required'
         ]);
 
 
