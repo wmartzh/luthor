@@ -173,10 +173,7 @@ class EventController extends Controller
 
             $user_auth = Auth::user();
 
-            if($user_auth->rol_id != 4 || $user_auth->rol_id != 6){
-                return response(['messge'=> 'User Unauthorized'],401);
-            }else{
-
+            if($user_auth->rol_id == 4 || $user_auth->rol_id == 6){
                 $check_regs = \App\Event::select()->where('title',$data['title'])->exists();
 
                 if(!$check_regs){ // Check if exists
@@ -194,6 +191,10 @@ class EventController extends Controller
                 }else{
                     return response(['message'=> $data['title'].' is already register'],400);
                 }
+
+            }else{
+                return response(['messge'=> 'User Unauthorized'],401);
+
             }
 
         }catch(Exception $e){
