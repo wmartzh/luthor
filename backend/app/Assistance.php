@@ -8,7 +8,13 @@ class Assistance extends Model
 {
 
     protected $fillable = [
-        'user_code','monitor_id', 'event_id','status','date','time','intership'
+        'user_code',
+        'monitor_id',
+        'event_id',
+        'status',
+        'date',
+        'time',
+        'intership'
     ];
 
 

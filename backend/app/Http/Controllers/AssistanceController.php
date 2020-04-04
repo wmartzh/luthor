@@ -201,7 +201,11 @@ class AssistanceController extends Controller
                 if($auth_user->is_active){
 
                     $data = \App\Assistance::select('id','monitor_id','event_id','status','date','time')
-                    ->where([['user_code',$auth_user->code],['event_id',$event]])
+                    ->where([
+                        ['user_code',$auth_user->code],
+                        ['event_id',$event],
+
+                        ])
                     ->with(['event'=> function($query){
                         $query->select('id','title');
                     }])
@@ -222,7 +226,10 @@ class AssistanceController extends Controller
                 if($auth_user->is_active){
 
                     $data = \App\Assistance::select('id','monitor_id','event_id','status','date','time')
-                    ->where([['user_code',$auth_user->code],['event_id',$event],['date',date('Y-m-d')]])
+                    ->where([
+                        ['user_code',$auth_user->code],
+                        ['event_id',$event],
+                        ['date',date('Y-m-d')]])
                     ->with(['event'=> function($query){
                         $query->select('id','title');
                     }])
@@ -252,7 +259,7 @@ class AssistanceController extends Controller
                 ->with(['monitor' => function($query){
                     $query->select('id','first_name','last_name');
                 }])
-                ->where([['event_id',$event],['intership',$auth_user->intership]])
+                ->where([['event_id',$event],['intership',$auth_user->intership],  ['date',date('Y-m-d')]])
                 ->orderBy('date','desc')->get();
 
                 return ResponsesHelper::dataResponse($data);
@@ -272,7 +279,7 @@ class AssistanceController extends Controller
                 ->with(['monitor' => function($query){
                     $query->select('id','first_name','last_name');
                 }])
-                ->where([['event_id',$event],['intership','boys']])
+                ->where([['event_id',$event],['intership','boys'],  ['date',date('Y-m-d')]])
                 ->orderBy('date','desc')->get();
 
                 $girls = \App\Assistance::select('user_code','monitor_id','event_id','status','date','time')
@@ -348,7 +355,7 @@ class AssistanceController extends Controller
                 case $roles['monitor']:{
 
                     if( $intership['intership'] == $user->intership){
-                        if(!TakeAssistanceHelper::assistancesExists($data)){
+                        if(!TakeAssistanceHelper::assistancesExists($data)){ // get if the assistance exist
                             if(strtotime($data['time']) <= $present){
                                 $data['status']='present';
                                 $data['intership'] = $user->intership; //intership control

@@ -108,7 +108,7 @@ export const StudentsTable = ({ selectedEvent }) => {
         return data['user_code'] === student.code
       })
     }))
-    setValidStudent(valid)
+  //  setValidStudent(valid)
     return (
       (students.length !== 0 &&
         valid.map(
