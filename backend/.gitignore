@@ -61,3 +61,6 @@ typings/
 .next
 
 vendor/
+
+# docker configuration
+docker/
