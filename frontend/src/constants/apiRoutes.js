@@ -1,5 +1,5 @@
 export const API_ROUTES = {
-  base: ' http://127.0.0.1:8000/api',
+  base: ' http://127.0.0.1:80/api',
   login: '/login',
   register: {
     method: 'POST',

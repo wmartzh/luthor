@@ -23,7 +23,7 @@ Route::post('/login','Api\AuthController@login');
 Route::post('/logout','Api\AuthController@logout')->middleware('auth:api');
 
 
-Route::group(['middleware'  =>  ['auth:api']], function () {
+Route::group(['middleware'  =>  ['auth:api','auth.user']], function () {
 
     Route::get('status-test','DataStateServiceController@test');
     Route::get('user-status','DataStateServiceController@getStatus');
@@ -103,9 +103,6 @@ Route::group(['middleware'  =>  ['auth:api']], function () {
 
 
  });
-
-
-
 
 
 
